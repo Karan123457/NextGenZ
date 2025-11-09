@@ -85,7 +85,7 @@ export default function JharkhandCards() {
         }
       `}</style>
 
-      <h1 className="text-center fw-bold" style={{ marginTop: '80px', marginBottom: '2rem' }}>Jharkhand</h1>
+      <h1 className="text-center fw-bold" style={{ marginTop: '70px', marginBottom: '2rem' }}>Jharkhand</h1>
       <Row className="justify-content-center gx-4 gy-4 px-4">
         {jharkhandCards.map((card) => (
           <Col key={card.id} xs={12} sm={6} md={4} lg={3}>
@@ -149,4 +149,5 @@ export default function JharkhandCards() {
     </>
   );
 }
+
 
