@@ -2,16 +2,6 @@ import React, { useState } from "react";
 import { Accordion, Card } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { useNavigate } from 'react-router-dom';
-import Sem1 from "../data_Resources/JharDiploma/Sem1"; // ✅ Correct import path
-import Sem2 from "../data_Resources/JharDiploma/Sem2"; // ✅ Correct import path
-import Sem3 from "../data_Resources/JharDiploma/Sem3"; // ✅ Correct import path
-import Sem4 from "../data_Resources/JharDiploma/Sem4"; // ✅ Correct import path
-import Sem5 from "../data_Resources/JharDiploma/Sem5"; // ✅ Correct import path
-import Sem6 from "../data_Resources/JharDiploma/Sem6"; // ✅ Correct import path
-import JHPolytechnic from "../data_Resources/JharPolytechnic/JHPolytechnic";
-import JHQPaper from "../data_Resources/JharPolytechnic/JHQPaper";
-import D2DInfo from "../data_Resources/JharD2D/D2DInfo";  
-import JHD2DQPaper from "../data_Resources/JharD2D/JHD2DQPaper";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Resources = () => {
@@ -98,3 +88,4 @@ const Resources = () => {
 };
 
 export default Resources;
+
