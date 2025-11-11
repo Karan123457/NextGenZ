@@ -18,16 +18,24 @@ const Sem1 = () => {
     background: bg,
     border: `2px solid ${borderColor}`,
     borderRadius: "16px",
-    padding: "20px",
+    padding: "4vw",
     boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-    marginTop: "20px",
+    marginTop: "5vw",
   });
+
+  const tableContainer = {
+    overflowX: "auto",
+    WebkitOverflowScrolling: "touch",
+    borderRadius: "12px",
+    marginTop: "10px",
+  };
 
   const tableStyle = {
     width: "100%",
     borderCollapse: "collapse",
     textAlign: "center",
-    fontSize: "0.9rem",
+    fontSize: "clamp(0.8rem, 2.5vw, 0.95rem)",
+    minWidth: "500px",
   };
 
   const thtd = {
@@ -36,27 +44,30 @@ const Sem1 = () => {
     wordBreak: "break-word",
   };
 
+  const headingStyle = {
+    color: "#0d6efd",
+    marginBottom: "14px",
+    fontWeight: 700,
+    textAlign: "center",
+    fontSize: "clamp(1.2rem, 4vw, 1.8rem)",
+  };
+
+  const paragraphStyle = {
+    marginBottom: "16px",
+    fontSize: "clamp(0.9rem, 3.5vw, 1rem)",
+  };
+
   return (
     <div style={containerStyle}>
-      <h2
-        style={{
-          color: "#0d6efd",
-          marginBottom: "14px",
-          fontWeight: 700,
-          textAlign: "center",
-          fontSize: "clamp(1.2rem, 4vw, 1.8rem)",
-        }}
-      >
-        📘 Diploma 1st Semester Jharkhand (JUT Ranchi)
-      </h2>
+      <h2 style={headingStyle}>📘 Diploma 1st Semester Jharkhand (JUT Ranchi)</h2>
 
-      <p style={{ marginBottom: "16px", fontSize: "clamp(0.9rem, 3.5vw, 1rem)" }}>
+      <p style={paragraphStyle}>
         This 1st Semester material has been carefully prepared to help Jharkhand Polytechnic Diploma students prepare effectively for their examinations.
         <br />
         इसमें important questions, previous year question papers, तथा important topics शामिल हैं, जिससे students को semester examinations में आने वाले pattern और topics की clear understanding मिल सके।
       </p>
 
-      {/* Subject Box */}
+      {/* Subjects Section */}
       <div style={sectionBox("#198754", "linear-gradient(135deg, #e6ffed, #ffffff)")}>
         <h4
           style={{
@@ -64,6 +75,7 @@ const Sem1 = () => {
             marginBottom: "15px",
             fontWeight: 600,
             fontSize: "clamp(1rem, 3.5vw, 1.2rem)",
+            textAlign: "center",
           }}
         >
           📝 Subjects of 1st Semester Jharkhand (Total 4):
@@ -81,20 +93,21 @@ const Sem1 = () => {
           <li>Engineering Physics</li>
           <li>Engineering Chemistry</li>
           <li>Engineering Mathematics</li>
-          <li>🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile Branch)</li>
-          <li>🔹Basics of Electrical Power System (Electrical-EE Branch)</li>
-          <li>🔹Fundamental of Computer (Computer-CSE Branch)</li>
-          <li>🔹Electronic Component & Device (Electronic-ECE Branch)</li>
-          <li>🔹Basic Surveying (Civil Branch)</li>
+          <li>🔹 Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile Branch)</li>
+          <li>🔹 Basics of Electrical Power System (Electrical-EE Branch)</li>
+          <li>🔹 Fundamental of Computer (Computer-CSE Branch)</li>
+          <li>🔹 Electronic Component & Device (Electronic-ECE Branch)</li>
+          <li>🔹 Basic Surveying (Civil Branch)</li>
         </ul>
       </div>
 
-      <p style={{ marginTop: "16px", fontSize: "clamp(0.9rem, 3.5vw, 1rem)" }}>
-        सभी 1st Semester के छात्रों के लिए इन 4 विषयों की External Exam में उपस्थित होना अनिवार्य है। अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi द्वारा तैयार किया जाता है।
+      <p style={{ ...paragraphStyle, marginTop: "16px" }}>
+        सभी 1st Semester के छात्रों के लिए इन 4 विषयों की External Exam में उपस्थित होना अनिवार्य है।
+        अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi द्वारा तैयार किया जाता है।
       </p>
 
       {/* Question Paper Section */}
-      <div style={{ marginTop: "40px" }}>
+      <div style={{ marginTop: "8vw" }}>
         <h3
           style={{
             textAlign: "center",
@@ -118,13 +131,13 @@ const Sem1 = () => {
                 color: "#0d6efd",
                 fontWeight: 600,
                 marginBottom: 20,
-                fontSize: "clamp(1rem, 3.5vw, 1.4rem)",
+                fontSize: "clamp(1rem, 3.5vw, 1.3rem)",
               }}
             >
               {year} Question Paper 1st Semester
             </h2>
 
-            <div style={{ overflowX: "auto" }}>
+            <div style={tableContainer}>
               <table style={tableStyle}>
                 <thead style={{ background: "#f1f3f5" }}>
                   <tr>
@@ -134,26 +147,33 @@ const Sem1 = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {["Engineering Mathematics", "Engineering Chemistry", "Engineering Physics"].map((sub, i) => (
-                    <tr key={i} style={{ background: i % 2 !== 0 ? "#f8f9fa" : "transparent" }}>
-                      <td style={thtd}>{sub}</td>
-                      <td style={thtd}>{year}</td>
-                      <td style={thtd}>
-                        <a
-                          href="/"
-                          onClick={(e) => e.preventDefault()}
-                          style={{
-                            color: "#0d6efd",
-                            textDecoration: "underline",
-                            fontWeight: 500,
-                            fontSize: "clamp(0.85rem, 3vw, 1rem)",
-                          }}
-                        >
-                          Download [PDF]
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                  {["Engineering Mathematics", "Engineering Chemistry", "Engineering Physics"].map(
+                    (sub, i) => (
+                      <tr
+                        key={i}
+                        style={{
+                          background: i % 2 !== 0 ? "#f8f9fa" : "transparent",
+                        }}
+                      >
+                        <td style={thtd}>{sub}</td>
+                        <td style={thtd}>{year}</td>
+                        <td style={thtd}>
+                          <a
+                            href="/"
+                            onClick={(e) => e.preventDefault()}
+                            style={{
+                              color: "#0d6efd",
+                              textDecoration: "underline",
+                              fontWeight: 500,
+                              fontSize: "clamp(0.85rem, 3vw, 1rem)",
+                            }}
+                          >
+                            Download [PDF]
+                          </a>
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
