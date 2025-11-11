@@ -1,4 +1,3 @@
-
 // src/data_Resources/JharDiploma/Sem1.jsx
 import React from "react";
 
@@ -17,7 +16,7 @@ const Sem1 = () => {
 
   const sectionBox = (borderColor, bg) => ({
     background: bg,
-    border: 2px solid ${borderColor},
+    border: `2px solid ${borderColor}`,
     borderRadius: "16px",
     padding: "20px",
     boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
@@ -166,5 +165,3 @@ const Sem1 = () => {
 };
 
 export default Sem1;
-
-
