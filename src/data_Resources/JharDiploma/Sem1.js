@@ -4,35 +4,35 @@ import React from "react";
 const Sem1 = () => {
   const containerStyle = {
     background: "linear-gradient(180deg, #f8fbff 0%, #ffffff 100%)",
-    borderRadius: "16px",
-    padding: "4vw 5vw",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    borderRadius: "12px",
+    padding: "3vw 4vw",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.06)",
     color: "#212529",
     fontFamily: "'Segoe UI', sans-serif",
-    lineHeight: 1.6,
-    maxWidth: "950px",
+    lineHeight: 1.5,
+    maxWidth: "900px",
     margin: "auto",
   };
 
   const sectionBox = (borderColor, bg) => ({
     background: bg,
-    border: `2px solid ${borderColor}`,
-    borderRadius: "12px",
-    padding: "16px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-    marginTop: "18px",
+    border: `1.5px solid ${borderColor}`,
+    borderRadius: "10px",
+    padding: "12px",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+    marginTop: "12px",
   });
 
   const tableStyle = {
     width: "100%",
     borderCollapse: "collapse",
     textAlign: "center",
-    fontSize: "clamp(0.8rem, 2.5vw, 0.95rem)",
+    fontSize: "clamp(0.78rem, 2.4vw, 0.9rem)",
   };
 
   const thtd = {
     border: "1px solid #dee2e6",
-    padding: "8px 6px",
+    padding: "6px 5px",
     wordBreak: "break-word",
   };
 
@@ -41,10 +41,10 @@ const Sem1 = () => {
       <h2
         style={{
           color: "#0d6efd",
-          marginBottom: "12px",
+          marginBottom: "8px",
           fontWeight: 700,
           textAlign: "center",
-          fontSize: "clamp(1.1rem, 3.5vw, 1.6rem)",
+          fontSize: "clamp(1rem, 3vw, 1.4rem)",
         }}
       >
         📘 Diploma 1st Semester Jharkhand (JUT Ranchi)
@@ -52,8 +52,8 @@ const Sem1 = () => {
 
       <p
         style={{
-          marginBottom: "14px",
-          fontSize: "clamp(0.85rem, 3vw, 0.95rem)",
+          marginBottom: "10px",
+          fontSize: "clamp(0.8rem, 2.8vw, 0.9rem)",
           textAlign: "justify",
         }}
       >
@@ -66,15 +66,15 @@ const Sem1 = () => {
       <div
         style={sectionBox(
           "#198754",
-          "linear-gradient(135deg, #e9fff0, #ffffff)"
+          "linear-gradient(135deg, #edfff2, #ffffff)"
         )}
       >
         <h4
           style={{
             color: "#198754",
-            marginBottom: "12px",
+            marginBottom: "8px",
             fontWeight: 600,
-            fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
+            fontSize: "clamp(0.9rem, 2.5vw, 1rem)",
           }}
         >
           📝 Subjects of 1st Semester Jharkhand (Total 4):
@@ -83,16 +83,16 @@ const Sem1 = () => {
         <ul
           style={{
             margin: 0,
-            paddingLeft: "18px",
+            paddingLeft: "16px",
             color: "#212529",
-            fontSize: "clamp(0.85rem, 2.8vw, 0.95rem)",
-            lineHeight: 1.6,
+            fontSize: "clamp(0.8rem, 2.4vw, 0.9rem)",
+            lineHeight: 1.5,
           }}
         >
           <li>Engineering Physics</li>
           <li>Engineering Chemistry</li>
           <li>Engineering Mathematics</li>
-          <li>🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile)</li>
+          <li>🔹Mechanical Science & Engineering (Mechanical / Metallurgy / Automobile)</li>
           <li>🔹Basics of Electrical Power System (Electrical - EE)</li>
           <li>🔹Fundamentals of Computer (Computer - CSE)</li>
           <li>🔹Electronic Component & Device (Electronics - ECE)</li>
@@ -102,22 +102,22 @@ const Sem1 = () => {
 
       <p
         style={{
-          marginTop: "14px",
-          fontSize: "clamp(0.85rem, 2.8vw, 0.95rem)",
+          marginTop: "10px",
+          fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
         }}
       >
         सभी 1st Semester के छात्रों के लिए इन 4 विषयों की External Exam में उपस्थित होना अनिवार्य है। अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi द्वारा तैयार किया जाता है।
       </p>
 
       {/* Question Paper Section */}
-      <div style={{ marginTop: "30px" }}>
+      <div style={{ marginTop: "20px" }}>
         <h3
           style={{
             textAlign: "center",
             color: "#0d6efd",
             fontWeight: 700,
-            marginBottom: "16px",
-            fontSize: "clamp(1rem, 3.5vw, 1.4rem)",
+            marginBottom: "12px",
+            fontSize: "clamp(0.95rem, 3vw, 1.2rem)",
           }}
         >
           📝 Previous Year Question Papers
@@ -126,15 +126,18 @@ const Sem1 = () => {
         {[2024, 2023, 2022, 2021].map((year) => (
           <div
             key={year}
-            style={sectionBox("#0d6efd", "linear-gradient(135deg, #e9f1ff, #ffffff)")}
+            style={sectionBox(
+              "#0d6efd",
+              "linear-gradient(135deg, #eef5ff, #ffffff)"
+            )}
           >
             <h2
               style={{
                 textAlign: "center",
                 color: "#0d6efd",
                 fontWeight: 600,
-                marginBottom: 16,
-                fontSize: "clamp(0.95rem, 3vw, 1.2rem)",
+                marginBottom: 10,
+                fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)",
               }}
             >
               {year} Question Paper - 1st Semester
@@ -166,7 +169,7 @@ const Sem1 = () => {
                               color: "#0d6efd",
                               textDecoration: "underline",
                               fontWeight: 500,
-                              fontSize: "clamp(0.8rem, 2.5vw, 0.95rem)",
+                              fontSize: "clamp(0.78rem, 2.3vw, 0.9rem)",
                             }}
                           >
                             Download [PDF]
