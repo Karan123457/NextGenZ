@@ -295,8 +295,8 @@ const Sem1 = () => {
           }
 
           .download-btn {
-            font-size: 0.9rem;
-            padding: 4px 15px;
+            font-size: 0.95rem;
+            padding: 6px 20px;
           }
         }
       `}</style>
@@ -305,3 +305,4 @@ const Sem1 = () => {
 };
 
 export default Sem1;
+
