@@ -152,14 +152,15 @@ const Sem1 = () => {
       ))}
 
       <style>{`
-        .sem1-container {
+       .sem1-container {
   background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
   border-radius: 20px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   max-width: 1000px;
-  margin: 20px auto 8px auto;   /* ✅ TOP margin added */
+  margin: 100px auto 8px auto;   /* ✅ TOP margin added */
   font-family: 'Poppins', sans-serif;
   line-height: 1.7;
+ 
 }
 
 
@@ -290,11 +291,11 @@ const Sem1 = () => {
         }
 
         @media (max-width: 768px) {
-          .sem1-container {
-            margin: 6px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-          }
+  .sem1-container {
+    margin: 60px auto 8px auto;   /* ✅ MOBILE TOP MARGIN FIXED */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
 
           .hero-banner {
             margin-top: 10px;
