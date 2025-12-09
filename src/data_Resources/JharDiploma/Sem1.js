@@ -27,7 +27,7 @@ const Sem1 = () => {
               color: "#0d6efd",
               marginBottom: "14px",
               fontWeight: 700,
-              fontSize: "1.2rem",
+              fontSize: "1.4rem",
             }}
           >
           Diploma 1st Semester Jharkhand (JUT Ranchi)
@@ -305,6 +305,7 @@ const Sem1 = () => {
 };
 
 export default Sem1;
+
 
 
 
