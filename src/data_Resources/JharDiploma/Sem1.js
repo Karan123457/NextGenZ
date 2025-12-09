@@ -30,7 +30,7 @@ const Sem1 = () => {
               fontSize: "1.6rem",
             }}
           >
-            Diploma 1st Semester Jharkhand (JUT Ranchi)
+          Diploma 1st Semester Jharkhand (JUT Ranchi)
           </h2>
           <p
             className="intro"
@@ -305,4 +305,5 @@ const Sem1 = () => {
 };
 
 export default Sem1;
+
 
