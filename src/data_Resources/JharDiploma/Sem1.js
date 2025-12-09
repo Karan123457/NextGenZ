@@ -37,10 +37,12 @@ const Sem1 = () => {
             style={{
               marginBottom: "12px",
               fontSize: "0.95rem",
-              padding: "0",
-              textAlign: "left",
+              padding: "0",        // ✅ remove all side padding
+              textAlign: "left",   // ✅ force left
             }}
           >
+
+
             This 1st Semester material has been carefully prepared to help
             Jharkhand Polytechnic Diploma students prepare effectively for their
             examinations.
@@ -86,10 +88,7 @@ const Sem1 = () => {
           <li>Engineering Physics</li>
           <li>Engineering Chemistry</li>
           <li>Engineering Mathematics</li>
-          <li>
-            🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/
-            Automobile Branch)
-          </li>
+          <li>🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile Branch)</li>
           <li>🔹Basics of Electrical Power System (EE)</li>
           <li>🔹Fundamental of Computer (CSE)</li>
           <li>🔹Electronic Component & Device (ECE)</li>
@@ -108,6 +107,8 @@ const Sem1 = () => {
         होना अनिवार्य है। अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi द्वारा तैयार किया
         जाता है।
       </p>
+
+      {/* 🔻 FROM HERE DOWN: YOUR ORIGINAL PYQ CODE – UNCHANGED 🔻 */}
 
       {/* PYQ SECTION */}
       <h3 className="section-title">📝 Previous Year Question Papers</h3>
@@ -155,25 +156,25 @@ const Sem1 = () => {
           max-width: 1000px;
           margin: 25px auto;
           font-family: 'Poppins', sans-serif;
-          line-height: 1.7;
         }
 
         .hero-banner {
-          background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-          color: #212529;
-          padding: 20px 6px;
-          text-align: left;
-        }
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  color: #212529;
+  padding: 20px 6px;    /* ✅ reduced left/right padding */
+  text-align: left;    /* ✅ left aligned text */
+}
+
 
         .hero-content h2 {
           font-size: 1.7rem;
           font-weight: 700;
-          text-align: center;
+          text-align: center; 
         }
 
         .hero-content .intro {
           font-size: 0.95rem;
-          text-align: left !important;
+          text-align: left !important;  
         }
 
         .subjects-box {
@@ -209,14 +210,14 @@ const Sem1 = () => {
           background: linear-gradient(135deg, #e6f0ff, #ffffff);
           border: 2px solid #0d6efd;
           border-radius: 14px;
-          text-align: center;
+          text-alighn: center;
           padding: 16px;
           margin: 0 5px 25px;
         }
         
         .year-box h3 {
           text-align: center;
-          white-space: nowrap;
+          white-space: nowrap;     /* ✅ Force one line */
           overflow: hidden;
           text-overflow: ellipsis;
           font-size: 0.9rem;
@@ -244,12 +245,12 @@ const Sem1 = () => {
           overflow: hidden;
           text-overflow: ellipsis;
         }
+          /* ✅ Make only subject names left aligned in PYQ table */
+.year-box td:first-child {
+  text-align: left;
+  padding-left: 8px;
+}
 
-        /* Subject name column left aligned */
-        .year-box td:first-child {
-          text-align: left;
-          padding-left: 8px;
-        }
 
         th {
           background: #0d6efd;
@@ -277,61 +278,25 @@ const Sem1 = () => {
         }
 
         @media (max-width: 768px) {
-          .sem1-container {
-            margin: 15px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-          }
-
-          .hero-banner {
-            padding: 16px 10px;
-          }
-
-          .hero-content h2 {
-            font-size: 1.3rem;
-          }
-
-          .hero-content .intro {
-            font-size: 0.88rem;
-          }
-
-          .subjects-box {
-            padding: 16px;
-            margin: 8px 4px;
-          }
-
-          .note {
-            margin: 10px 6px;
-            font-size: 0.82rem;
-          }
-
-          .section-title {
-            font-size: 1.1rem;
-            margin: 22px 0 12px;
-          }
-
-          .year-box {
-            padding: 12px;
-            margin: 0 4px 18px;
-          }
-
           table {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
           }
 
           th {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             padding: 6px 4px;
           }
 
           td {
-            font-size: 0.78rem;
+            font-size: 0.85rem;
             padding: 6px 4px;
+            
+
           }
 
           .download-btn {
-            font-size: 0.78rem;
-            padding: 6px 14px;
+            font-size: 0.99rem;
+            padding: 8px 20px;
           }
         }
       `}</style>
