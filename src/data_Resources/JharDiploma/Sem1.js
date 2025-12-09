@@ -107,6 +107,12 @@ const Sem1 = () => {
         जाता है।
       </p>
 
+      {/* Small info line before PYQ */}
+      <p className="pyq-intro">
+        यहाँ आप Jharkhand Polytechnic Diploma 1st Semester के मुख्य विषयों के{" "}
+        <b>2021–2024 Previous Year Question Papers (PDF)</b> डाउनलोड कर सकते हैं।
+      </p>
+
       {/* PYQ SECTION */}
       <h3 className="section-title">📝 Previous Year Question Papers</h3>
 
@@ -118,9 +124,9 @@ const Sem1 = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Subjects</th>
-                  <th>Year</th>
-                  <th>Download</th>
+                  <th scope="col">Subjects</th>
+                  <th scope="col">Year</th>
+                  <th scope="col">Download</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,7 +140,7 @@ const Sem1 = () => {
                         onClick={(e) => e.preventDefault()}
                         className="download-btn"
                       >
-                        📥 PDF
+                        📥 Download PDF
                       </a>
                     </td>
                   </tr>
@@ -147,20 +153,22 @@ const Sem1 = () => {
 
       <style>{`
         .sem1-container {
-          background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
-          border-radius: 20px;
-          box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-          max-width: 1000px;
-          margin: 25px auto;
-          font-family: 'Poppins', sans-serif;
-        }
+  background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  margin: 20px auto 8px auto;   /* ✅ TOP margin added */
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.7;
+}
+
 
         .hero-banner {
-          background: transparent;       /* ✅ no different bg */
+          background: transparent;
           color: #212529;
           padding: 14px 4px;
           text-align: left;
-          margin-top: 60px;
+          margin-top: 20px;
         }
 
         .hero-content h2 {
@@ -196,18 +204,25 @@ const Sem1 = () => {
           font-size: 0.9rem;
         }
 
+        .pyq-intro {
+          margin: 10px 10px 0;
+          font-size: 0.85rem;
+          color: #495057;
+          text-align: center;
+        }
+
         .section-title {
           text-align: center;
           color: #0d6efd;
           font-weight: 700;
-          margin: 30px 0 16px;
+          margin: 18px 0 16px;
         }
 
         .year-box {
           background: linear-gradient(135deg, #e6f0ff, #ffffff);
           border: 2px solid #0d6efd;
           border-radius: 14px;
-          text-alighn: center;
+          text-align: center;
           padding: 16px;
           margin: 0 5px 25px;
         }
@@ -267,31 +282,70 @@ const Sem1 = () => {
         .download-btn {
           background: linear-gradient(90deg, #0d6efd, #6610f2);
           color: white;
-          padding: 5px 8px;
+          padding: 5px 10px;
           border-radius: 6px;
-          font-size: 0.75rem;
+          font-size: 0.78rem;
           text-decoration: none;
           display: inline-block;
         }
 
         @media (max-width: 768px) {
+          .sem1-container {
+            margin: 6px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+          }
+
+          .hero-banner {
+            margin-top: 10px;
+            padding: 10px 6px;
+          }
+
+          .hero-content h2 {
+            font-size: 1.3rem;
+          }
+
+          .hero-content .intro {
+            font-size: 0.88rem;
+          }
+
+          .subjects-box {
+            padding: 14px;
+            margin: 8px 4px;
+          }
+
+          .note {
+            margin: 10px 6px;
+            font-size: 0.82rem;
+          }
+
+          .section-title {
+            font-size: 1.1rem;
+            margin: 20px 0 12px;
+          }
+
+          .year-box {
+            padding: 12px;
+            margin: 0 4px 18px;
+          }
+
           table {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
           }
 
           th {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             padding: 6px 4px;
           }
 
           td {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             padding: 6px 4px;
           }
 
           .download-btn {
-            font-size: 0.99rem;
-            padding: 8px 20px;
+            font-size: 0.78rem;
+            padding: 6px 14px;
           }
         }
       `}</style>
