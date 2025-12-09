@@ -11,15 +11,13 @@ const Sem1 = () => {
 
   return (
     <div className="sem1-container">
-      {/* 🌟 HEADER / HERO SECTION – styled like Sem2 (only here changed) */}
+      {/* 🌟 HEADER / HERO SECTION */}
       <div
         className="hero-banner"
         style={{
-          background: "linear-gradient(180deg, #f8fbff 0%, #ffffff 100%)",
           color: "#212529",
           marginBottom: "10px",
         }}
-
       >
         <div className="hero-content">
           <h2
@@ -37,12 +35,10 @@ const Sem1 = () => {
             style={{
               marginBottom: "12px",
               fontSize: "0.95rem",
-              padding: "0",        // ✅ remove all side padding
-              textAlign: "left",   // ✅ force left
+              padding: "0",
+              textAlign: "left",
             }}
           >
-
-
             This 1st Semester material has been carefully prepared to help
             Jharkhand Polytechnic Diploma students prepare effectively for their
             examinations.
@@ -88,7 +84,10 @@ const Sem1 = () => {
           <li>Engineering Physics</li>
           <li>Engineering Chemistry</li>
           <li>Engineering Mathematics</li>
-          <li>🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile Branch)</li>
+          <li>
+            🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/
+            Automobile Branch)
+          </li>
           <li>🔹Basics of Electrical Power System (EE)</li>
           <li>🔹Fundamental of Computer (CSE)</li>
           <li>🔹Electronic Component & Device (ECE)</li>
@@ -107,8 +106,6 @@ const Sem1 = () => {
         होना अनिवार्य है। अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi द्वारा तैयार किया
         जाता है।
       </p>
-
-      {/* 🔻 FROM HERE DOWN: YOUR ORIGINAL PYQ CODE – UNCHANGED 🔻 */}
 
       {/* PYQ SECTION */}
       <h3 className="section-title">📝 Previous Year Question Papers</h3>
@@ -159,24 +156,22 @@ const Sem1 = () => {
         }
 
         .hero-banner {
-  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-  color: #212529;
-  padding: 14px 4px;   /* ✅ VERY SMALL left & right padding */
-  text-align: left;
-  margin-top: 60px; 
-}
-
-
+          background: transparent;       /* ✅ no different bg */
+          color: #212529;
+          padding: 14px 4px;
+          text-align: left;
+          margin-top: 60px;
+        }
 
         .hero-content h2 {
           font-size: 1.7rem;
           font-weight: 700;
-          text-align: center; 
+          text-align: center;
         }
 
         .hero-content .intro {
           font-size: 0.95rem;
-          text-align: left !important;  
+          text-align: left !important;
         }
 
         .subjects-box {
@@ -207,15 +202,6 @@ const Sem1 = () => {
           font-weight: 700;
           margin: 30px 0 16px;
         }
-          /* ✅ Hero title styled exactly like PYQ title */
-.hero-title {
-  text-align: center;
-  color: #0d6efd;
-  font-weight: 700;
-  margin: 18px 0 16px;
-  font-size: 1.6rem;
-}
-
 
         .year-box {
           background: linear-gradient(135deg, #e6f0ff, #ffffff);
@@ -228,7 +214,7 @@ const Sem1 = () => {
         
         .year-box h3 {
           text-align: center;
-          white-space: nowrap;     /* ✅ Force one line */
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           font-size: 0.9rem;
@@ -256,12 +242,12 @@ const Sem1 = () => {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-          /* ✅ Make only subject names left aligned in PYQ table */
-.year-box td:first-child {
-  text-align: left;
-  padding-left: 8px;
-}
 
+        /* Subject names left aligned */
+        .year-box td:first-child {
+          text-align: left;
+          padding-left: 8px;
+        }
 
         th {
           background: #0d6efd;
@@ -301,8 +287,6 @@ const Sem1 = () => {
           td {
             font-size: 0.85rem;
             padding: 6px 4px;
-            
-
           }
 
           .download-btn {
@@ -316,4 +300,3 @@ const Sem1 = () => {
 };
 
 export default Sem1;
-
