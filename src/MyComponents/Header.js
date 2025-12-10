@@ -1,226 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Navbar, Nav, Container, Button, Modal, Form } from "react-bootstrap";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
+import React, { useState } from "react";
+import { Accordion, Card } from "react-bootstrap";
+import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
+import { useNavigate } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function Header() {
-  const [show, setShow] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const location = useLocation(); // Track current URL
+const Resources = () => {
+    const [activeKey, setActiveKey] = useState(null);
+    const navigate = useNavigate();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const toggleAccordion = (key) => setActiveKey(activeKey === key ? null : key);
 
-  // Handle scroll background fade
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const data = [
+        {
+            key: "0",
+            title: "📘 Jharkhand Diploma Semester PYQ",
+            color: "linear-gradient(135deg, #0d6efd, #6ea8fe)",
+            subs: [
+                { id: "sub1", title: "1st Semester", type: "fullContent" },
+                { id: "sub2", title: "2nd Semester", type: "fullContent2" },
+                { id: "sub3", title: "3rd Semester", type: "fullContent3" },
+                { id: "sub4", title: "4th Semester", type: "fullContent4" },
+                { id: "sub5", title: "5th Semester", type: "fullContent5" },
+                { id: "sub6", title: "6th Semester", type: "fullContent6" },
 
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Career Advisor", path: "/Counselling" },
-    { name: "Exam Preparation", path: "/Exam_Preparation" },
-    { name: "Resources", path: "/resources" },
-    { name: "Jobs", path: "/jobs" },
-  ];
+            ],
+        },
+        {
+            key: "1",
+            title: "📚 Jharkhand Polytechnic PYQ",
+            color: "linear-gradient(135deg, #198754, #5be49b)",
+            subs: [
+                { id: "jhpoly", title: "Exam Information for 2026 ", type: "fullJHPoly" }, // no sub-card, entire content will render
+                { id: "jhpoly2", title: "Download All Paper (2021 - 2025)", type: "fullJHPoly2" },
+            ],
+        },
 
-  return (
-    <>
-      {/* Navbar */}
-      <Navbar
-        expand="lg"
-        fixed="top"//sticky="top"
-        className={`py-2 ${scrolled ? "navbar-fade" : "navbar-clear"}`}
-      >
-        <Container>
-          <Navbar.Brand
-            as={Link}
-            to="/"
-            className="fw-bold text-primary fs-4 brand-name"
-          >
-            Futurely
-          </Navbar.Brand>
 
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0 align-items-center" navbarScroll>
-              {navLinks.map((item, idx) => (
-                <Nav.Link
-                  key={idx}
-                  as={Link}
-                  to={item.path}
-                  className={`fw-semibold nav-animated-link mx-2 ${location.pathname === item.path ? "active-link" : ""
-                    }`}
-                >
-                  {item.name}
-                </Nav.Link>
-              ))}
+        {
+            key: "2",
+            title: "📚 Jharkhand D2D PYQ",
+            color: "linear-gradient(135deg, #fd7e14, #ebc285ff)",
+            subs: [
+                { id: "sub_d2d", title: "Exam Information for 2026", type: "D2dExam" },
+                { id: "sub2_d2d", title: "Download All Paper (2021 - 2025)", type: "D2dExam2" },
+            ],
+        },
+        {
+            key: "3",
+            title: "📚 Comming Soon...",
+            color: "linear-gradient(135deg, #fd3546, #eb8c85ff)",
+            subs: [
+                { id: "sub3", title: "Engineering Physics", desc: "Motion, optics, modern physics.", inner: [{ name: "Module 1", info: "Kinematics" }, { name: "Module 2", info: "Optics" }] },
+                { id: "sub4", title: "Engineering Chemistry", desc: "Electrochemistry, polymers, fuels.", inner: [{ name: "Organic", info: "Polymers" }, { name: "Physical", info: "Thermodynamics" }] },
+            ],
+        },
+    ];
 
-              {/* Explore Dropdown */}
-              <Nav.Item className="dropdown mx-2">
-                <button
-                  className="nav-link dropdown-toggle fw-semibold nav-animated-link"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Explore
-                </button>
-                <ul className="dropdown-menu shadow-sm border-0 rounded-3">
-                  <li><button className="dropdown-item" onClick={() => { }}>Colleges</button></li>
-                  <li><button className="dropdown-item" onClick={() => { }}>Schools</button></li>
-                  <li><button className="dropdown-item" onClick={() => { }}>Courses</button></li>
-                </ul>
-              </Nav.Item>
-            </Nav>
+    return (
+        <div style={{ marginTop: "5px", minHeight: "100vh", background: "rgba(255,255,255,0.85)", padding: "20px 0.1px", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
 
-            <Button
-              variant="primary"
-              className="px-4 rounded-pill fw-semibold"
-              onClick={handleShow}
-            >
-              Login / Register
-            </Button>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+            <div style={{ width: "100%", maxWidth: "550px", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: "20px", boxShadow: "0 8px 25px rgba(0,0,0,0.15)", padding: "20px" }}>
+                <h2 className="text-center mb-5" style={{ fontWeight: 800, color: "#0d6efd",}}>All Study Material in One Place</h2>
 
-      {/* ✅ Login Modal */}
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title className="fw-bold text-primary ms-auto">
-            Welcome Back!
-          </Modal.Title>
-        </Modal.Header>
+                <Accordion activeKey={activeKey}>
+                    {data.map(main => (
+                        <Card key={main.key} style={{ border: "none", marginBottom: "22px", borderRadius: "16px", overflow: "hidden", boxShadow: "0 4px 15px rgba(0,0,0,0.08)" }}>
+                            <Card.Header onClick={() => toggleAccordion(main.key)} style={{ background: main.color, color: "white", fontWeight: 600, fontSize: "1.15rem", padding: "18px 20px", display: "flex", justifyContent: "space-between", cursor: "pointer" }}>
+                                {main.title}
+                                <ChevronDown size={22} style={{ transition: "transform 0.3s", transform: activeKey === main.key ? "rotate(180deg)" : "rotate(0deg)" }} />
+                            </Card.Header>
 
-        <Modal.Body className="p-4">
-          <Form>
-            <Form.Group className="mb-3" controlId="formName">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your full name" />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="your@email.com" />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <div className="input-group">
-                <Form.Control
-                  type={showPassword ? "text" : "password"}
-                  placeholder="********"
-                />
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => setShowPassword(!showPassword)}
-                  type="button"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </Button>
-              </div>
-            </Form.Group>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <Form.Check type="checkbox" label="Remember me" />
-              <button className="btn btn-link text-decoration-none small text-primary p-0" onClick={() => { }}>
-                Forgot password?
-              </button>
+                            <Accordion.Collapse eventKey={main.key}>
+                                <Card.Body style={{ background: "#f9fafb", padding: "20px" }}>
+                                    {main.subs.map(sub => (
+                                        <div key={sub.id} role="button" tabIndex={0} onClick={() => navigate(`/resources/${main.key}/${sub.id}`, { state: { title: sub.title, type: sub.type } })} onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/resources/${main.key}/${sub.id}`, { state: { title: sub.title, type: sub.type } }) }} style={{ background: "rgba(255,255,255,0.95)", borderRadius: "14px", padding: "16px 18px", marginBottom: "16px", boxShadow: "0 3px 12px rgba(0,0,0,0.05)", border: "1px solid #e9ecef", display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+                                            <h5 style={{ color: "#0d6efd", fontWeight: 600, margin: 0 }}>{sub.title}</h5>
+                                            <ChevronRight size={20} />
+                                        </div>
+                                    ))}
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    ))}
+                </Accordion>
             </div>
+        </div>
+    );
+};
 
-            <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3">
-              Sign In
-            </Button>
-
-            <div className="text-center text-muted mb-3">or continue with</div>
-
-            <div className="d-flex gap-2">
-              <Button variant="outline-danger" className="w-50 rounded-pill">
-                <FaGoogle className="me-2" /> Google
-              </Button>
-              <Button variant="outline-primary" className="w-50 rounded-pill">
-                <FaFacebook className="me-2" /> Facebook
-              </Button>
-            </div>
-
-            <div className="text-center mt-4">
-              <small>
-                Don’t have an account?{" "}
-                <button className="btn btn-link text-decoration-none fw-semibold text-primary p-0" onClick={() => { }}>
-                  Sign up
-                </button>
-              </small>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
-      {/* ✨ Styles Section */}
-      <style>{`
-        /* Scroll Fade Navbar */
-        .navbar-clear {
-          background-color: rgba(255, 255, 255, 0.98);
-          transition: all 0.2s ease-in-out;
-        }
-        .navbar-fade {
-          background-color: #e9f3ff !important;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          transition: all 0.4s ease-in-out;
-        }
-
-        /* Hover animation for nav links */
-        .nav-animated-link {
-          position: relative;
-          color: #212529 !important;
-          text-decoration: none;
-          transition: color 0.2s ease-in-out;
-        }
-
-        .nav-animated-link::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          bottom: -4px;
-          width: 0;
-          height: 2px;
-          background-color: #0d6efd;
-          transition: width 0.3s ease;
-        }
-
-        .nav-animated-link:hover {
-          color: #0d6efd !important;
-        }
-
-        .nav-animated-link:hover::after {
-          width: 100%;
-        }
-
-        /* Active link style */
-        .active-link {
-          color: #0d6efd !important;
-          font-weight: 600;
-        }
-        .active-link::after {
-          width: 100%;
-        }
-
-        /* Dropdown hover look */
-        .dropdown-menu a:hover {
-          background-color: #f0f4ff;
-          color: #0d6efd;
-        }
-
-        .brand-name {
-          letter-spacing: 0.5px;
-        }
-
-        .navbar {
-          transition: all 0.4s ease-in-out;
-        }
-      `}</style>
-    </>
-  );
-}
+export default Resources;
