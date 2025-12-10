@@ -103,7 +103,32 @@ const Sem2 = () => {
                 ))}
             </div>
         </div>
+{/* Footer: last updated + disclaimer */}
+      <footer>
+        <p
+          style={{
+            fontSize: "0.75rem",
+            color: "#777",
+            textAlign: "center",
+            marginTop: "10px",
+          }}
+        >
+          Last Updated: December 2025
+        </p>
+        <p
+          style={{
+            fontSize: "0.7rem",
+            color: "#999",
+            textAlign: "center",
+            marginTop: "2px",
+          }}
+        >
+          All information and PDFs are for educational purposes only and based on previous year data. We do not claim official ownership.
+
+        </p>
+      </footer>
     );
 };
 
 export default Sem2;
+
