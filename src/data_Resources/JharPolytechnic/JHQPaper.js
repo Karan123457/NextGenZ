@@ -104,8 +104,8 @@ const JHQPaper = () => {
                   (e.currentTarget.style.background = "#e8f0ff")
                 }
                 onMouseLeave={(e) =>
-                (e.currentTarget.style.background =
-                  i % 2 === 0 ? "#f8f9fa" : "#ffffff")
+                  (e.currentTarget.style.background =
+                    i % 2 === 0 ? "#f8f9fa" : "#ffffff")
                 }
               >
                 <td
@@ -132,20 +132,31 @@ const JHQPaper = () => {
                     padding: "10px",
                   }}
                 >
-                  <a href="/" onClick={(e) => e.preventDefault()}
+                  {/* ✅ NEW GRADIENT DOWNLOAD BUTTON */}
+                  <a
+                    href="/"
+                    onClick={(e) => e.preventDefault()}
                     style={{
-                      color: "#0d6efd",
+                      background: "linear-gradient(90deg, #0d6efd, #6610f2)",
+                      color: "#fff",
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "0.78rem",
                       textDecoration: "none",
+                      display: "inline-block",
                       fontWeight: 600,
+                      transition: "all 0.2s ease",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.target.style.textDecoration = "underline")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.textDecoration = "none")
-                    }
+                    onMouseEnter={(e) => {
+                      e.target.style.opacity = "0.9";
+                      e.target.style.transform = "scale(1.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.opacity = "1";
+                      e.target.style.transform = "scale(1)";
+                    }}
                   >
-                    Download [PDF]
+                    📥 Download PDF
                   </a>
                 </td>
               </tr>
