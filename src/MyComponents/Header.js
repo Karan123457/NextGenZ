@@ -24,6 +24,7 @@ export default function Header() {
     { name: "Career Advisor", path: "/Counselling" },
     { name: "Exam Preparation", path: "/Exam_Preparation" },
     { name: "Resources", path: "/resources" },
+    { name: "Jobs", path: "/jobs" },
   ];
 
   return (
@@ -40,7 +41,7 @@ export default function Header() {
             to="/"
             className="fw-bold text-primary fs-4 brand-name"
           >
-           Futurely
+            Futurely
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="navbarScroll" />
@@ -223,4 +224,3 @@ export default function Header() {
     </>
   );
 }
-
