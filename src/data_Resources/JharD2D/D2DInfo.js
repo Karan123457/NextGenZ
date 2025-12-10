@@ -23,7 +23,7 @@ const D2DExam = () => {
           marginBottom: "14px",
           fontWeight: 700,
           textAlign: "center",
-          fontSize: "1.3rem",
+          fontSize: "1.5rem",
           lineHeight: "1.3",
         }}
       >
@@ -267,3 +267,4 @@ const D2DExam = () => {
 };
 
 export default D2DExam;
+
