@@ -19,7 +19,7 @@ const JHPolytechnic = () => {
       <h2
   style={{
     color: "#0d6efd",
-    marginTop: "35px",     // ✅ Added top margin
+    marginTop: "40px",     // ✅ Added top margin
     marginBottom: "14px",
     fontWeight: 700,
     textAlign: "center",
@@ -341,3 +341,4 @@ const JHPolytechnic = () => {
 };
 
 export default JHPolytechnic;
+
