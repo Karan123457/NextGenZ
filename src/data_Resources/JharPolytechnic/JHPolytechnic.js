@@ -23,6 +23,7 @@ const JHPolytechnic = () => {
     marginBottom: "14px",
     fontWeight: 700,
     textAlign: "center",
+    fontSize: "1.3rem",
   }}
 >
   Jharkhand Polytechnic Exam Information JCECEB(PECE)
