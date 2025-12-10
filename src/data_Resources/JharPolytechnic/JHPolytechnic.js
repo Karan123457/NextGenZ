@@ -17,15 +17,17 @@ const JHPolytechnic = () => {
     >
       {/* 🔹 Header */}
       <h2
-        style={{
-          color: "#0d6efd",
-          marginBottom: "14px",
-          fontWeight: 700,
-          textAlign: "center",
-        }}
-      >
-        Jharkhand Polytechnic Exam Information JCECEB(PECE)
-      </h2>
+  style={{
+    color: "#0d6efd",
+    marginTop: "35px",     // ✅ Added top margin
+    marginBottom: "14px",
+    fontWeight: 700,
+    textAlign: "center",
+  }}
+>
+  Jharkhand Polytechnic Exam Information JCECEB(PECE)
+</h2>
+
 
       {/* 🔸 Intro */}
       <p
