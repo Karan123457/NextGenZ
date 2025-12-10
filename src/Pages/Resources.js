@@ -57,8 +57,8 @@ const Resources = () => {
     ];
 
     return (
-        <div style={{ marginTop:"20px", minHeight: "100vh", background: "linear-gradient(120deg, #dee2ff, #e2efff)", padding: "50px 20px", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
-            <div style={{ width: "100%", maxWidth: "950px", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: "20px", boxShadow: "0 8px 25px rgba(0,0,0,0.15)", padding: "40px" }}>
+        <div style={{ marginTop:"50px", minHeight: "100vh", background: "rgba(255,255,255,0.85)", padding: "50px 0.1px", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+            <div style={{ width: "100%", maxWidth: "550px", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", borderRadius: "20px", padding: "20px" }}>
                 <h2 className="text-center mb-5" style={{ fontWeight: 700, color: "#0d6efd" }}>All Study Material in One Place</h2>
 
                 <Accordion activeKey={activeKey}>
@@ -88,5 +88,3 @@ const Resources = () => {
 };
 
 export default Resources;
-
-
