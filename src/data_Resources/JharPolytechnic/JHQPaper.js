@@ -6,7 +6,7 @@ const JHQPaper = () => {
       style={{
         background: "linear-gradient(180deg, #f8fbff 0%, #ffffff 100%)",
         borderRadius: "20px",
-        padding: "35px",
+        padding: "1px",
         boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
         color: "#212529",
         fontFamily: "'Segoe UI', sans-serif",
@@ -22,15 +22,16 @@ const JHQPaper = () => {
           marginBottom: "14px",
           fontWeight: 700,
           textAlign: "center",
+          marginTop: "35px",
         }}
       >
-        📘 Jharkhand Polytechnic Past Year Papers (PECE)
+        Jharkhand Polytechnic Past Year Papers (PECE)
       </h2>
 
       <p
         style={{
-          textAlign: "center",
-          fontSize: "1.05rem",
+          textAlign: "left",
+          fontSize: "0.95rem",
           color: "#495057",
           marginBottom: "25px",
         }}
@@ -45,7 +46,7 @@ const JHQPaper = () => {
           background: "linear-gradient(135deg, #e6f0ff, #ffffff)",
           border: "2px solid #0d6efd",
           borderRadius: "20px",
-          padding: "25px",
+          padding: "15px",
           boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
           marginTop: "25px",
         }}
@@ -56,10 +57,10 @@ const JHQPaper = () => {
             color: "#0d6efd",
             fontWeight: 700,
             marginBottom: "20px",
-            fontSize: "1.4rem",
+            fontSize: "1.1rem",
           }}
         >
-          📝 Jharkhand Polytechnic Question Papers
+          Jharkhand Polytechnic Question Papers
         </h3>
 
         <table
@@ -156,9 +157,9 @@ const JHQPaper = () => {
       <p
         style={{
           marginTop: "25px",
-          fontSize: "1rem",
+          fontSize: "0.95rem",
           color: "#495057",
-          textAlign: "center",
+          textAlign: "left",
         }}
       >
         सभी Jharkhand Polytechnic छात्रों को सलाह दी जाती है कि वे इन question papers को अच्छे
