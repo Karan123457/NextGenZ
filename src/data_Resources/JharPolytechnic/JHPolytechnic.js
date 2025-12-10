@@ -6,7 +6,7 @@ const JHPolytechnic = () => {
       style={{
         background: "linear-gradient(180deg, #f8fbff 0%, #ffffff 100%)",
         borderRadius: "20px",
-        padding: "35px",
+        padding: "1px",
         boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
         color: "#212529",
         fontFamily: "'Segoe UI', sans-serif",
@@ -30,8 +30,8 @@ const JHPolytechnic = () => {
       {/* 🔸 Intro */}
       <p
         style={{
-          textAlign: "center",
-          fontSize: "1.05rem",
+          textAlign: "left",
+          fontSize: "0.95rem",
           color: "#495057",
           marginBottom: "25px",
         }}
@@ -56,25 +56,25 @@ const JHPolytechnic = () => {
             color: "#0d6efd",
             marginBottom: "15px",
             fontWeight: 700,
-            fontSize: "1.3rem",
+            fontSize: "1.1rem",
           }}
         >
-          📘 Exam Highlights:
+          Exam Highlights:
         </h3>
         <ul
           style={{
             margin: 0,
-            paddingLeft: "22px",
-            fontSize: "1rem",
+            paddingLeft: "0.1px",
+            fontSize: "0.80rem",
             color: "#333",
           }}
         >
-          <li>📅 <b>Exam Name:</b> Jharkhand Polytechnic Entrance Exam (P.E.C.E.)</li>
-          <li>🏛️ <b>Conducting Body:</b> Jharkhand Combined Entrance Competitive Examination Board (JCECEB)</li>
-          <li>🧭 <b>Exam Level:</b> State-Level Entrance Exam</li>
-          <li>📚 <b>Courses Offered:</b> Diploma in Engineering & Technology</li>
-          <li>🕘 <b>Exam Duration:</b> 2 Hours 30 Minutes</li>
-          <li>📝 <b>Exam Mode:</b> Offline (OMR Based)</li>
+          <li><b>Exam Name:</b> Jharkhand Polytechnic Entrance Exam (P.E.C.E.)</li>
+          <li><b>Conducting Body:</b> Jharkhand Combined Entrance Competitive Examination Board (JCECEB)</li>
+          <li><b>Exam Level:</b> State-Level Entrance Exam</li>
+          <li><b>Courses Offered:</b> Diploma in Engineering & Technology</li>
+          <li><b>Exam Duration:</b> 2 Hours 30 Minutes 🕘</li>
+          <li><b>Exam Mode:</b> Offline (OMR Based)</li>
         </ul>
       </div>
 
@@ -94,16 +94,16 @@ const JHPolytechnic = () => {
             color: "#ffb300",
             marginBottom: "15px",
             fontWeight: 700,
-            fontSize: "1.3rem",
+            fontSize: "1.1rem",
           }}
         >
-          🧾 Eligibility Criteria:
+          Eligibility Criteria:
         </h3>
-        <ul style={{ paddingLeft: "22px", color: "#333" }}>
-          <li>📖 Candidate must have passed <b>10th Class</b> or equivalent from a recognized board.</li>
-          <li>🏠 Candidate must be a <b>domicile of Jharkhand</b>.</li>
-          <li>🎯 Minimum Marks: 35% in Class 10th.</li>
-          <li>🧒 Age Limit: Minimum 17 years for Mining Engineering, no age limit for other branches.</li>
+        <ul style={{ paddingLeft: "0.1px", color: "#333",fontSize: "0.80rem" }}>
+          <li>Candidate must have passed <b>10th Class</b> or equivalent from a recognized board.</li>
+          <li>Candidate must be a <b>domicile of Jharkhand</b>.</li>
+          <li>Minimum Marks: 35% in Class 10th.</li>
+          <li>Age Limit: Minimum 17 years for Mining Engineering, no age limit for other branches.</li>
         </ul>
       </div>
 
@@ -123,12 +123,12 @@ const JHPolytechnic = () => {
             color: "#198754",
             marginBottom: "15px",
             fontWeight: 700,
-            fontSize: "1.3rem",
+            fontSize: "1.1rem",
           }}
         >
-          🧮 Exam Pattern (Single Paper – 3 Sections)
+          Exam Pattern (Single Paper – 3 Sections)
         </h3>
-        <p style={{ color: "#333", marginBottom: "15px" }}>
+        <p style={{ color: "#333", marginBottom: "15px",fontSize: "0.80rem",paddingLeft: "1px" }}>
           Jharkhand Polytechnic Exam में केवल <b>एक ही question paper</b> होता है जिसमें तीन sections होते हैं – 
           <b>Physics, Chemistry, और Mathematics</b>.  
           हर section में 50 questions होते हैं, यानी कुल <b>150 objective-type questions</b>.
@@ -139,7 +139,7 @@ const JHPolytechnic = () => {
             width: "100%",
             borderCollapse: "collapse",
             textAlign: "center",
-            fontSize: "1rem",
+            fontSize: "0.80rem",
           }}
         >
           <thead style={{ background: "#198754", color: "#fff" }}>
@@ -173,8 +173,8 @@ const JHPolytechnic = () => {
           </tbody>
         </table>
 
-        <p style={{ marginTop: "15px", color: "#555" }}>
-          ⚠️ <b>Marking Scheme:</b>  
+        <p style={{ marginTop: "15px", color: "#555",fontSize: "0.80rem",paddingLeft: "0.5px"  }}>
+          <b>Marking Scheme:</b>  
           ✅ Correct Answer: +1 Mark  
           ❌ Wrong Answer: –0.25 Mark  
           🔸 Unattempted Question: 0 Mark
@@ -184,13 +184,13 @@ const JHPolytechnic = () => {
       {/* 🔹 Final Note */}
       <p
         style={{
-          textAlign: "center",
-          fontSize: "1.05rem",
+          textAlign: "left",
+          fontSize: "0.95rem",
           color: "#495057",
           marginTop: "20px",
         }}
       >
-        💡 Jharkhand Polytechnic Exam हर साल <b>May–June</b> में होती है। यह एक combined paper होता है जो 
+        Jharkhand Polytechnic Exam हर साल <b>May–June</b> में होती है। यह एक combined paper होता है जो 
         Jharkhand के Polytechnic Colleges में admission का gateway है।
       </p>
     </div>
