@@ -24,7 +24,7 @@ const JHPolytechnic = () => {
           textAlign: "center",
         }}
       >
-        🎓 Jharkhand Polytechnic Exam Information JCECEB(PECE)
+        Jharkhand Polytechnic Exam Information JCECEB(PECE)
       </h2>
 
       {/* 🔸 Intro */}
@@ -309,6 +309,30 @@ const JHPolytechnic = () => {
         combined paper होता है जो Jharkhand के Polytechnic Colleges में admission
         का gateway है।
       </p>
+
+      {/* ✅ Last Updated (Only New Line Added) */}
+      <p
+        style={{
+          fontSize: "0.75rem",
+          color: "#777",
+          textAlign: "center",
+          marginTop: "10px",
+        }}
+      >
+        Last Updated: December 2025
+      </p>
+
+      <p
+  style={{
+    fontSize: "0.7rem",
+    color: "#999",
+    textAlign: "center",
+    marginTop: "2px",
+  }}
+>
+  Disclaimer: Information is based on previous year data. Always verify from the official JCECEB website.
+</p>
+
     </div>
   );
 };
