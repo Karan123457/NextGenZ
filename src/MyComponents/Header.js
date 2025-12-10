@@ -40,7 +40,7 @@ export default function Header() {
             to="/"
             className="fw-bold text-primary fs-4 brand-name"
           >
-            NextGenZ
+           Futurely
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="navbarScroll" />
@@ -223,3 +223,4 @@ export default function Header() {
     </>
   );
 }
+
