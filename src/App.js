@@ -1,35 +1,37 @@
-import React, { useEffect, useRef } from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './MyComponents/Header';
-import Footer from './MyComponents/Footer';
-import Home from './Pages/Home';
-import Counselling from './Pages/Counselling';
-import Resources from './Pages/Resources';
-import CarrerAdvisor from './Pages/Carrer_Advisor';
-import ExamPreparation from './Pages/Exam_Preparation';
+import React, { useEffect, useRef } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./MyComponents/Header";
+import Footer from "./MyComponents/Footer";
+import Home from "./Pages/Home";
+import Counselling from "./Pages/Counselling";
+import Resources from "./Pages/Resources";
+import CarrerAdvisor from "./Pages/Carrer_Advisor";
+import ExamPreparation from "./Pages/Exam_Preparation";
+import Jobs from "./Pages/Jobs";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import RefundPolicy from "./Pages/RefundPolicy";
 
 import DetailsPage from "./data_Exam/Jharkhand/D2D/DetailsPage";
-import ResourcesDetail from './Pages/ResourcesDetail';
+import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/MainPage";
+import ResourcesDetail from "./Pages/ResourcesDetail";
 
+import { Routes, Route, useLocation } from "react-router-dom";
 
-import { Routes, Route, useLocation } from 'react-router-dom';
-
-/* ✅ ScrollToTopWithMemory Component */
+/* ScrollToTopWithMemory component unchanged */
 function ScrollToTopWithMemory() {
   const { pathname } = useLocation();
   const scrollPositions = useRef({});
 
   useEffect(() => {
-    // Save current scroll position before leaving
     const handleBeforeUnload = () => {
       scrollPositions.current[pathname] = window.scrollY;
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    const currentPath = pathname; // Store pathname in a variable for cleanup
-    const positions = scrollPositions.current; // copy ref value for cleanup
-    // Save on route change
+    const currentPath = pathname;
+    const positions = scrollPositions.current;
     return () => {
       positions[currentPath] = window.scrollY;
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -39,21 +41,18 @@ function ScrollToTopWithMemory() {
   useEffect(() => {
     const savedY = scrollPositions.current[pathname];
     if (savedY !== undefined) {
-      // 👇 Restore old scroll position (Back/Forward)
       window.scrollTo({ top: savedY, behavior: "auto" });
     } else {
-      // 👇 Fresh navigation — scroll instantly to top
       window.scrollTo({ top: 0, behavior: "auto" });
     }
   }, [pathname]);
 
   return null;
 }
-                       
+
 function App() {
   return (
     <>
-
       <ScrollToTopWithMemory />
       <Header />
       <div className="container mt-4">
@@ -64,8 +63,16 @@ function App() {
           <Route path="/Exam_Preparation" element={<ExamPreparation />} />
           <Route path="/Counselling" element={<Counselling />} />
           <Route path="/Carrer_Advisor" element={<CarrerAdvisor />} />
-         
-          <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} /> {/* Route */}
+          <Route path="/jobs" element={<Jobs />} />
+
+          {/* Legal / SEO pages (static) */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+
+          {/* Put specific/static routes before param routes */}
+          <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<PolytechnicMain />} />
+          <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
         </Routes>
       </div>
       <Footer />
