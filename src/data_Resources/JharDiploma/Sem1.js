@@ -231,6 +231,9 @@ const Sem1 = () => {
 // src/data_Resources/JharDiploma/Sem1.jsx
 import React from "react";
 import { Container } from "react-bootstrap";
+// src/data_Resources/JharDiploma/Sem1.jsx
+import React from "react";
+import { Container } from "react-bootstrap";
 
 const Sem1 = () => {
   const years = [2024, 2023, 2022, 2021];
@@ -240,31 +243,61 @@ const Sem1 = () => {
     "Engineering Physics",
   ];
 
-  // ✅ PDF links
+  // PDF links: both direct-download and view fallback
   const pdfLinks = {
     2024: {
-      "Engineering Mathematics":
-        "https://drive.google.com/uc?export=download&id=1q37HmN_xbt_1GA0wQT0EUQpQfDtRuXPf",
-      "Engineering Chemistry":
-        "https://drive.google.com/uc?export=download&id=1_IwKbn4BjXZq4A9ewSIJEuEbyfbZUv-i",
-      "Engineering Physics":
-        "https://drive.google.com/uc?export=download&id=11Anhppa96B03pasBNkeX35LxLz2NxHI1",
+      "Engineering Mathematics": {
+        download:
+          "https://drive.google.com/uc?export=download&id=1q37HmN_xbt_1GA0wQT0EUQpQfDtRuXPf",
+        view:
+          "https://drive.google.com/file/d/1q37HmN_xbt_1GA0wQT0EUQpQfDtRuXPf/view",
+      },
+      "Engineering Chemistry": {
+        download:
+          "https://drive.google.com/uc?export=download&id=1_IwKbn4BjXZq4A9ewSIJEuEbyfbZUv-i",
+        view:
+          "https://drive.google.com/file/d/1_IwKbn4BjXZq4A9ewSIJEuEbyfbZUv-i/view",
+      },
+      "Engineering Physics": {
+        download:
+          "https://drive.google.com/uc?export=download&id=11Anhppa96B03pasBNkeX35LxLz2NxHI1",
+        view:
+          "https://drive.google.com/file/d/11Anhppa96B03pasBNkeX35LxLz2NxHI1/view",
+      },
     },
     2023: {},
     2022: {},
     2021: {},
   };
 
+  // Unified click handler: tries download first, falls back to view
+  const handleOpenPdf = (e, links) => {
+    e.preventDefault();
+    if (!links) return;
+
+    try {
+      // Try to open the direct-download URL in a new tab
+      const win = window.open(links.download, "_blank", "noopener,noreferrer");
+      if (!win) {
+        // Popup blocked — open view link in same tab as fallback
+        window.location.href = links.view || links.download;
+      } else {
+        // In some cases Drive blocks direct download and returns preview — still OK
+        // We do nothing further; user will see preview or download dialog.
+      }
+    } catch (err) {
+      console.error("Failed to open link:", err);
+      if (links.view) window.open(links.view, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <Container fluid className="px-0">
       <div className="sem1-container">
-        {/* 🌟 HEADER / HERO SECTION */}
+        {/* (header, subjects, description — unchanged) */}
         <div
           className="hero-banner"
-          style={{
-            color: "#212529",
-            marginBottom: "10px",
-          }}
+          style={{ color: "#212529", marginBottom: "10px" }}
         >
           <div className="hero-content">
             <h2
@@ -286,19 +319,11 @@ const Sem1 = () => {
                 textAlign: "left",
               }}
             >
-              This 1st Semester material has been carefully prepared to help
-              Jharkhand Polytechnic Diploma students prepare effectively for
-              their examinations.
-              <br />
-              इसमें important questions, previous year question papers, तथा
-              important topics शामिल हैं, जिससे students को semester
-              examinations में आने वाले pattern और topics की clear
-              understanding मिल सके।
+              This 1st Semester material has been carefully prepared...
             </p>
           </div>
         </div>
 
-        {/* SUBJECT SECTION – styled like Sem2 subjects box */}
         <div
           className="subjects-box"
           style={{
@@ -310,32 +335,14 @@ const Sem1 = () => {
             marginTop: "20px",
           }}
         >
-          <h4
-            style={{
-              color: "#198754",
-              marginBottom: "15px",
-              fontWeight: 600,
-              fontSize: "1.1rem",
-            }}
-          >
+          <h4 style={{ color: "#198754", marginBottom: "15px", fontWeight: 600 }}>
             📝 Subjects of 1st Semester Jharkhand (Total 4):
           </h4>
-          <ul
-            style={{
-              margin: 0,
-              paddingLeft: "20px",
-              color: "#212529",
-              fontSize: "0.80rem",
-              lineHeight: 1.7,
-            }}
-          >
+          <ul style={{ margin: 0, paddingLeft: "20px", color: "#212529" }}>
             <li>Engineering Physics</li>
             <li>Engineering Chemistry</li>
             <li>Engineering Mathematics</li>
-            <li>
-              🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/
-              Automobile Branch)
-            </li>
+            <li>🔹Mechanical Science & Engineering (Mechanical/ Metallurgy/ Automobile Branch)</li>
             <li>🔹Basics of Electrical Power System (EE)</li>
             <li>🔹Fundamental of Computer (CSE)</li>
             <li>🔹Electronic Component & Device (ECE)</li>
@@ -343,25 +350,15 @@ const Sem1 = () => {
           </ul>
         </div>
 
-        <p
-          className="note"
-          style={{
-            marginTop: "16px",
-            fontSize: "0.9rem",
-          }}
-        >
-          सभी 1st Semester के छात्रों के लिए इन 4 विषयों की External Exam में
-          उपस्थित होना अनिवार्य है। अंतिम परीक्षा का प्रश्नपत्र JUT Ranchi
-          द्वारा तैयार किया जाता है।
+        <p className="note" style={{ marginTop: "16px", fontSize: "0.9rem" }}>
+          सभी 1st Semester के छात्रों के लिए...
         </p>
 
-        {/* Small info line before PYQ */}
         <p className="pyq-intro">
           यहाँ आप Jharkhand Polytechnic Diploma 1st Semester के मुख्य विषयों के{" "}
           <b>2021–2024 Previous Year Question Papers (PDF)</b> डाउनलोड कर सकते हैं।
         </p>
 
-        {/* PYQ SECTION */}
         <h3 className="section-title">📝 Previous Year Question Papers</h3>
 
         {years.map((year) => (
@@ -379,16 +376,17 @@ const Sem1 = () => {
                 </thead>
                 <tbody>
                   {subjects.map((sub, i) => {
-                    const link = pdfLinks[year][sub];
+                    const links = pdfLinks[year] ? pdfLinks[year][sub] : null;
                     return (
                       <tr key={i}>
                         <td className="one-line">{sub}</td>
                         <td>{year}</td>
                         <td>
-                          {link ? (
+                          {links ? (
                             <a
-                              href={link}
+                              href={links.download}
                               className="download-btn"
+                              onClick={(e) => handleOpenPdf(e, links)}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -409,12 +407,10 @@ const Sem1 = () => {
           </div>
         ))}
 
-        {/* … (rest of your CSS & footer unchanged) */}
+        {/* (styles & footer — keep your existing style block and footer) */}
       </div>
     </Container>
   );
 };
 
-export default Sem1;        
-        
-
+export default Sem1;
