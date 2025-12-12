@@ -216,26 +216,18 @@ const Sem1 = () => {
         .section-title {
           text-align: center;
           color: #0d6efd;
-          font-weight: 700;
-          margin: 18px 0 16px;
-        }
-
-        .year-box {
-          background: linear-gradient(135deg, #e6f0ff, #ffffff);
-          border: 2px solid #0d6efd;
-          border-radius: 14px;
-          text-align: center;
-          padding: 16px;
-          margin: 0 5px 25px;
-        }
 // src/data_Resources/JharDiploma/Sem1.jsx
-import React from "react";
-import { Container } from "react-bootstrap";
-// src/data_Resources/JharDiploma/Sem1.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 
 const Sem1 = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // mark client only after mount — safe for SSR
+    setIsClient(true);
+  }, []);
+
   const years = [2024, 2023, 2022, 2021];
   const subjects = [
     "Engineering Mathematics",
@@ -243,7 +235,7 @@ const Sem1 = () => {
     "Engineering Physics",
   ];
 
-  // PDF links: both direct-download and view fallback
+  // Provide both view and direct-download forms but always include a view link for SSR.
   const pdfLinks = {
     2024: {
       "Engineering Mathematics": {
@@ -270,75 +262,50 @@ const Sem1 = () => {
     2021: {},
   };
 
-  // Unified click handler: tries download first, falls back to view
   const handleOpenPdf = (e, links) => {
+    // do not call during SSR; only when isClient true and user clicked
     e.preventDefault();
-    if (!links) return;
+    if (!isClient || !links) {
+      // fallback: navigate to view link
+      if (links && links.view) {
+        window.location.href = links.view;
+      }
+      return;
+    }
 
     try {
-      // Try to open the direct-download URL in a new tab
-      const win = window.open(links.download, "_blank", "noopener,noreferrer");
+      const win = window.open(links.download || links.view, "_blank", "noopener,noreferrer");
       if (!win) {
-        // Popup blocked — open view link in same tab as fallback
+        // popup blocked; open in same tab as fallback
         window.location.href = links.view || links.download;
-      } else {
-        // In some cases Drive blocks direct download and returns preview — still OK
-        // We do nothing further; user will see preview or download dialog.
       }
     } catch (err) {
-      console.error("Failed to open link:", err);
-      if (links.view) window.open(links.view, "_blank", "noopener,noreferrer");
+      console.error("Error opening PDF link:", err);
+      if (links && links.view) window.open(links.view, "_blank", "noopener,noreferrer");
     }
   };
 
   return (
     <Container fluid className="px-0">
       <div className="sem1-container">
-        {/* (header, subjects, description — unchanged) */}
-        <div
-          className="hero-banner"
-          style={{ color: "#212529", marginBottom: "10px" }}
-        >
+        {/* header/intro unchanged */}
+        <div className="hero-banner" style={{ color: "#212529", marginBottom: "10px" }}>
           <div className="hero-content">
-            <h2
-              style={{
-                color: "#0d6efd",
-                marginBottom: "14px",
-                fontWeight: 700,
-                fontSize: "1.5rem",
-              }}
-            >
+            <h2 style={{ color: "#0d6efd", marginBottom: "14px", fontWeight: 700, fontSize: "1.5rem" }}>
               Diploma 1st Semester Jharkhand (JUT Ranchi)
             </h2>
-            <p
-              className="intro"
-              style={{
-                marginBottom: "12px",
-                fontSize: "0.95rem",
-                padding: "0",
-                textAlign: "left",
-              }}
-            >
-              This 1st Semester material has been carefully prepared...
+            <p className="intro" style={{ marginBottom: "12px", fontSize: "0.95rem", padding: "0", textAlign: "left" }}>
+              This 1st Semester material has been carefully prepared to help students...
             </p>
           </div>
         </div>
 
-        <div
-          className="subjects-box"
-          style={{
-            background: "linear-gradient(135deg, #e6ffed, #ffffff)",
-            border: "2px solid #198754",
-            borderRadius: "16px",
-            padding: "25px",
-            boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-            marginTop: "20px",
-          }}
-        >
+        {/* subjects box */}
+        <div className="subjects-box" style={{ background: "linear-gradient(135deg, #e6ffed, #ffffff)", border: "2px solid #198754", borderRadius: "16px", padding: "25px", boxShadow: "0 6px 18px rgba(0,0,0,0.12)", marginTop: "20px" }}>
           <h4 style={{ color: "#198754", marginBottom: "15px", fontWeight: 600 }}>
             📝 Subjects of 1st Semester Jharkhand (Total 4):
           </h4>
-          <ul style={{ margin: 0, paddingLeft: "20px", color: "#212529" }}>
+          <ul style={{ margin: 0, paddingLeft: "20px", color: "#212529", fontSize: "0.80rem", lineHeight: 1.7 }}>
             <li>Engineering Physics</li>
             <li>Engineering Chemistry</li>
             <li>Engineering Mathematics</li>
@@ -351,12 +318,11 @@ const Sem1 = () => {
         </div>
 
         <p className="note" style={{ marginTop: "16px", fontSize: "0.9rem" }}>
-          सभी 1st Semester के छात्रों के लिए...
+          सभी 1st Semester के छात्रों के लिए इन 4 विषयों की External Exam में उपस्थित होना अनिवार्य है।
         </p>
 
-        <p className="pyq-intro">
-          यहाँ आप Jharkhand Polytechnic Diploma 1st Semester के मुख्य विषयों के{" "}
-          <b>2021–2024 Previous Year Question Papers (PDF)</b> डाउनलोड कर सकते हैं।
+        <p className="pyq-intro" style={{ margin: "10px 10px 0", fontSize: "0.85rem", color: "#495057", textAlign: "center" }}>
+          यहाँ आप Jharkhand Polytechnic Diploma 1st Semester के मुख्य विषयों के <b>2021–2024 Previous Year Question Papers (PDF)</b> डाउनलोड कर सकते हैं।
         </p>
 
         <h3 className="section-title">📝 Previous Year Question Papers</h3>
@@ -376,15 +342,18 @@ const Sem1 = () => {
                 </thead>
                 <tbody>
                   {subjects.map((sub, i) => {
-                    const links = pdfLinks[year] ? pdfLinks[year][sub] : null;
+                    const yearObj = pdfLinks[year] || {};
+                    const links = yearObj[sub] || null;
+
                     return (
                       <tr key={i}>
-                        <td className="one-line">{sub}</td>
-                        <td>{year}</td>
-                        <td>
+                        <td className="one-line" style={{ textAlign: "left", paddingLeft: "8px" }}>{sub}</td>
+                        <td style={{ textAlign: "center" }}>{year}</td>
+                        <td style={{ textAlign: "center" }}>
                           {links ? (
+                            // SSR fallback: anchor href is always set to the view link so pre-rendered HTML has a valid URL.
                             <a
-                              href={links.download}
+                              href={links.view || links.download}
                               className="download-btn"
                               onClick={(e) => handleOpenPdf(e, links)}
                               target="_blank"
@@ -393,9 +362,7 @@ const Sem1 = () => {
                               📥 Download PDF
                             </a>
                           ) : (
-                            <span style={{ color: "#777", fontSize: "0.85rem" }}>
-                              Not Available
-                            </span>
+                            <span style={{ color: "#777", fontSize: "0.85rem" }}>Not Available</span>
                           )}
                         </td>
                       </tr>
@@ -407,7 +374,7 @@ const Sem1 = () => {
           </div>
         ))}
 
-        {/* (styles & footer — keep your existing style block and footer) */}
+        {/* keep your existing style block & footer below (omit here for brevity) */}
       </div>
     </Container>
   );
