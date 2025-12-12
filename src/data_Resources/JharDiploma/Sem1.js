@@ -118,40 +118,68 @@ Automobile Branch)
 {/* PYQ SECTION */}    
 <h3 className="section-title">📝 Previous Year Question Papers</h3>    
 
-{years.map((year) => (    
-  <div key={year} className="year-box">    
-    <h3>{year} Question Paper – 1st Semester</h3>    
+{years.map((year) => (
+  <div key={year} className="year-box">
+    <h3>{year} Question Paper – 1st Semester</h3>
 
-    <div className="table-no-scroll">    
-      <table>    
-        <thead>    
-          <tr>    
-            <th scope="col">Subjects</th>    
-            <th scope="col">Year</th>    
-            <th scope="col">Download</th>    
-          </tr>    
-        </thead>    
-        <tbody>    
-          {subjects.map((sub, i) => (    
-            <tr key={i}>    
-              <td className="one-line">{sub}</td>    
-              <td>{year}</td>    
-              <td>    
-                <a    
-                  href="/"    
-                  onClick={(e) => e.preventDefault()}    
-                  className="download-btn"    
-                >    
-                  📥 Download PDF    
-                </a>    
-              </td>    
-            </tr>    
-          ))}    
-        </tbody>    
-      </table>    
-    </div>    
-  </div>    
-))}    
+    <div className="table-no-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Subjects</th>
+            <th scope="col">Year</th>
+            <th scope="col">Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          {subjects.map((sub, i) => {
+            // Check if this is 2024 and match subject
+            let link = "/";
+            if (year === 2024) {
+              if (sub === "Engineering Physics") {
+                link =
+                  "https://drive.google.com/uc?export=download&id=11Anhppa96B03pasBNkeX35LxLz2NxHI1";
+              } else if (sub === "Engineering Mathematics") {
+                link =
+                  "https://drive.google.com/uc?export=download&id=1q37HmN_xbt_1GA0wQT0EUQpQfDtRuXPf";
+              } else if (sub === "Engineering Chemistry") {
+                link =
+                  "https://drive.google.com/uc?export=download&id=1_IwKbn4BjXZq4A9ewSIJEuEbyfbZUv-i";
+              }
+            }
+
+            return (
+              <tr key={i}>
+                <td className="one-line">{sub}</td>
+                <td>{year}</td>
+                <td>
+                  {year === 2024 ? (
+                    <a
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="download-btn"
+                    >
+                      📥 Download PDF
+                    </a>
+                  ) : (
+                    <a
+                      href="/"
+                      onClick={(e) => e.preventDefault()}
+                      className="download-btn"
+                    >
+                      📥 Download PDF
+                    </a>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+))}
 
 <style>{`
 
@@ -381,3 +409,4 @@ td {
 };
 
 export default Sem1;
+
