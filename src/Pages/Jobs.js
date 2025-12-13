@@ -201,6 +201,17 @@ export default function FuturelyPYQExact() {
     font-size:13px;
   }
 }
+  /* REMOVE SIDE MARGIN FOR TOP HEADER ON MOBILE */
+@media (max-width: 600px){
+  .pyq-header{
+    width:100vw;
+    max-width:100vw;
+    margin-left:calc(-50vw + 50%);
+    margin-right:calc(-50vw + 50%);
+    border-radius:0 0 22px 22px;
+  }
+}
+
 
       `}</style>
 
