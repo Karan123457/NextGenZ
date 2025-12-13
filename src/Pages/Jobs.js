@@ -17,6 +17,16 @@ export default function FuturelyPYQExact() {
   background:#f4f7fb;
   min-height:100vh;
   margin-top:56px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* CONTAINER SAFETY */
+.pyq-header,
+.pyq-card{
+  width:100%;
+  max-width:760px; /* desktop comfort */
 }
 
 /* HEADER */
@@ -26,14 +36,16 @@ export default function FuturelyPYQExact() {
   padding:18px 16px 22px;
   border-radius:0 0 22px 22px;
 }
+
 .pyq-header h1{
   margin:0;
   text-align:center;
-  font-size:18px;
+  font-size:clamp(16px, 4vw, 18px);
   font-weight:800;
 }
+
 .pyq-header p{
-  margin:4px 0 10px;
+  margin:6px 0 12px;
   text-align:center;
   font-size:12px;
   opacity:.95;
@@ -43,9 +55,11 @@ export default function FuturelyPYQExact() {
 .pyq-stats{
   display:flex;
   justify-content:center;
-  gap:28px;
+  gap:26px;
   font-size:12px;
+  flex-wrap:wrap;
 }
+
 .pyq-stats span{
   display:flex;
   flex-direction:column;
@@ -59,16 +73,20 @@ export default function FuturelyPYQExact() {
   display:flex;
   gap:8px;
   justify-content:center;
+  flex-wrap:wrap;
 }
+
 .pyq-tabs button{
   border:none;
-  padding:7px 14px;
+  padding:8px 16px;
   border-radius:999px;
   background:rgba(255,255,255,.25);
   color:#fff;
   font-size:13px;
   font-weight:700;
+  min-height:36px; /* mobile tap */
 }
+
 .pyq-tabs button.active{
   background:#fff;
   color:#2563eb;
@@ -77,11 +95,12 @@ export default function FuturelyPYQExact() {
 /* CARD */
 .pyq-card{
   background:#fff;
-  margin:14px 12px;
+  margin:16px 12px;
   border-radius:18px;
   padding:16px;
   box-shadow:0 10px 30px rgba(0,0,0,.06);
 }
+
 .pyq-card h2{
   margin:0;
   text-align:center;
@@ -89,11 +108,12 @@ export default function FuturelyPYQExact() {
   font-weight:800;
   color:#2563eb;
 }
+
 .pyq-card .sub{
   text-align:center;
   font-size:13px;
   color:#6b7280;
-  margin-top:4px;
+  margin-top:6px;
 }
 
 /* LIST */
@@ -103,6 +123,7 @@ export default function FuturelyPYQExact() {
   flex-direction:column;
   gap:10px;
 }
+
 .pyq-row{
   display:flex;
   justify-content:space-between;
@@ -110,6 +131,7 @@ export default function FuturelyPYQExact() {
   background:#f9fbff;
   border-radius:14px;
   padding:12px;
+  gap:10px;
 }
 
 /* LEFT */
@@ -117,7 +139,9 @@ export default function FuturelyPYQExact() {
   display:flex;
   gap:12px;
   align-items:center;
+  min-width:0;
 }
+
 .pyq-year{
   width:42px;
   height:42px;
@@ -129,30 +153,55 @@ export default function FuturelyPYQExact() {
   font-weight:800;
   color:#2563eb;
   font-size:14px;
+  flex-shrink:0;
 }
+
 .pyq-meta{
   line-height:1.2;
 }
+
 .pyq-title{
   font-size:14px;
   font-weight:700;
   color:#111827;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* RIGHT */
 .pyq-right{
   text-align:right;
+  flex-shrink:0;
 }
+
 .pyq-progress{
   font-size:14px;
   font-weight:800;
   color:#2563eb;
 }
+
 .pyq-small{
   font-size:11px;
   color:#6b7280;
   margin-top:3px;
 }
+
+/* MOBILE TUNING */
+@media (max-width:480px){
+  .pyq-row{
+    padding:10px;
+  }
+
+  .pyq-title{
+    font-size:13px;
+  }
+
+  .pyq-progress{
+    font-size:13px;
+  }
+}
+
       `}</style>
 
       {/* HEADER */}
@@ -204,4 +253,3 @@ export default function FuturelyPYQExact() {
     </div>
   );
 }
-
