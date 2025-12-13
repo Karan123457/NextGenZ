@@ -235,6 +235,33 @@ export default function FuturelyPYQExact() {
     margin-right:12px;
   }
 }
+/* ========== STICKY HEADER (MOBILE ONLY) ========== */
+@media (max-width: 600px){
+  .pyq-header{
+    position:sticky;
+    top:56px; /* because navbar height */
+    z-index:50;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+  }
+}
+  /* ========== UPPER CARD TEXT ENHANCEMENT ========== */
+.pyq-header h1{
+  font-size:clamp(18px, 5vw, 22px);
+  line-height:1.2;
+}
+
+.pyq-header p{
+  font-size:clamp(13px, 3.5vw, 14px);
+}
+
+.pyq-stats{
+  font-size:clamp(12px, 3.2vw, 13px);
+}
+
+.pyq-stats strong{
+  font-size:clamp(14px, 4vw, 16px);
+}
+
 
 
 
