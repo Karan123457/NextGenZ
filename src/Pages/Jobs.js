@@ -12,7 +12,7 @@ export default function FuturelyPYQExact() {
   return (
     <div className="pyq-app">
       <style>{`
-/* ROOT */
+/* ================= ROOT ================= */
 .pyq-app{
   font-family: Inter, system-ui;
   background:#f4f7fb;
@@ -30,7 +30,7 @@ export default function FuturelyPYQExact() {
   max-width:760px;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 .pyq-header{
   background:linear-gradient(180deg,#6c45ff,#4f83ff);
   color:#fff;
@@ -95,7 +95,7 @@ export default function FuturelyPYQExact() {
   color:#2563eb;
 }
 
-/* CONTENT CARD */
+/* ================= CONTENT CARD ================= */
 .pyq-card{
   background:#fff;
   margin:16px 12px;
@@ -170,7 +170,28 @@ export default function FuturelyPYQExact() {
   margin-top:3px;
 }
 
-/* MOBILE: EDGE-TO-EDGE HEADER ONLY */
+/* ================= SEO CONTENT ================= */
+.pyq-seo{
+  max-width:980px;
+  margin:32px auto 60px;
+  padding:0 16px;
+  color:#374151;
+  font-size:14px;
+  line-height:1.7;
+}
+
+.pyq-seo h2{
+  font-size:18px;
+  margin:20px 0 8px;
+  font-weight:800;
+  color:#111827;
+}
+
+.pyq-seo p{
+  margin:10px 0;
+}
+
+/* ================= MOBILE ================= */
 @media (max-width:600px){
   .pyq-header{
     width:100vw;
@@ -185,21 +206,14 @@ export default function FuturelyPYQExact() {
     box-shadow:0 6px 20px rgba(0,0,0,.08);
   }
 }
-  /* ========== DESKTOP POLISH ========== */
+
+/* ================= DESKTOP POLISH ================= */
 @media (min-width:1024px){
-
-  /* Overall container */
-  .pyq-app{
-    align-items:center;
-  }
-
-  /* Increase comfortable width */
   .pyq-header,
   .pyq-card{
     max-width:980px;
   }
 
-  /* Header refinement */
   .pyq-header{
     padding:28px 32px 26px;
     border-radius:0 0 28px 28px;
@@ -207,27 +221,13 @@ export default function FuturelyPYQExact() {
 
   .pyq-header h1{
     font-size:26px;
-    letter-spacing:-0.3px;
   }
 
-  .pyq-header p{
-    font-size:15px;
-    margin-top:8px;
-  }
-
-  /* Stats row looks premium */
   .pyq-stats{
     gap:48px;
-    margin-top:12px;
   }
 
-  .pyq-stats strong{
-    font-size:18px;
-  }
-
-  /* Tabs like nav */
   .pyq-tabs{
-    margin-top:18px;
     gap:12px;
   }
 
@@ -235,32 +235,17 @@ export default function FuturelyPYQExact() {
     padding:10px 22px;
     font-size:14px;
     cursor:pointer;
-    transition:all .2s ease;
   }
 
-  .pyq-tabs button:hover{
-    background:rgba(255,255,255,.35);
-  }
-
-  /* Content card spacing */
   .pyq-card{
     margin:28px auto;
     padding:22px;
     border-radius:22px;
   }
 
-  .pyq-card h2{
-    font-size:18px;
-  }
-
-  .pyq-card .sub{
-    font-size:14px;
-  }
-
-  /* Rows feel clickable */
   .pyq-row{
     padding:14px 16px;
-    transition:all .2s ease;
+    transition:.2s ease;
     cursor:pointer;
   }
 
@@ -268,27 +253,12 @@ export default function FuturelyPYQExact() {
     background:#f1f5ff;
     transform:translateY(-1px);
   }
-
-  .pyq-year{
-    width:46px;
-    height:46px;
-    font-size:15px;
-  }
-
-  .pyq-progress{
-    font-size:15px;
-  }
-
-  .pyq-small{
-    font-size:12px;
-  }
 }
-
       `}</style>
 
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
       <div className="pyq-header">
-        <h1>Jharkhand D2D PYQ</h1>
+        <h1>Jharkhand D2D Previous Year Questions (PYQ)</h1>
         <p>(2021 – 2025) — For 2026 Exam</p>
 
         <div className="pyq-stats">
@@ -298,21 +268,21 @@ export default function FuturelyPYQExact() {
         </div>
 
         <div className="pyq-tabs">
-          <button className="active">Physics</button>
+          <button className="active" aria-current="page">Physics</button>
           <button>Chemistry</button>
           <button>Math</button>
           <button>Analysis</button>
         </div>
       </div>
 
-      {/* CONTENT */}
+      {/* ================= CONTENT ================= */}
       <div className="pyq-card">
         <h2>Physics Previous Year Questions</h2>
         <div className="sub">{totalAttempted} attempted</div>
 
         <div className="pyq-list">
           {DATA.map(item => (
-            <div key={item.id} className="pyq-row">
+            <div key={item.id} className="pyq-row" role="button" tabIndex={0}>
               <div className="pyq-left">
                 <div className="pyq-year">{item.year}</div>
                 <div>{item.title}</div>
@@ -329,6 +299,30 @@ export default function FuturelyPYQExact() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ================= SEO LANDING CONTENT ================= */}
+      <div className="pyq-seo">
+        <h2>Jharkhand D2D Previous Year Question Papers</h2>
+        <p>
+          Prepare for the <strong>Jharkhand Diploma to Degree (D2D) Exam 2026</strong>
+          using official previous year question papers from <strong>2021 to 2025</strong>.
+          These PYQs help students understand exam patterns, important topics, and
+          frequently asked questions.
+        </p>
+
+        <p>
+          On <strong>Futurely</strong>, you get subject-wise D2D PYQs for
+          <strong> Physics, Chemistry, and Mathematics</strong> with progress tracking.
+          All question papers are organized year-wise and optimized for mobile
+          and desktop learning.
+        </p>
+
+        <p>
+          Practicing previous year questions is one of the most effective ways
+          to score well in the Jharkhand D2D examination. Start solving PYQs today
+          and analyze your preparation level for the 2026 exam.
+        </p>
       </div>
     </div>
   );
