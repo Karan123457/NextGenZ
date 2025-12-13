@@ -211,6 +211,31 @@ export default function FuturelyPYQExact() {
     border-radius:0 0 22px 22px;
   }
 }
+  /* ========== MOBILE EDGE-TO-EDGE HEADER (SAFE) ========== */
+@media (max-width: 600px){
+  .pyq-header{
+    width:100vw;
+    max-width:100vw;
+    margin-left:calc(-50vw + 50%);
+    margin-right:calc(-50vw + 50%);
+    padding-left:env(safe-area-inset-left, 16px);
+    padding-right:env(safe-area-inset-right, 16px);
+    border-radius:0 0 22px 22px;
+  }
+
+  /* Keep tabs perfectly centered */
+  .pyq-tabs{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Prevent card touching edges */
+  .pyq-card{
+    margin-left:12px;
+    margin-right:12px;
+  }
+}
+
 
 
       `}</style>
