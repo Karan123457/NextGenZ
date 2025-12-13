@@ -185,6 +185,105 @@ export default function FuturelyPYQExact() {
     box-shadow:0 6px 20px rgba(0,0,0,.08);
   }
 }
+  /* ========== DESKTOP POLISH ========== */
+@media (min-width:1024px){
+
+  /* Overall container */
+  .pyq-app{
+    align-items:center;
+  }
+
+  /* Increase comfortable width */
+  .pyq-header,
+  .pyq-card{
+    max-width:980px;
+  }
+
+  /* Header refinement */
+  .pyq-header{
+    padding:28px 32px 26px;
+    border-radius:0 0 28px 28px;
+  }
+
+  .pyq-header h1{
+    font-size:26px;
+    letter-spacing:-0.3px;
+  }
+
+  .pyq-header p{
+    font-size:15px;
+    margin-top:8px;
+  }
+
+  /* Stats row looks premium */
+  .pyq-stats{
+    gap:48px;
+    margin-top:12px;
+  }
+
+  .pyq-stats strong{
+    font-size:18px;
+  }
+
+  /* Tabs like nav */
+  .pyq-tabs{
+    margin-top:18px;
+    gap:12px;
+  }
+
+  .pyq-tabs button{
+    padding:10px 22px;
+    font-size:14px;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+
+  .pyq-tabs button:hover{
+    background:rgba(255,255,255,.35);
+  }
+
+  /* Content card spacing */
+  .pyq-card{
+    margin:28px auto;
+    padding:22px;
+    border-radius:22px;
+  }
+
+  .pyq-card h2{
+    font-size:18px;
+  }
+
+  .pyq-card .sub{
+    font-size:14px;
+  }
+
+  /* Rows feel clickable */
+  .pyq-row{
+    padding:14px 16px;
+    transition:all .2s ease;
+    cursor:pointer;
+  }
+
+  .pyq-row:hover{
+    background:#f1f5ff;
+    transform:translateY(-1px);
+  }
+
+  .pyq-year{
+    width:46px;
+    height:46px;
+    font-size:15px;
+  }
+
+  .pyq-progress{
+    font-size:15px;
+  }
+
+  .pyq-small{
+    font-size:12px;
+  }
+}
+
       `}</style>
 
       {/* HEADER */}
