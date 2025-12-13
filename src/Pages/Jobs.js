@@ -12,6 +12,7 @@ export default function FuturelyPYQExact() {
   return (
     <div className="pyq-app">
       <style>{`
+/* ROOT */
 .pyq-app{
   font-family: Inter, system-ui;
   background:#f4f7fb;
@@ -22,32 +23,31 @@ export default function FuturelyPYQExact() {
   align-items:center;
 }
 
-/* CONTAINER SAFETY */
+/* WIDTH CONTROL */
 .pyq-header,
 .pyq-card{
   width:100%;
-  max-width:760px; /* desktop comfort */
+  max-width:760px;
 }
 
 /* HEADER */
 .pyq-header{
   background:linear-gradient(180deg,#6c45ff,#4f83ff);
   color:#fff;
-  padding:18px 16px 22px;
+  padding:20px 16px 24px;
   border-radius:0 0 22px 22px;
+  text-align:center;
 }
 
 .pyq-header h1{
   margin:0;
-  text-align:center;
-  font-size:clamp(16px, 4vw, 18px);
+  font-size:clamp(18px, 5vw, 22px);
   font-weight:800;
 }
 
 .pyq-header p{
-  margin:6px 0 12px;
-  text-align:center;
-  font-size:12px;
+  margin:6px 0 14px;
+  font-size:clamp(13px, 3.5vw, 14px);
   opacity:.95;
 }
 
@@ -56,8 +56,7 @@ export default function FuturelyPYQExact() {
   display:flex;
   justify-content:center;
   gap:26px;
-  font-size:12px;
-  flex-wrap:wrap;
+  font-size:13px;
 }
 
 .pyq-stats span{
@@ -65,6 +64,10 @@ export default function FuturelyPYQExact() {
   flex-direction:column;
   align-items:center;
   font-weight:600;
+}
+
+.pyq-stats strong{
+  font-size:15px;
 }
 
 /* TABS */
@@ -84,7 +87,7 @@ export default function FuturelyPYQExact() {
   color:#fff;
   font-size:13px;
   font-weight:700;
-  min-height:36px; /* mobile tap */
+  min-height:36px;
 }
 
 .pyq-tabs button.active{
@@ -92,7 +95,7 @@ export default function FuturelyPYQExact() {
   color:#2563eb;
 }
 
-/* CARD */
+/* CONTENT CARD */
 .pyq-card{
   background:#fff;
   margin:16px 12px;
@@ -103,10 +106,10 @@ export default function FuturelyPYQExact() {
 
 .pyq-card h2{
   margin:0;
-  text-align:center;
   font-size:15px;
   font-weight:800;
   color:#2563eb;
+  text-align:center;
 }
 
 .pyq-card .sub{
@@ -131,7 +134,6 @@ export default function FuturelyPYQExact() {
   background:#f9fbff;
   border-radius:14px;
   padding:12px;
-  gap:10px;
 }
 
 /* LEFT */
@@ -139,7 +141,6 @@ export default function FuturelyPYQExact() {
   display:flex;
   gap:12px;
   align-items:center;
-  min-width:0;
 }
 
 .pyq-year{
@@ -152,119 +153,38 @@ export default function FuturelyPYQExact() {
   justify-content:center;
   font-weight:800;
   color:#2563eb;
-  font-size:14px;
-  flex-shrink:0;
-}
-
-.pyq-meta{
-  line-height:1.2;
-}
-
-.pyq-title{
-  font-size:14px;
-  font-weight:700;
-  color:#111827;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
 }
 
 /* RIGHT */
-.pyq-right{
-  text-align:right;
-  flex-shrink:0;
-}
-
 .pyq-progress{
   font-size:14px;
   font-weight:800;
   color:#2563eb;
+  text-align:right;
 }
 
 .pyq-small{
   font-size:11px;
   color:#6b7280;
+  text-align:right;
   margin-top:3px;
 }
 
-/* MOBILE TUNING */
-@media (max-width:480px){
-  .pyq-row{
-    padding:10px;
-  }
-
-  .pyq-title{
-    font-size:13px;
-  }
-
-  .pyq-progress{
-    font-size:13px;
-  }
-}
-  /* REMOVE SIDE MARGIN FOR TOP HEADER ON MOBILE */
-@media (max-width: 600px){
+/* MOBILE: EDGE-TO-EDGE HEADER ONLY */
+@media (max-width:600px){
   .pyq-header{
     width:100vw;
     max-width:100vw;
     margin-left:calc(-50vw + 50%);
     margin-right:calc(-50vw + 50%);
-    border-radius:0 0 22px 22px;
-  }
-}
-  /* ========== MOBILE EDGE-TO-EDGE HEADER (SAFE) ========== */
-@media (max-width: 600px){
-  .pyq-header{
-    width:100vw;
-    max-width:100vw;
-    margin-left:calc(-50vw + 50%);
-    margin-right:calc(-50vw + 50%);
-    padding-left:env(safe-area-inset-left, 16px);
-    padding-right:env(safe-area-inset-right, 16px);
-    border-radius:0 0 22px 22px;
-  }
-
-  /* Keep tabs perfectly centered */
-  .pyq-tabs{
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  /* Prevent card touching edges */
-  .pyq-card{
-    margin-left:12px;
-    margin-right:12px;
-  }
-}
-/* ========== STICKY HEADER (MOBILE ONLY) ========== */
-@media (max-width: 600px){
-  .pyq-header{
+    padding-left:16px;
+    padding-right:16px;
     position:sticky;
-    top:56px; /* because navbar height */
+    top:56px;
     z-index:50;
     box-shadow:0 6px 20px rgba(0,0,0,.08);
   }
 }
-  /* ========== UPPER CARD TEXT ENHANCEMENT ========== */
-.pyq-header h1{
-  font-size:clamp(18px, 5vw, 22px);
-  line-height:1.2;
-}
-
-.pyq-header p{
-  font-size:clamp(13px, 3.5vw, 14px);
-}
-
-.pyq-stats{
-  font-size:clamp(12px, 3.2vw, 13px);
-}
-
-.pyq-stats strong{
-  font-size:clamp(14px, 4vw, 16px);
-}
-
-
-
-
       `}</style>
 
       {/* HEADER */}
@@ -296,12 +216,10 @@ export default function FuturelyPYQExact() {
             <div key={item.id} className="pyq-row">
               <div className="pyq-left">
                 <div className="pyq-year">{item.year}</div>
-                <div className="pyq-meta">
-                  <div className="pyq-title">{item.title} …</div>
-                </div>
+                <div>{item.title}</div>
               </div>
 
-              <div className="pyq-right">
+              <div>
                 <div className="pyq-progress">
                   {item.attempted}/{item.total}
                 </div>
