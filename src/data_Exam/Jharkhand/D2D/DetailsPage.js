@@ -160,8 +160,14 @@ export default function FuturelyPYQExact() {
         {activeTab === "Physics" && (
           <PhysicsQuestions setFocusMode={setFocusMode} />
         )}
-        {activeTab === "Chemistry" && <ChemistryQuestions />}
-        {activeTab === "Math" && <MathematicsQuestions />}
+        {activeTab === "Chemistry" && (
+  <ChemistryQuestions setFocusMode={setFocusMode} />
+)}
+
+{activeTab === "Math" && (
+  <MathematicsQuestions setFocusMode={setFocusMode} />
+)}
+
         {activeTab === "Analysis" && (
           <div style={{ textAlign: "center", padding: "40px 0", color: "#6b7280" }}>
             Analysis section coming soon 🚀
