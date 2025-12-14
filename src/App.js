@@ -51,6 +51,11 @@ function ScrollToTopWithMemory() {
 }
 
 function App() {
+  const location = useLocation();
+
+  const hideFooter =
+    location.pathname.startsWith("/Exam_Preparation/");
+
   return (
     <>
       <ScrollToTopWithMemory />
@@ -75,7 +80,8 @@ function App() {
           <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
         </Routes>
       </div>
-      <Footer />
+      {!hideFooter && <Footer />}
+
     </>
   );
 }
