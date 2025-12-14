@@ -72,7 +72,6 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
   function openYearQuestions(yearObj) {
     let qs = [];
-
     if (yearObj.key === "ALL") {
       Object.values(chemistryQuestionsByYear).forEach(arr => qs = qs.concat(arr));
     } else {
@@ -83,8 +82,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     setCurrentIndex(0);
     setViewMode("viewer");
     setSelectedYear(yearObj);
-
-    setFocusMode(true); // ✅ HIDE UPPER SECTION
+    setFocusMode(true);
 
     setChecked(prev => {
       const next = { ...prev };
@@ -127,29 +125,27 @@ export default function ChemistryQuestions({ setFocusMode }) {
     setSelectedYear(null);
     setYearQuestions([]);
     setCurrentIndex(0);
-
-    setFocusMode(false); // ✅ SHOW UPPER SECTION
-
+    setFocusMode(false);
     timerRef.current && clearInterval(timerRef.current);
   }
 
-  const attemptedCount = yearQuestions.filter(q => checked[q.id]).length;
-function getTotalQuestions(y) {
-  if (y.key === "ALL") {
-    return Object.values(chemistryQuestionsByYear)
-      .reduce((sum, arr) => sum + arr.length, 0);
+  function getTotal(y) {
+    if (y.key === "ALL") {
+      return Object.values(chemistryQuestionsByYear).reduce((s, a) => s + a.length, 0);
+    }
+    return chemistryQuestionsByYear[y.year]?.length || 0;
   }
-  return chemistryQuestionsByYear[y.year]?.length || 0;
-}
 
-function getAttemptedQuestions(y) {
-  return Object.keys(checked).filter(
-    k =>
-      checked[k] &&
-      (y.key === "ALL" ||
-        chemistryQuestionsByYear[y.year]?.some(q => q.id === k))
-  ).length;
-}
+  function getAttempted(y) {
+    return Object.keys(checked).filter(
+      k =>
+        checked[k] &&
+        (y.key === "ALL" ||
+          chemistryQuestionsByYear[y.year]?.some(q => q.id === k))
+    ).length;
+  }
+
+  const attemptedCount = yearQuestions.filter(q => checked[q.id]).length;
 
   /* ================= UI ================= */
   return (
@@ -163,86 +159,88 @@ function getAttemptedQuestions(y) {
       .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
-      .exam-topbar{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;padding:10px 14px;border-radius:12px;margin-bottom:14px}
+      .exam-topbar{
+        display:flex;justify-content:space-between;align-items:center;
+        background:#0f172a;color:#fff;
+        margin-left:-16px;margin-right:-16px;
+        padding:10px 14px;margin-bottom:14px;border-radius:0
+      }
       .exam-left span{display:block;font-size:12px;opacity:.8}
       .exam-center{font-weight:700}
       .exam-right{display:flex;gap:8px;align-items:center}
 
       .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;background:#e0edff;color:#1d4ed8}
-      .timer-pill.warn{background:#fff7ed;color:#c2410c}
-      .timer-pill.danger{background:#fee2e2;color:#b91c1c;animation:pulse 1s infinite}
-      @keyframes pulse{50%{transform:scale(1.06)}}
 
-      .exam-question{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;font-weight:600}
-      .exam-option{display:flex;gap:12px;align-items:center;border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
-      .exam-option.selected{background:#eef3ff;border-color:#2563eb}
-      .exam-option.correct{background:#dcfce7;border-color:#22c55e}
-      .exam-option.incorrect{background:#fee2e2;border-color:#ef4444}
-      .exam-label{width:32px;height:32px;border-radius:8px;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-weight:700}
+      .option-box{
+        display:flex;align-items:center;gap:12px;
+        border:1px solid #e5e7eb;border-radius:14px;
+        padding:14px 16px;margin-bottom:12px;
+        cursor:pointer;background:#fff;user-select:none
+      }
+      .option-box strong{
+        min-width:34px;height:34px;border-radius:10px;
+        background:#f1f5f9;color:#1f2937;
+        display:flex;align-items:center;justify-content:center;
+        font-weight:800;font-size:14px
+      }
+      .option-box.selected{background:#eef3ff}
+      .option-box.selected strong{background:#dbeafe;color:#1d4ed8}
+      .option-box.correct{background:#dcfce7;border-color:#22c55e}
+      .option-box.correct strong{background:#dcfce7;color:#166534}
+      .option-box.incorrect{background:#fee2e2;border-color:#ef4444}
+      .option-box.incorrect strong{background:#fee2e2;color:#991b1b}
+
+      @media (max-width:600px){
+        .exam-topbar{margin-left:-12px;margin-right:-12px}
+        .option-box{padding:12px 14px}
+        .option-box strong{min-width:32px;height:32px;font-size:13px}
+      }
       `}</style>
 
-      {/* ===== YEAR LIST ===== */}
-{viewMode === "years" && (
-  <>
-    <h5>Chemistry Previous Year Questions</h5>
-    <div className="small text-muted mb-2">
-      {attemptedCount} attempted
-    </div>
+      {/* ================= YEAR LIST ================= */}
+      {viewMode === "years" && (
+        <>
+          <h5>Chemistry Previous Year Questions</h5>
+          <div className="small text-muted mb-2">{attemptedCount} attempted</div>
 
-    <div className="pyq-list">
-      {years.map((y, i) => {
-        const total = getTotalQuestions(y);
-        const attempted = getAttemptedQuestions(y);
-
-        return (
-          <div
-            key={i}
-            className="pyq-row"
-            onClick={() => openYearQuestions(y)}
-          >
-            <div className="pyq-left">
-              <div className="pyq-year">{y.key}</div>
-              <div>
-                <div style={{ fontWeight: 700 }}>{y.year}</div>
-                <div className="pyq-small">
-                  Previous Year Questions
+          <div className="pyq-list">
+            {years.map((y, i) => (
+              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                <div className="pyq-left">
+                  <div className="pyq-year">{y.key}</div>
+                  <div>
+                    <div style={{ fontWeight: 700 }}>{y.year}</div>
+                    <div className="pyq-small">Previous Year Questions</div>
+                  </div>
+                </div>
+                <div>
+                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  <div className="pyq-small">Total {getTotal(y)} • Attempted {getAttempted(y)}</div>
                 </div>
               </div>
-            </div>
-
-            <div>
-              <div className="pyq-progress">
-                {attempted}/{total}
-              </div>
-              <div className="pyq-small">
-                Total {total} • Attempted {attempted}
-              </div>
-            </div>
+            ))}
           </div>
-        );
-      })}
-    </div>
-  </>
-)}
+        </>
+      )}
 
-
+      {/* ================= MCQ VIEWER ================= */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
           <div className="exam-topbar">
-            <div className="exam-left"><strong>Jharkhand D2D</strong><span>
-  Chemistry – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}
-</span>
-</div>
+            <div className="exam-left">
+              <strong>Jharkhand D2D</strong>
+              <span>Chemistry – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
+            </div>
             <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
             <div className="exam-right">
-              <div className={`timer-pill ${timeLeft > 60 ? "danger" : timeLeft > 30 ? "warn" : ""}`}>
-                ⏱ {formatTime(timeLeft)}
-              </div>
+              <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
               <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
             </div>
           </div>
 
-          <div className="exam-question">{yearQuestions[currentIndex].text}</div>
+          <div className="fw-bold mb-3" style={{ fontSize: "1.02rem" }}>
+            {yearQuestions[currentIndex].text}
+          </div>
 
           {yearQuestions[currentIndex].options.map((opt, idx) => {
             const qid = yearQuestions[currentIndex].id;
@@ -250,14 +248,15 @@ function getAttemptedQuestions(y) {
             const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
             const isSelected = selectedAnswers[qid] === idx;
 
-            let cls = "exam-option";
+            let cls = "option-box";
             if (!isChecked && isSelected) cls += " selected";
             if (isChecked && isCorrect) cls += " correct";
             if (isChecked && isSelected && !isCorrect) cls += " incorrect";
 
             return (
               <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
-                <div className="exam-label">{String.fromCharCode(65 + idx)}</div>{opt}
+                <strong>{String.fromCharCode(65 + idx)}.</strong>
+                {opt}
               </div>
             );
           })}
