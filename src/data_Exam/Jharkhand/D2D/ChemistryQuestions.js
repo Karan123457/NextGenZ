@@ -201,7 +201,10 @@ export default function ChemistryQuestions({ setFocusMode }) {
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
           <div className="exam-topbar">
-            <div className="exam-left"><strong>Jharkhand D2D</strong><span>Chemistry</span></div>
+            <div className="exam-left"><strong>Jharkhand D2D</strong><span>
+  Chemistry – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}
+</span>
+</div>
             <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
             <div className="exam-right">
               <div className={`timer-pill ${timeLeft > 60 ? "danger" : timeLeft > 30 ? "warn" : ""}`}>
