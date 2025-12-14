@@ -5,15 +5,8 @@ import { Button } from "react-bootstrap";
 /* ================= DATA ================= */
 export const mathematicsQuestionsByYear = {
   "2025 Questions": [
-    { id: "2025-q1", text: "Alkali metal from the following with least melting point is", options: ["Na","Cs","K","Rb"], correctIndex: 0 },
-    { id: "2025-q2", text: "Lime reacts exothermally with water to give ‘
-’ which has low solubility in water. Aqueous solution of ‘
-’ is often used for the test of 
-, a test in which insoluble 
- is formed. If 
- is further reacted with 
- then soluble compound is formed. ‘A
-' is", options: ["Quick lime ","Lime water","Slaked lime","White lime"], correctIndex: 0 },
+    { id: "2025-q1", text: "Calculus basic?", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2025-q2", text: "Algebra question?", options: ["A","B","C","D"], correctIndex: 0 },
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Trigonometry?", options: ["A","B","C","D"], correctIndex: 0 },
@@ -183,9 +176,9 @@ setFocusMode(false); // ✅ SHOW UPPER PART
       .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;
         font-size:13px;background:#e0edff;color:#1d4ed8}
         @media (max-width:600px){
-       .exam-topbar{
-       margin-left:-12px;
-       margin-right:-12px;
+  .exam-topbar{
+    margin-left:-12px;
+    margin-right:-12px;
   }
 }
 
@@ -298,6 +291,3 @@ setFocusMode(false); // ✅ SHOW UPPER PART
     </div>
   );
 }
-
-
-
