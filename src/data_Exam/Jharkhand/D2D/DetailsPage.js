@@ -45,7 +45,7 @@ export default function FuturelyPYQExact() {
   font-weight:800;
 }
 
-.pyq-header p{
+.pyq-header h2{
   margin:6px 0 14px;
   font-size:clamp(13px, 3.5vw, 14px);
   opacity:.95;
@@ -138,7 +138,7 @@ export default function FuturelyPYQExact() {
       {!focusMode && (
         <div className="pyq-header">
           <h1>Jharkhand D2D Previous Year Questions (PYQ)</h1>
-          <p>(2021 – 2025) — For 2026 Exam</p>
+          <h2>(2021 – 2025) — For 2026 Exam</h2>
 
           <div className="pyq-stats">
             <span><strong>2021–2025</strong>Years</span>
