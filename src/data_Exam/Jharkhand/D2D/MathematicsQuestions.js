@@ -168,7 +168,61 @@ setFocusMode(false); // ✅ SHOW UPPER PART
       .exam-center{font-weight:700}
       .exam-right{display:flex;gap:8px;align-items:center}
 
-      .option-box{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
+      .option-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:12px;
+
+  cursor:pointer;
+  transition:.15s ease;
+  background:#fff;
+}
+.option-box strong{
+  min-width:34px;
+  height:34px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:10px;
+  background:#f1f5f9;
+  color:#1f2937;
+
+  font-weight:800;
+  font-size:14px;
+}
+.option-box.selected strong{
+  background:#dbeafe;
+  color:#1d4ed8;
+}
+
+.option-box.correct strong{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.option-box.incorrect strong{
+  background:#fee2e2;
+  color:#991b1b;
+}
+@media (max-width:600px){
+  .option-box{
+    padding:12px 14px;
+  }
+
+  .option-box strong{
+    min-width:32px;
+    height:32px;
+    font-size:13px;
+  }
+}
+
       .option-box.selected{background:#eef3ff}
       .option-box.correct{background:#dcfce7;border-color:#22c55e}
       .option-box.incorrect{background:#fee2e2;border-color:#ef4444}
