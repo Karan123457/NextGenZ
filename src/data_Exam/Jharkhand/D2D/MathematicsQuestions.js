@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 /* ================= DATA ================= */
 export const mathematicsQuestionsByYear = {
   "2025 Questions": [
-    { id: "2025-q1", text: "Calculus basic?", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2025-q1", text: "Alkali metal from the following with least melting point is", options: ["Na","Cs","K","Rb"], correctIndex: 0 },
     { id: "2025-q2", text: "Algebra question?", options: ["A","B","C","D"], correctIndex: 0 },
   ],
   "2024 Questions": [
@@ -284,3 +284,4 @@ setFocusMode(false); // ✅ SHOW UPPER PART
     </div>
   );
 }
+
