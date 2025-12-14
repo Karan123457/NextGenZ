@@ -14,7 +14,8 @@ export const mathematicsQuestionsByYear = {
 };
 
 /* ================= COMPONENT ================= */
-export default function MathematicsQuestions() {
+export default function MathematicsQuestions({ setFocusMode }) {
+
 
   const years = [
     { year: "All Previous Year Questions", key: "ALL" },
@@ -26,8 +27,6 @@ export default function MathematicsQuestions() {
   ];
 
   const questionsByYear = mathematicsQuestionsByYear;
-
-  const QUESTION_TIME_SECONDS = 60;
   const timerRef = useRef(null);
 
   const [selectedYear, setSelectedYear] = useState(null);
@@ -35,7 +34,7 @@ export default function MathematicsQuestions() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [checked, setChecked] = useState({});
-  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [viewMode, setViewMode] = useState("years");
 
@@ -63,7 +62,7 @@ export default function MathematicsQuestions() {
 
   function formatTime(sec) {
     const m = Math.floor(sec / 60).toString().padStart(2, "0");
-    const s = Math.floor(sec % 60).toString().padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   }
 
@@ -71,9 +70,7 @@ export default function MathematicsQuestions() {
     let qs = [];
 
     if (yearObj.key === "ALL") {
-      Object.values(questionsByYear).forEach(arr => {
-        qs = qs.concat(arr);
-      });
+      Object.values(questionsByYear).forEach(arr => qs = qs.concat(arr));
     } else {
       qs = questionsByYear[yearObj.year] || [];
     }
@@ -81,7 +78,9 @@ export default function MathematicsQuestions() {
     setYearQuestions(qs);
     setCurrentIndex(0);
     setViewMode("viewer");
-    setSelectedYear(yearObj);
+setSelectedYear(yearObj);
+setFocusMode(true); // ✅ HIDE UPPER PART
+
 
     setChecked(prev => {
       const next = { ...prev };
@@ -92,9 +91,9 @@ export default function MathematicsQuestions() {
     });
   }
 
-  function handleSelectOption(qid, optionIndex) {
+  function handleSelectOption(qid, idx) {
     if (isDisabled) return;
-    setSelectedAnswers(prev => ({ ...prev, [qid]: optionIndex }));
+    setSelectedAnswers(prev => ({ ...prev, [qid]: idx }));
   }
 
   function handleCheckAnswer() {
@@ -121,9 +120,11 @@ export default function MathematicsQuestions() {
 
   function backToYears() {
     setViewMode("years");
-    setSelectedYear(null);
-    setYearQuestions([]);
-    setCurrentIndex(0);
+setSelectedYear(null);
+setYearQuestions([]);
+setCurrentIndex(0);
+setFocusMode(false); // ✅ SHOW UPPER PART
+
     timerRef.current && clearInterval(timerRef.current);
   }
 
@@ -132,8 +133,6 @@ export default function MathematicsQuestions() {
   /* ================= UI ================= */
   return (
     <div className="physics-box">
-
-      {/* ================= PYQ UI STYLES ================= */}
       <style>{`
       .pyq-list{display:flex;flex-direction:column;gap:10px}
       .pyq-row{display:flex;justify-content:space-between;align-items:center;
@@ -147,80 +146,100 @@ export default function MathematicsQuestions() {
       .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
+      .exam-topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        background:#0f172a;
+        color:#fff;
+        padding:10px 14px;
+        border-radius:12px;
+        margin-bottom:14px
+      }
+      .exam-left span{display:block;font-size:12px;opacity:.8}
+      .exam-center{font-weight:700}
+      .exam-right{display:flex;gap:8px;align-items:center}
+
       .option-box{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
       .option-box.selected{background:#eef3ff}
       .option-box.correct{background:#dcfce7;border-color:#22c55e}
       .option-box.incorrect{background:#fee2e2;border-color:#ef4444}
-      .timer-pill{background:#eef3ff;padding:6px 12px;border-radius:999px;font-weight:700}
+
+      .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;
+        font-size:13px;background:#e0edff;color:#1d4ed8}
       `}</style>
 
-      <h5>Mathematics Previous Year Questions</h5>
-      <div className="small text-muted mb-2">{attemptedCount} attempted</div>
-
-      {/* ================= YEAR SELECTION (PYQ UI) ================= */}
+      {/* ================= YEAR LIST ================= */}
       {viewMode === "years" && (
-        <div className="pyq-list">
-          {years.map((y, i) => {
-            let total = 0;
+        <>
+          <h5>Mathematics Previous Year Questions</h5>
+          <div className="small text-muted mb-2">
+            {attemptedCount} attempted
+          </div>
 
-            if (y.key === "ALL") {
-              Object.values(questionsByYear).forEach(arr => total += arr.length);
-            } else {
-              total = questionsByYear[y.year]?.length || 0;
-            }
+          <div className="pyq-list">
+            {years.map((y, i) => {
+              let total = 0;
+              if (y.key === "ALL") {
+                Object.values(questionsByYear).forEach(arr => total += arr.length);
+              } else {
+                total = questionsByYear[y.year]?.length || 0;
+              }
 
-            const attempted = Object.keys(checked).filter(k =>
-              checked[k] &&
-              (y.key === "ALL"
-                ? true
-                : questionsByYear[y.year]?.some(q => q.id === k))
-            ).length;
+              const attempted = Object.keys(checked).filter(
+                k =>
+                  checked[k] &&
+                  (y.key === "ALL" ||
+                    questionsByYear[y.year]?.some(q => q.id === k))
+              ).length;
 
-            return (
-              <div
-                key={i}
-                className="pyq-row"
-                onClick={() => openYearQuestions(y)}
-                role="button"
-                tabIndex={0}
-              >
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
+              return (
+                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                  <div className="pyq-left">
+                    <div className="pyq-year">{y.key}</div>
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{y.year}</div>
+                      <div className="pyq-small">Previous Year Questions</div>
+                    </div>
+                  </div>
+
                   <div>
-                    <div style={{ fontWeight: 700 }}>{y.year}</div>
-                    <div className="pyq-small">Previous Year Questions</div>
+                    <div className="pyq-progress">{attempted}/{total}</div>
+                    <div className="pyq-small">
+                      Total {total} • Attempted {attempted}
+                    </div>
                   </div>
                 </div>
-
-                <div>
-                  <div className="pyq-progress">{attempted}/{total}</div>
-                  <div className="pyq-small">
-                    Total {total} • Attempted {attempted}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* ================= MCQ VIEWER ================= */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <strong>{selectedYear.year.replace(" Questions", "")}</strong><br/>
-              Question {currentIndex + 1} / {yearQuestions.length}
+          <div className="exam-topbar">
+            <div className="exam-left">
+              <strong>Jharkhand D2D</strong>
+              <span>
+                Mathematics – {selectedYear?.key === "ALL"
+                  ? "All PYQ"
+                  : `${selectedYear?.year.replace(" Questions", "")} Qs`}
+              </span>
             </div>
-            <div className="d-flex gap-2">
+
+            <div className="exam-center">
+              Q {currentIndex + 1} / {yearQuestions.length}
+            </div>
+
+            <div className="exam-right">
               <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-              <Button size="sm" variant="outline-secondary" onClick={backToYears}>
-                ← Back
-              </Button>
+              <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
             </div>
           </div>
 
-          <div className="mb-3 fw-bold">
+          <div className="fw-bold mb-3">
             {yearQuestions[currentIndex].text}
           </div>
 
@@ -236,35 +255,21 @@ export default function MathematicsQuestions() {
             if (isChecked && isSelected && !isCorrect) cls += " incorrect";
 
             return (
-              <div
-                key={idx}
-                className={cls}
-                onClick={() => handleSelectOption(qid, idx)}
-              >
+              <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
                 <strong>{String.fromCharCode(65 + idx)}.</strong> {opt}
               </div>
             );
           })}
 
           <div className="d-flex justify-content-between mt-3">
-            <Button onClick={goPrevious} disabled={currentIndex === 0}>
-              Previous
-            </Button>
+            <Button onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
             <Button
               onClick={handleCheckAnswer}
-              disabled={
-                isDisabled ||
-                selectedAnswers[yearQuestions[currentIndex].id] === undefined
-              }
+              disabled={isDisabled || selectedAnswers[yearQuestions[currentIndex].id] === undefined}
             >
               Check Answer
             </Button>
-            <Button
-              onClick={goNext}
-              disabled={currentIndex === yearQuestions.length - 1}
-            >
-              Next
-            </Button>
+            <Button onClick={goNext} disabled={currentIndex === yearQuestions.length - 1}>Next</Button>
           </div>
         </div>
       )}
