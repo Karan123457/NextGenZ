@@ -146,16 +146,24 @@ setFocusMode(false); // ✅ SHOW UPPER PART
       .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
-      .exam-topbar{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        background:#0f172a;
-        color:#fff;
-        padding:10px 14px;
-        border-radius:12px;
-        margin-bottom:14px
-      }
+     .exam-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+  color:#fff;
+
+  /* 🔥 REMOVE SIDE MARGIN */
+  margin-left:-16px;
+  margin-right:-16px;
+
+  padding:10px 14px;
+  margin-bottom:14px;
+
+  /* FULL BLEED LOOK */
+  border-radius:0;
+}
+
       .exam-left span{display:block;font-size:12px;opacity:.8}
       .exam-center{font-weight:700}
       .exam-right{display:flex;gap:8px;align-items:center}
