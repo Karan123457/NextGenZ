@@ -7,9 +7,10 @@ import MathematicsQuestions from "./MathematicsQuestions";
 
 export default function FuturelyPYQExact() {
   const [activeTab, setActiveTab] = useState("Physics");
+  const [focusMode, setFocusMode] = useState(false); // NEW
 
   return (
-    <div className="pyq-app">
+    <div className={`pyq-app ${focusMode ? "focus-mode" : ""}`}>
       <style>{`
 /* ================= ROOT ================= */
 .pyq-app{
@@ -104,6 +105,21 @@ export default function FuturelyPYQExact() {
   box-shadow:0 10px 30px rgba(0,0,0,.06);
 }
 
+/* ================= FOCUS MODE ================= */
+.focus-mode .pyq-header,
+.focus-mode .pyq-seo{
+  display:none;
+}
+
+.focus-mode .pyq-card{
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  border-radius:0;
+  box-shadow:none;
+}
+
 /* ================= MOBILE ================= */
 @media (max-width:600px){
   .pyq-header{
@@ -119,47 +135,31 @@ export default function FuturelyPYQExact() {
       `}</style>
 
       {/* ================= HEADER ================= */}
-      <div className="pyq-header">
-        <h1>Jharkhand D2D Previous Year Questions (PYQ)</h1>
-        <p>(2021 – 2025) — For 2026 Exam</p>
+      {!focusMode && (
+        <div className="pyq-header">
+          <h1>Jharkhand D2D Previous Year Questions (PYQ)</h1>
+          <p>(2021 – 2025) — For 2026 Exam</p>
 
-        <div className="pyq-stats">
-          <span><strong>2021–2025</strong>Years</span>
-          <span><strong>5</strong>Papers</span>
-          <span><strong>350+</strong>Questions</span>
-        </div>
+          <div className="pyq-stats">
+            <span><strong>2021–2025</strong>Years</span>
+            <span><strong>5</strong>Papers</span>
+            <span><strong>350+</strong>Questions</span>
+          </div>
 
-        <div className="pyq-tabs">
-          <button
-            className={activeTab === "Physics" ? "active" : ""}
-            onClick={() => setActiveTab("Physics")}
-          >
-            Physics
-          </button>
-          <button
-            className={activeTab === "Chemistry" ? "active" : ""}
-            onClick={() => setActiveTab("Chemistry")}
-          >
-            Chemistry
-          </button>
-          <button
-            className={activeTab === "Math" ? "active" : ""}
-            onClick={() => setActiveTab("Math")}
-          >
-            Math
-          </button>
-          <button
-            className={activeTab === "Analysis" ? "active" : ""}
-            onClick={() => setActiveTab("Analysis")}
-          >
-            Analysis
-          </button>
+          <div className="pyq-tabs">
+            <button className={activeTab === "Physics" ? "active" : ""} onClick={() => setActiveTab("Physics")}>Physics</button>
+            <button className={activeTab === "Chemistry" ? "active" : ""} onClick={() => setActiveTab("Chemistry")}>Chemistry</button>
+            <button className={activeTab === "Math" ? "active" : ""} onClick={() => setActiveTab("Math")}>Math</button>
+            <button className={activeTab === "Analysis" ? "active" : ""} onClick={() => setActiveTab("Analysis")}>Analysis</button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ================= CONTENT ================= */}
       <div className="pyq-card">
-        {activeTab === "Physics" && <PhysicsQuestions />}
+        {activeTab === "Physics" && (
+          <PhysicsQuestions setFocusMode={setFocusMode} />
+        )}
         {activeTab === "Chemistry" && <ChemistryQuestions />}
         {activeTab === "Math" && <MathematicsQuestions />}
         {activeTab === "Analysis" && (
@@ -170,13 +170,15 @@ export default function FuturelyPYQExact() {
       </div>
 
       {/* ================= SEO CONTENT ================= */}
-      <div className="pyq-seo">
-        <h2>Jharkhand D2D Previous Year Question Papers</h2>
-        <p>
-          Prepare for the <strong>Jharkhand Diploma to Degree (D2D) Exam 2026</strong>
-          using official previous year question papers from <strong>2021 to 2025</strong>.
-        </p>
-      </div>
+      {!focusMode && (
+        <div className="pyq-seo">
+          <h2>Jharkhand D2D Previous Year Question Papers</h2>
+          <p>
+            Prepare for the <strong>Jharkhand Diploma to Degree (D2D) Exam 2026</strong>
+            using official previous year question papers from <strong>2021 to 2025</strong>.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
