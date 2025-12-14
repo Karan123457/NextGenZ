@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 export const chemistryQuestionsByYear = {
   "2025 Questions": [
     { id: "2025-q1", text: "Atomic number of Carbon?", options: ["6","12","14","8"], correctIndex: 0 },
-    { id: "2025-q2", text: "Define molarity.", options: ["Moles per liter","Mass per liter","Moles per kg","Mass per kg"], correctIndex: 0 },
+    { id: "2025-q2", text: "During the reaction of permanganate with thiosulphate, the change in oxidation of manganese occurs by value of Identify which of the below medium will favour the reaction?", options: ["Moles per liter","Mass per liter","Moles per kg","Mass per kg"], correctIndex: 0 },
     { id: "2025-q3", text: "Le Chatelier's Principle?", options: ["Equilibrium shifts to counter change","Reaction stops","Temperature constant","No effect"], correctIndex: 0 },
     { id: "2025-q4", text: "IUPAC name of H₂SO₄?", options: ["Sulfuric acid","Sulfurous acid","Hydrosulfuric acid","Sulfur acid"], correctIndex: 0 },
     { id: "2025-q5", text: "Ionic bonding involves?", options: ["Transfer of electrons","Sharing of electrons","No bonding","Covalent"], correctIndex: 0 },
