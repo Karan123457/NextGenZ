@@ -182,6 +182,13 @@ setFocusMode(false); // ✅ SHOW UPPER PART
 
       .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;
         font-size:13px;background:#e0edff;color:#1d4ed8}
+        @media (max-width:600px){
+       .exam-topbar{
+       margin-left:-12px;
+       margin-right:-12px;
+  }
+}
+
       `}</style>
 
       {/* ================= YEAR LIST ================= */}
@@ -291,5 +298,6 @@ setFocusMode(false); // ✅ SHOW UPPER PART
     </div>
   );
 }
+
 
 
