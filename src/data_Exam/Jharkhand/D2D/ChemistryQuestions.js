@@ -134,6 +134,22 @@ export default function ChemistryQuestions({ setFocusMode }) {
   }
 
   const attemptedCount = yearQuestions.filter(q => checked[q.id]).length;
+function getTotalQuestions(y) {
+  if (y.key === "ALL") {
+    return Object.values(chemistryQuestionsByYear)
+      .reduce((sum, arr) => sum + arr.length, 0);
+  }
+  return chemistryQuestionsByYear[y.year]?.length || 0;
+}
+
+function getAttemptedQuestions(y) {
+  return Object.keys(checked).filter(
+    k =>
+      checked[k] &&
+      (y.key === "ALL" ||
+        chemistryQuestionsByYear[y.year]?.some(q => q.id === k))
+  ).length;
+}
 
   /* ================= UI ================= */
   return (
@@ -165,38 +181,50 @@ export default function ChemistryQuestions({ setFocusMode }) {
       .exam-label{width:32px;height:32px;border-radius:8px;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-weight:700}
       `}</style>
 
-      <h5>Chemistry Previous Year Questions</h5>
-      <div className="small text-muted mb-2">{attemptedCount} attempted</div>
+      {/* ===== YEAR LIST ===== */}
+{viewMode === "years" && (
+  <>
+    <h5>Chemistry Previous Year Questions</h5>
+    <div className="small text-muted mb-2">
+      {attemptedCount} attempted
+    </div>
 
-      {viewMode === "years" && (
-        <div className="pyq-list">
-          {years.map((y, i) => {
-            let total = 0;
-            if (y.key === "ALL") Object.values(chemistryQuestionsByYear).forEach(arr => total += arr.length);
-            else total = chemistryQuestionsByYear[y.year]?.length || 0;
+    <div className="pyq-list">
+      {years.map((y, i) => {
+        const total = getTotalQuestions(y);
+        const attempted = getAttemptedQuestions(y);
 
-            const attempted = Object.keys(checked).filter(
-              k => checked[k] && (y.key === "ALL" || chemistryQuestionsByYear[y.year]?.some(q => q.id === k))
-            ).length;
-
-            return (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
-                  <div>
-                    <div style={{ fontWeight: 700 }}>{y.year}</div>
-                    <div className="pyq-small">Previous Year Questions</div>
-                  </div>
-                </div>
-                <div>
-                  <div className="pyq-progress">{attempted}/{total}</div>
-                  <div className="pyq-small">Total {total} • Attempted {attempted}</div>
+        return (
+          <div
+            key={i}
+            className="pyq-row"
+            onClick={() => openYearQuestions(y)}
+          >
+            <div className="pyq-left">
+              <div className="pyq-year">{y.key}</div>
+              <div>
+                <div style={{ fontWeight: 700 }}>{y.year}</div>
+                <div className="pyq-small">
+                  Previous Year Questions
                 </div>
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
+
+            <div>
+              <div className="pyq-progress">
+                {attempted}/{total}
+              </div>
+              <div className="pyq-small">
+                Total {total} • Attempted {attempted}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </>
+)}
+
 
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
