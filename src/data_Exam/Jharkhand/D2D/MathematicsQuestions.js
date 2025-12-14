@@ -13,7 +13,7 @@ export const mathematicsQuestionsByYear = {
  is formed. If 
  is further reacted with 
  then soluble compound is formed. ‘A
-' is", options: ["Quick lime","Lime water","Slaked lime","White lime"], correctIndex: 0 },
+' is", options: ["Quick lime ","Lime water","Slaked lime","White lime"], correctIndex: 0 },
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Trigonometry?", options: ["A","B","C","D"], correctIndex: 0 },
