@@ -238,7 +238,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
             </div>
           </div>
 
-          <div className="fw-bold mb-3" style={{ fontSize: "1.02rem" }}>
+          <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
           </div>
 
@@ -273,6 +273,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
 
 
