@@ -171,12 +171,12 @@ setFocusMode(false); // ✅ SHOW UPPER PART
       .option-box{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:15px;
 
-  border:1px solid #e5e7eb;
+  border:2px solid #e5e7eb;
   border-radius:14px;
   padding:14px 16px;
-  margin-bottom:12px;
+  margin-bottom:16px;
 
   cursor:pointer;
   transition:.15s ease;
@@ -330,7 +330,7 @@ setFocusMode(false); // ✅ SHOW UPPER PART
             );
           })}
 
-          <div className="d-flex justify-content-between mt-3">
+          <div className="d-flex justify-content-between mt-5">
             <Button onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
             <Button
               onClick={handleCheckAnswer}
@@ -345,3 +345,4 @@ setFocusMode(false); // ✅ SHOW UPPER PART
     </div>
   );
 }
+
