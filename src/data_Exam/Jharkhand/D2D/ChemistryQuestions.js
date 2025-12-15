@@ -55,7 +55,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     return () => timerRef.current && clearInterval(timerRef.current);
   }, []);
 
-  /* ================= FUNCTIONS ================= */
+  /* ================= HELPERS ================= */
   function startTimer() {
     if (timerRef.current) clearInterval(timerRef.current);
     setTimeLeft(0);
@@ -70,6 +70,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     return `${m}:${s}`;
   }
 
+  /* ================= ACTIONS ================= */
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
@@ -104,6 +105,25 @@ export default function ChemistryQuestions({ setFocusMode }) {
     setChecked(prev => ({ ...prev, [q.id]: true }));
     setIsDisabled(true);
     timerRef.current && clearInterval(timerRef.current);
+  }
+
+  // Try again handler (same behaviour as Physics)
+  function handleTryAgain() {
+    const q = yearQuestions[currentIndex];
+    if (!q) return;
+    const qid = q.id;
+
+    // clear checked flag & selected answer for this question
+    setChecked(prev => ({ ...prev, [qid]: false }));
+    setSelectedAnswers(prev => {
+      const next = { ...prev };
+      delete next[qid];
+      return next;
+    });
+
+    setIsDisabled(false);
+    // restart timer for retry
+    startTimer();
   }
 
   function goNext() {
@@ -175,25 +195,127 @@ export default function ChemistryQuestions({ setFocusMode }) {
         display:flex;align-items:center;gap:15px;
         border:2px solid #e5e7eb;border-radius:14px;
         padding:14px 16px;margin-bottom:16px;
-        cursor:pointer;background:#fff;user-select:none
+        cursor:pointer;background:#fff;user-select:none;
+        transition: all .18s ease;
       }
-      .option-box strong{
-        min-width:34px;height:34px;border-radius:10px;
-        background:#f1f5f9;color:#1f2937;
-        display:flex;align-items:center;justify-content:center;
-        font-weight:800;font-size:14px
+    /* ABCD label – SAME AS PHYSICS */
+.option-box strong{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#f1f5f9;
+  color:#475569;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:15px;
+  flex-shrink:0;
+}
+
+/* Selected (before check) */
+.option-box.selected{
+  border:2px solid #1d4ed8;
+  background:#ffffff;
+}
+.option-box.selected strong{
+  background:#1d4ed8;
+  color:#ffffff;
+}
+
+/* Correct */
+.option-box.correct{
+  border-color:#22c55e;
+  background:#f0fdf4;
+}
+.option-box.correct strong{
+  background:#22c55e;
+  color:#ffffff;
+}
+
+/* Incorrect */
+.option-box.incorrect{
+  border-color:#ef4444;
+  background:#fef2f2;
+}
+.option-box.incorrect strong{
+  background:#ef4444;
+  color:#ffffff;
+}
+
+
+      /* ===== FIXED BOTTOM BUTTON BAR ===== */
+      .bottom-action-bar{
+        position:fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        background:#ffffff;
+        padding:14px 16px 18px;
+        border-top:1px solid #e5e7eb;
+        z-index:1000;
       }
-      .option-box.selected{background:#eef3ff}
-      .option-box.selected strong{background:#dbeafe;color:#1d4ed8}
-      .option-box.correct{background:#dcfce7;border-color:#22c55e}
-      .option-box.correct strong{background:#dcfce7;color:#166534}
-      .option-box.incorrect{background:#fee2e2;border-color:#ef4444}
-      .option-box.incorrect strong{background:#fee2e2;color:#991b1b}
+
+      .bottom-action-inner{
+        max-width:760px;
+        margin:0 auto;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+      }
+
+      .bottom-action-inner button{
+        min-width:110px;
+        height:44px;
+        border-radius:12px;
+        font-weight:600;
+        font-size:15px;
+      }
+
+      /* keep light buttons bordered even when disabled */
+      .bottom-action-inner .btn-light{
+        border-radius:12px !important;
+        border:1.5px solid #d1d5db !important;
+        background:#ffffff !important;
+        color:#111827;
+      }
+      .bottom-action-inner .btn-light:hover{
+        background:#f9fafb !important;
+      }
+      .bottom-action-inner .btn-light:disabled,
+      .bottom-action-inner .btn-light.disabled{
+        border-radius:12px !important;
+        border:1.5px solid #d1d5db !important;
+        background:#ffffff !important;
+        color:#9ca3af !important;
+        opacity:1 !important;
+      }
+
+      /* TRY AGAIN (center black) style */
+      .try-btn{
+        background:#111827;
+        color:#fff;
+        border:0;
+        min-width:160px;
+        height:44px;
+        border-radius:12px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        font-weight:700;
+        font-size:15px;
+      }
+      .try-btn:hover{opacity:.95}
+
+      .mcq-viewer{padding-bottom:120px}
 
       @media (max-width:600px){
         .exam-topbar{margin-left:-12px;margin-right:-12px}
         .option-box{padding:12px 14px}
         .option-box strong{min-width:32px;height:32px;font-size:13px}
+        .bottom-action-inner{gap:8px}
       }
       `}</style>
 
@@ -255,26 +377,61 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
             return (
               <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
-                <strong>{String.fromCharCode(65 + idx)}.</strong>
+                <strong>{String.fromCharCode(65 + idx)}</strong>
                 {opt}
               </div>
             );
           })}
-
-          <div className="d-flex justify-content-between mt-5">
-            <Button onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
-            <Button onClick={handleCheckAnswer} disabled={isDisabled || selectedAnswers[yearQuestions[currentIndex].id] === undefined}>
-              Check Answer
-            </Button>
-            <Button onClick={goNext} disabled={currentIndex === yearQuestions.length - 1}>Next</Button>
-          </div>
         </div>
       )}
+
+      {/* ===== FIXED BOTTOM BUTTONS ===== */}
+      {viewMode === "viewer" && yearQuestions.length > 0 && (() => {
+        const qid = yearQuestions[currentIndex].id;
+        const isChecked = Boolean(checked[qid]);
+        const isCorrect = isChecked && (yearQuestions[currentIndex].correctIndex === selectedAnswers[qid]);
+
+        return (
+          <div className="bottom-action-bar">
+            <div className="bottom-action-inner">
+              <Button
+                variant="light"
+                onClick={goPrevious}
+                disabled={currentIndex === 0}
+              >
+                Previous
+              </Button>
+
+              {isChecked && !isCorrect ? (
+                <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
+                  <span style={{fontSize:18}}>↺</span>
+                  Try Again
+                </button>
+              ) : (
+                <Button
+                  variant="primary"
+                  onClick={handleCheckAnswer}
+                  disabled={
+                    isDisabled ||
+                    selectedAnswers[yearQuestions[currentIndex].id] === undefined
+                  }
+                  style={{ minWidth: 160 }}
+                >
+                  Check Answer
+                </Button>
+              )}
+
+              <Button
+                variant="light"
+                onClick={goNext}
+                disabled={currentIndex === yearQuestions.length - 1}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
-
-
-
-
-
