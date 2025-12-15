@@ -163,7 +163,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
         display:flex;justify-content:space-between;align-items:center;
         background:#0f172a;color:#fff;
         margin-left:-16px;margin-right:-16px;
-        padding:15px 14px;margin-bottom:14px;border-radius:0
+        padding:10px 14px;margin-bottom:14px;border-radius:0
       }
       .exam-left span{display:block;font-size:12px;opacity:.8}
       .exam-center{font-weight:700}
@@ -273,6 +273,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
 
 
