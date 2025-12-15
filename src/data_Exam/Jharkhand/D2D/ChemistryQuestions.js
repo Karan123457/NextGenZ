@@ -174,7 +174,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
       .option-box{
         display:flex;align-items:center;gap:12px;
         border:1px solid #e5e7eb;border-radius:14px;
-        padding:14px 16px;margin-bottom:12px;
+        padding:14px 16px;margin-bottom:16px;
         cursor:pointer;background:#fff;user-select:none
       }
       .option-box strong{
@@ -261,7 +261,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
             );
           })}
 
-          <div className="d-flex justify-content-between mt-3">
+          <div className="d-flex justify-content-between mt-5">
             <Button onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
             <Button onClick={handleCheckAnswer} disabled={isDisabled || selectedAnswers[yearQuestions[currentIndex].id] === undefined}>
               Check Answer
@@ -273,3 +273,4 @@ export default function ChemistryQuestions({ setFocusMode }) {
     </div>
   );
 }
+
