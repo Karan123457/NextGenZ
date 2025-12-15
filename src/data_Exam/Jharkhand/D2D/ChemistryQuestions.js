@@ -21,7 +21,6 @@ export const chemistryQuestionsByYear = {
 
 /* ================= COMPONENT ================= */
 export default function ChemistryQuestions({ setFocusMode }) {
-
   const years = [
     { year: "All Previous Year Questions", key: "ALL" },
     { year: "2025 Questions", key: "2025" },
@@ -36,24 +35,37 @@ export default function ChemistryQuestions({ setFocusMode }) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [yearQuestions, setYearQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // user's current selected answer per question (undefined when none)
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [checked, setChecked] = useState({});
+
+  // marks question as attempted when user clicks Check Answer (stays true even after Try Again)
+  const [attempted, setAttempted] = useState({});
+
+  // controls visual feedback (colors). false | "PARTIAL" | "FULL"
+  const [showAnswer, setShowAnswer] = useState({});
+
   const [timeLeft, setTimeLeft] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
+
+  // view: years list or viewer
   const [viewMode, setViewMode] = useState("years");
+
+  // how many times "Check Answer" clicked per question
+  const [attemptCount, setAttemptCount] = useState({});
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
+    // when viewer opens a question, disable selection if showAnswer is true for that q
+    // we don't keep a separate isDisabled state — compute on render using showAnswer for current q
+    // but we keep timer behavior here:
     if (viewMode === "viewer" && yearQuestions.length > 0) {
+      // ensure timer running when question loaded
       startTimer();
-      const qid = yearQuestions[currentIndex].id;
-      setIsDisabled(Boolean(checked[qid]));
     }
-  }, [currentIndex, viewMode, yearQuestions, checked]);
-
-  useEffect(() => {
+    // cleanup on unmount
     return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, yearQuestions]);
 
   /* ================= HELPERS ================= */
   function startTimer() {
@@ -74,7 +86,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
-      Object.values(chemistryQuestionsByYear).forEach(arr => qs = qs.concat(arr));
+      Object.values(chemistryQuestionsByYear).forEach(arr => (qs = qs.concat(arr)));
     } else {
       qs = chemistryQuestionsByYear[yearObj.year] || [];
     }
@@ -83,60 +95,99 @@ export default function ChemistryQuestions({ setFocusMode }) {
     setCurrentIndex(0);
     setViewMode("viewer");
     setSelectedYear(yearObj);
-    setFocusMode(true);
+    setFocusMode && setFocusMode(true);
 
-    setChecked(prev => {
+    // initialize maps for loaded questions (do not override any existing attempted state that belongs to other questions)
+    setSelectedAnswers(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = undefined; });
+      return next;
+    });
+    setAttempted(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = false; });
+      return next;
+    });
+    setShowAnswer(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = false; });
+      return next;
+    });
+
+    // ensure attemptCount keys exist for loaded questions
+    setAttemptCount(prev => {
       const next = { ...prev };
       qs.forEach(q => {
-        if (next[q.id] === undefined) next[q.id] = false;
+        if (next[q.id] === undefined) next[q.id] = 0;
       });
       return next;
     });
+
+    startTimer();
   }
 
   function handleSelectOption(qid, idx) {
-    if (isDisabled) return;
+    // if feedback is visible for this question, block selecting
+    // showAnswer[qid] will be false | "PARTIAL" | "FULL" — truthy means a feedback state is active
+    if (showAnswer[qid]) return;
     setSelectedAnswers(prev => ({ ...prev, [qid]: idx }));
   }
 
   function handleCheckAnswer() {
     const q = yearQuestions[currentIndex];
     if (!q) return;
-    setChecked(prev => ({ ...prev, [q.id]: true }));
-    setIsDisabled(true);
+    const qid = q.id;
+
+    if (selectedAnswers[qid] === undefined) return;
+
+    setAttempted(prev => ({ ...prev, [qid]: true }));
+
+    setAttemptCount(prev => {
+      const nextCount = (prev[qid] || 0) + 1;
+
+      // FIRST attempt → show only selected (red or green)
+      if (nextCount === 1) {
+        setShowAnswer(p => ({ ...p, [qid]: "PARTIAL" }));
+      }
+
+      // SECOND attempt → show correct + wrong
+      if (nextCount >= 2) {
+        setShowAnswer(p => ({ ...p, [qid]: "FULL" }));
+      }
+
+      return { ...prev, [qid]: nextCount };
+    });
+
     timerRef.current && clearInterval(timerRef.current);
   }
 
-  // Try again handler (same behaviour as Physics)
   function handleTryAgain() {
     const q = yearQuestions[currentIndex];
     if (!q) return;
     const qid = q.id;
 
-    // clear checked flag & selected answer for this question
-    setChecked(prev => ({ ...prev, [qid]: false }));
-    setSelectedAnswers(prev => {
-      const next = { ...prev };
-      delete next[qid];
-      return next;
-    });
+    // hide colors (go back to fresh state)
+    setShowAnswer(prev => ({ ...prev, [qid]: false }));
 
-    setIsDisabled(false);
-    // restart timer for retry
+    // clear selection so user picks again
+    setSelectedAnswers(prev => ({ ...prev, [qid]: undefined }));
+
+    // restart timer
     startTimer();
   }
 
   function goNext() {
     if (currentIndex < yearQuestions.length - 1) {
       setCurrentIndex(i => i + 1);
-      setIsDisabled(false);
+      // timer restarted in effect when viewer updates
+      startTimer();
     }
   }
 
   function goPrevious() {
     if (currentIndex > 0) {
       setCurrentIndex(i => i - 1);
-      setIsDisabled(false);
+      startTimer();
     }
   }
 
@@ -145,7 +196,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
     setSelectedYear(null);
     setYearQuestions([]);
     setCurrentIndex(0);
-    setFocusMode(false);
+    setFocusMode && setFocusMode(false);
     timerRef.current && clearInterval(timerRef.current);
   }
 
@@ -157,15 +208,55 @@ export default function ChemistryQuestions({ setFocusMode }) {
   }
 
   function getAttempted(y) {
-    return Object.keys(checked).filter(
-      k =>
-        checked[k] &&
-        (y.key === "ALL" ||
-          chemistryQuestionsByYear[y.year]?.some(q => q.id === k))
-    ).length;
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
+    const arr = chemistryQuestionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
   }
 
-  const attemptedCount = yearQuestions.filter(q => checked[q.id]).length;
+  const attemptedCount = yearQuestions.filter(q => attempted[q.id]).length;
+
+  /* ================= bottomBar ================= */
+  const showBottomBar = viewMode === "viewer" && yearQuestions.length > 0;
+
+  let bottomBar = null;
+  if (showBottomBar) {
+    const qid = yearQuestions[currentIndex].id;
+    const isShown = showAnswer[qid] === "PARTIAL" || showAnswer[qid] === "FULL";
+
+    const chosen = selectedAnswers[qid];
+    const correctIdx = yearQuestions[currentIndex].correctIndex;
+    const isCorrectNow = isShown && chosen === correctIdx;
+    const showTryAgain = isShown && chosen !== correctIdx; // only when shown and wrong
+
+    bottomBar = (
+      <div className="bottom-action-bar">
+        <div className="bottom-action-inner">
+          <Button variant="light" onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
+
+          {showTryAgain ? (
+            <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
+              <span style={{fontSize:18}}>↺</span>
+              Try Again
+            </button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={handleCheckAnswer}
+              // disabled when a feedback state is active OR when no option selected
+              disabled={ isShown || selectedAnswers[qid] === undefined }
+              style={{ minWidth: 160 }}
+            >
+              Check Answer
+            </Button>
+          )}
+
+          <Button variant="light" onClick={goNext} disabled={currentIndex === yearQuestions.length - 1}>Next</Button>
+        </div>
+      </div>
+    );
+  }
 
   /* ================= UI ================= */
   return (
@@ -198,7 +289,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
         cursor:pointer;background:#fff;user-select:none;
         transition: all .18s ease;
       }
-    /* ABCD label – SAME AS PHYSICS */
+    /* ABCD label */
 .option-box strong{
   width:38px;
   height:38px;
@@ -243,80 +334,79 @@ export default function ChemistryQuestions({ setFocusMode }) {
   color:#ffffff;
 }
 
+/* ===== FIXED BOTTOM BUTTON BAR ===== */
+.bottom-action-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#ffffff;
+  padding:14px 16px 18px;
+  border-top:1px solid #e5e7eb;
+  z-index:1000;
+}
 
-      /* ===== FIXED BOTTOM BUTTON BAR ===== */
-      .bottom-action-bar{
-        position:fixed;
-        bottom:0;
-        left:0;
-        width:100%;
-        background:#ffffff;
-        padding:14px 16px 18px;
-        border-top:1px solid #e5e7eb;
-        z-index:1000;
-      }
+.bottom-action-inner{
+  max-width:760px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
 
-      .bottom-action-inner{
-        max-width:760px;
-        margin:0 auto;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-      }
+.bottom-action-inner button{
+  min-width:110px;
+  height:44px;
+  border-radius:12px;
+  font-weight:600;
+  font-size:15px;
+}
 
-      .bottom-action-inner button{
-        min-width:110px;
-        height:44px;
-        border-radius:12px;
-        font-weight:600;
-        font-size:15px;
-      }
+/* keep light buttons bordered even when disabled */
+.bottom-action-inner .btn-light{
+  border-radius:12px !important;
+  border:1.5px solid #d1d5db !important;
+  background:#ffffff !important;
+  color:#111827;
+}
+.bottom-action-inner .btn-light:hover{
+  background:#f9fafb !important;
+}
+.bottom-action-inner .btn-light:disabled,
+.bottom-action-inner .btn-light.disabled{
+  border-radius:12px !important;
+  border:1.5px solid #d1d5db !important;
+  background:#ffffff !important;
+  color:#9ca3af !important;
+  opacity:1 !important;
+}
 
-      /* keep light buttons bordered even when disabled */
-      .bottom-action-inner .btn-light{
-        border-radius:12px !important;
-        border:1.5px solid #d1d5db !important;
-        background:#ffffff !important;
-        color:#111827;
-      }
-      .bottom-action-inner .btn-light:hover{
-        background:#f9fafb !important;
-      }
-      .bottom-action-inner .btn-light:disabled,
-      .bottom-action-inner .btn-light.disabled{
-        border-radius:12px !important;
-        border:1.5px solid #d1d5db !important;
-        background:#ffffff !important;
-        color:#9ca3af !important;
-        opacity:1 !important;
-      }
+/* TRY AGAIN (center black) style */
+.try-btn{
+  background:#111827;
+  color:#fff;
+  border:0;
+  min-width:160px;
+  height:44px;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:700;
+  font-size:15px;
+}
+.try-btn:hover{opacity:.95}
 
-      /* TRY AGAIN (center black) style */
-      .try-btn{
-        background:#111827;
-        color:#fff;
-        border:0;
-        min-width:160px;
-        height:44px;
-        border-radius:12px;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:10px;
-        font-weight:700;
-        font-size:15px;
-      }
-      .try-btn:hover{opacity:.95}
+.mcq-viewer{padding-bottom:120px}
 
-      .mcq-viewer{padding-bottom:120px}
-
-      @media (max-width:600px){
-        .exam-topbar{margin-left:-12px;margin-right:-12px}
-        .option-box{padding:12px 14px}
-        .option-box strong{min-width:32px;height:32px;font-size:13px}
-        .bottom-action-inner{gap:8px}
-      }
+@media (max-width:600px){
+  .exam-topbar{margin-left:-12px;margin-right:-12px}
+  .option-box{padding:12px 14px}
+  .option-box strong{min-width:32px;height:32px;font-size:13px}
+  .bottom-action-inner{gap:8px}
+}
       `}</style>
 
       {/* ================= YEAR LIST ================= */}
@@ -366,19 +456,57 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
           {yearQuestions[currentIndex].options.map((opt, idx) => {
             const qid = yearQuestions[currentIndex].id;
-            const isChecked = checked[qid];
-            const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
+
+            const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
+            const isPartial = showState === "PARTIAL";
+            const isFull = showState === "FULL";
+            const isShown = isPartial || isFull;
+
+            const isCorrectOption = yearQuestions[currentIndex].correctIndex === idx;
             const isSelected = selectedAnswers[qid] === idx;
 
             let cls = "option-box";
-            if (!isChecked && isSelected) cls += " selected";
-            if (isChecked && isCorrect) cls += " correct";
-            if (isChecked && isSelected && !isCorrect) cls += " incorrect";
+
+            /* BEFORE CHECK */
+            if (!showState && isSelected) {
+              cls += " selected";
+            }
+
+            /* FIRST CHECK (attempt 1) */
+            if (isPartial && isSelected && isCorrectOption) {
+              cls += " correct";
+            }
+            if (isPartial && isSelected && !isCorrectOption) {
+              cls += " incorrect";
+            }
+
+            /* SECOND CHECK (attempt 2+) */
+            if (isFull && isCorrectOption) {
+              cls += " correct";
+            }
+            if (isFull && isSelected && !isCorrectOption) {
+              cls += " incorrect";
+            }
 
             return (
-              <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
+              <div
+                key={idx}
+                className={cls}
+                onClick={() => handleSelectOption(qid, idx)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelectOption(qid, idx);
+                  }
+                }}
+                aria-pressed={isSelected}
+                aria-disabled={isShown}
+                style={{ opacity: 1 }}
+              >
                 <strong>{String.fromCharCode(65 + idx)}</strong>
-                {opt}
+                <div>{opt}</div>
               </div>
             );
           })}
@@ -386,52 +514,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
       )}
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}
-      {viewMode === "viewer" && yearQuestions.length > 0 && (() => {
-        const qid = yearQuestions[currentIndex].id;
-        const isChecked = Boolean(checked[qid]);
-        const isCorrect = isChecked && (yearQuestions[currentIndex].correctIndex === selectedAnswers[qid]);
-
-        return (
-          <div className="bottom-action-bar">
-            <div className="bottom-action-inner">
-              <Button
-                variant="light"
-                onClick={goPrevious}
-                disabled={currentIndex === 0}
-              >
-                Previous
-              </Button>
-
-              {isChecked && !isCorrect ? (
-                <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
-                  <span style={{fontSize:18}}>↺</span>
-                  Try Again
-                </button>
-              ) : (
-                <Button
-                  variant="primary"
-                  onClick={handleCheckAnswer}
-                  disabled={
-                    isDisabled ||
-                    selectedAnswers[yearQuestions[currentIndex].id] === undefined
-                  }
-                  style={{ minWidth: 160 }}
-                >
-                  Check Answer
-                </Button>
-              )}
-
-              <Button
-                variant="light"
-                onClick={goNext}
-                disabled={currentIndex === yearQuestions.length - 1}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        );
-      })()}
+      {bottomBar}
     </div>
   );
 }
