@@ -172,8 +172,8 @@ export default function ChemistryQuestions({ setFocusMode }) {
       .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;background:#e0edff;color:#1d4ed8}
 
       .option-box{
-        display:flex;align-items:center;gap:12px;
-        border:1px solid #e5e7eb;border-radius:14px;
+        display:flex;align-items:center;gap:15px;
+        border:2px solid #e5e7eb;border-radius:14px;
         padding:14px 16px;margin-bottom:16px;
         cursor:pointer;background:#fff;user-select:none
       }
@@ -273,4 +273,5 @@ export default function ChemistryQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
