@@ -169,47 +169,102 @@ export default function PhysicsQuestions({ setFocusMode }) {
       }
 
       .option-box{
-        display:flex;align-items:center;gap:15px;
-        border:2px solid #e5e7eb;border-radius:14px;
-        padding:14px 16px;margin-bottom:16px;
-        cursor:pointer;background:#fff;
-      }
-      .option-box strong{
-        min-width:34px;height:34px;border-radius:10px;
-        background:#f1f5f9;color:#1f2937;
-        display:flex;align-items:center;justify-content:center;
-        font-weight:800;
-      }
-      .option-box.selected{background:#eef3ff}
-      .option-box.correct{background:#dcfce7;border-color:#22c55e}
-      .option-box.incorrect{background:#fee2e2;border-color:#ef4444}
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:16px 18px;
+  margin-bottom:14px;
+  border:1.5px solid #e5e7eb;
+  border-radius:16px;
+  background:#fff;
+  cursor:pointer;
+  transition:all .2s ease;
+}
 
-      /* ===== FIXED BOTTOM BAR ===== */
+.option-box strong{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#f1f5f9;
+  color:#475569;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:15px;
+}
+
+/* Selected (blue border like image) */
+.option-box.selected{
+  border:2px solid #1d4ed8;
+  background:#ffffff;
+}
+
+.option-box.selected strong{
+  background:#1d4ed8;
+  color:#fff;
+}
+
+/* Correct / Incorrect (after check) */
+.option-box.correct{
+  border-color:#22c55e;
+  background:#f0fdf4;
+}
+
+.option-box.incorrect{
+  border-color:#ef4444;
+  background:#fef2f2;
+}
+
+
+      /* ===== FIXED BOTTOM BUTTON BAR ===== */
       .bottom-action-bar{
-        position:fixed;
-        bottom:0;
-        left:0;
-        width:100%;
-        background:#ffffff;
-        border-top:1px solid #e5e7eb;
-        padding:12px 16px;
-        z-index:1000;
-      }
-      .bottom-action-inner{
-        max-width:760px;
-        margin:0 auto;
-        display:flex;
-        justify-content:space-between;
-        gap:12px;
-      }
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#ffffff;
+  padding:14px 16px 18px;
+  border-top:1px solid #e5e7eb;
+  z-index:1000;
+}
+
+.bottom-action-inner{
+  max-width:760px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.bottom-action-inner button{
+  min-width:110px;
+  height:44px;
+  border-radius:12px;
+  font-weight:600;
+  font-size:15px;
+}
+  /* FIX Bootstrap override for light buttons */
+.bottom-action-inner .btn-light{
+  border-radius:12px !important;
+  border:1.5px solid #d1d5db !important;
+  background:#ffffff !important;
+  color:#111827;
+}
+
+.bottom-action-inner .btn-light:hover{
+  background:#f9fafb !important;
+}
+
+
       .mcq-viewer{
-        padding-bottom:90px;
+        padding-bottom:100px;
       }
       @media (max-width:600px){
         .exam-topbar{margin-left:-12px;margin-right:-12px}
         .option-box{padding:12px 14px}
         .option-box strong{min-width:32px;height:32px;font-size:13px}
-        .bottom-action-inner button{flex:1}
       }
       `}</style>
 
@@ -287,36 +342,38 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
-        <div className="bottom-action-bar">
-          <div className="bottom-action-inner">
-            <Button
-              variant="outline-secondary"
-              onClick={goPrevious}
-              disabled={currentIndex === 0}
-            >
-              Previous
-            </Button>
+       <div className="bottom-action-bar">
+  <div className="bottom-action-inner">
+    <Button
+      variant="light"
+      onClick={goPrevious}
+      disabled={currentIndex === 0}
+    >
+      Previous
+    </Button>
 
-            <Button
-              variant="primary"
-              onClick={handleCheckAnswer}
-              disabled={
-                isDisabled ||
-                selectedAnswers[yearQuestions[currentIndex].id] === undefined
-              }
-            >
-              Check Answer
-            </Button>
+    <Button
+      variant="primary"
+      onClick={handleCheckAnswer}
+      disabled={
+        isDisabled ||
+        selectedAnswers[yearQuestions[currentIndex].id] === undefined
+      }
+      style={{ minWidth: 160 }}
+    >
+      Check Answer
+    </Button>
 
-            <Button
-              variant="outline-secondary"
-              onClick={goNext}
-              disabled={currentIndex === yearQuestions.length - 1}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+    <Button
+      variant="light"
+      onClick={goNext}
+      disabled={currentIndex === yearQuestions.length - 1}
+    >
+      Next
+    </Button>
+  </div>
+</div>
+
       )}
     </div>
   );
