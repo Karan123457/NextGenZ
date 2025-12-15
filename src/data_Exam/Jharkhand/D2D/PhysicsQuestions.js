@@ -5,19 +5,17 @@ import { Button } from "react-bootstrap";
 /* ================= DATA ================= */
 export const physicsQuestionsByYear = {
   "2025 Questions": [
-    { id: "2025-q1", text: "Newton's Law?", options: ["A","B","C","D"], correctIndex: 0 },
-    { id: "2025-q2", text: "Kinematics?", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2025-q1", text: "Newton's Law?", options: ["A", "B", "C", "D"], correctIndex: 0 },
+    { id: "2025-q2", text: "Kinematics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
   "2024 Questions": [
-    // NOTE: ensure unique IDs if you add more questions
-    { id: "2024-q1", text: "Dynamics?", options: ["A","B","C","D"], correctIndex: 0 },
-    { id: "2024-q2", text: "What is Computer", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2024-q1", text: "Dynamics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
+    { id: "2024-q2", text: "What is Computer?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
 };
 
 /* ================= COMPONENT ================= */
 export default function PhysicsQuestions({ setFocusMode }) {
-
   const years = [
     { year: "All Previous Year Questions", key: "ALL" },
     { year: "2025 Questions", key: "2025" },
@@ -28,27 +26,27 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
   const timerRef = useRef(null);
 
+  const [selectedYear, setSelectedYear] = useState(null);
   const [yearQuestions, setYearQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  /* per-question states */
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [checked, setChecked] = useState({});
+  const [attempted, setAttempted] = useState({});
+  const [showAnswer, setShowAnswer] = useState({}); // false | "PARTIAL" | "FULL"
+  const [attemptCount, setAttemptCount] = useState({});
+
   const [timeLeft, setTimeLeft] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [viewMode, setViewMode] = useState("years");
-  const [selectedYear, setSelectedYear] = useState(null);
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
     if (viewMode === "viewer" && yearQuestions.length > 0) {
       startTimer();
-      const qid = yearQuestions[currentIndex].id;
-      setIsDisabled(Boolean(checked[qid]));
     }
-  }, [currentIndex, viewMode, yearQuestions, checked]);
-
-  useEffect(() => {
     return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, yearQuestions]);
 
   /* ================= HELPERS ================= */
   function startTimer() {
@@ -65,29 +63,26 @@ export default function PhysicsQuestions({ setFocusMode }) {
     return `${m}:${s}`;
   }
 
-  function getTotalQuestions(y) {
+  function getTotal(y) {
     if (y.key === "ALL") {
-      return Object.values(physicsQuestionsByYear)
-        .reduce((s, arr) => s + arr.length, 0);
+      return Object.values(physicsQuestionsByYear).reduce((s, a) => s + a.length, 0);
     }
     return physicsQuestionsByYear[y.year]?.length || 0;
   }
 
-  function getAttemptedQuestions(y) {
+  function getAttempted(y) {
     if (y.key === "ALL") {
-      return Object.values(physicsQuestionsByYear)
-        .flat()
-        .filter(q => checked[q.id]).length;
+      return Object.keys(attempted).filter(k => attempted[k]).length;
     }
-    return (physicsQuestionsByYear[y.year] || [])
-      .filter(q => checked[q.id]).length;
+    const arr = physicsQuestionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
   }
 
   /* ================= ACTIONS ================= */
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
-      Object.values(physicsQuestionsByYear).forEach(arr => qs = qs.concat(arr));
+      Object.values(physicsQuestionsByYear).forEach(arr => (qs = qs.concat(arr)));
     } else {
       qs = physicsQuestionsByYear[yearObj.year] || [];
     }
@@ -96,73 +91,136 @@ export default function PhysicsQuestions({ setFocusMode }) {
     setCurrentIndex(0);
     setViewMode("viewer");
     setSelectedYear(yearObj);
-    setFocusMode?.(true);
+    setFocusMode && setFocusMode(true);
 
-    setChecked(prev => {
+    // initialize per-question maps without overriding other-year data
+    setSelectedAnswers(prev => {
       const next = { ...prev };
-      qs.forEach(q => {
-        if (next[q.id] === undefined) next[q.id] = false;
-      });
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = undefined; });
       return next;
     });
+    setAttempted(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = false; });
+      return next;
+    });
+    setShowAnswer(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = false; });
+      return next;
+    });
+    setAttemptCount(prev => {
+      const next = { ...prev };
+      qs.forEach(q => { if (next[q.id] === undefined) next[q.id] = 0; });
+      return next;
+    });
+
+    startTimer();
   }
 
   function handleSelectOption(qid, idx) {
-    if (isDisabled) return;
+    // block selecting when feedback is visible for this question
+    if (showAnswer[qid]) return;
     setSelectedAnswers(prev => ({ ...prev, [qid]: idx }));
   }
 
   function handleCheckAnswer() {
     const q = yearQuestions[currentIndex];
     if (!q) return;
-    setChecked(prev => ({ ...prev, [q.id]: true }));
-    setIsDisabled(true);
+    const qid = q.id;
+    if (selectedAnswers[qid] === undefined) return;
+
+    setAttempted(prev => ({ ...prev, [qid]: true }));
+
+    setAttemptCount(prev => {
+      const next = (prev[qid] || 0) + 1;
+
+      // FIRST attempt -> PARTIAL (only selected shown)
+      if (next === 1) setShowAnswer(p => ({ ...p, [qid]: "PARTIAL" }));
+
+      // SECOND (or more) -> FULL (show correct + wrong)
+      if (next >= 2) setShowAnswer(p => ({ ...p, [qid]: "FULL" }));
+
+      return { ...prev, [qid]: next };
+    });
+
     timerRef.current && clearInterval(timerRef.current);
   }
 
-  // TRY AGAIN: reset current question so user can attempt again
   function handleTryAgain() {
     const q = yearQuestions[currentIndex];
     if (!q) return;
     const qid = q.id;
 
-    // clear checked state and selected answer for this question
-    setChecked(prev => ({ ...prev, [qid]: false }));
-    setSelectedAnswers(prev => {
-      const next = { ...prev };
-      delete next[qid];
-      return next;
-    });
-
-    setIsDisabled(false);
-    // restart timer for retry
+    // hide feedback and clear selection so user picks again
+    setShowAnswer(prev => ({ ...prev, [qid]: false }));
+    setSelectedAnswers(prev => ({ ...prev, [qid]: undefined }));
     startTimer();
   }
 
   function goNext() {
     if (currentIndex < yearQuestions.length - 1) {
       setCurrentIndex(i => i + 1);
-      setIsDisabled(false);
+      startTimer();
     }
   }
 
   function goPrevious() {
     if (currentIndex > 0) {
       setCurrentIndex(i => i - 1);
-      setIsDisabled(false);
+      startTimer();
     }
   }
 
   function backToYears() {
     setViewMode("years");
+    setSelectedYear(null);
     setYearQuestions([]);
     setCurrentIndex(0);
-    setFocusMode?.(false);
-    setSelectedYear(null);
+    setFocusMode && setFocusMode(false);
     timerRef.current && clearInterval(timerRef.current);
   }
 
-  const attemptedCount = Object.values(checked).filter(Boolean).length;
+  const attemptedCount = yearQuestions.filter(q => attempted[q.id]).length;
+
+  /* ================= bottomBar ================= */
+  const showBottomBar = viewMode === "viewer" && yearQuestions.length > 0;
+  let bottomBar = null;
+
+  if (showBottomBar) {
+    const qid = yearQuestions[currentIndex].id;
+    const isShown = showAnswer[qid] === "PARTIAL" || showAnswer[qid] === "FULL";
+    const chosen = selectedAnswers[qid];
+    const correctIdx = yearQuestions[currentIndex].correctIndex;
+    const showTryAgain = isShown && chosen !== correctIdx;
+
+    bottomBar = (
+      <div className="bottom-action-bar">
+        <div className="bottom-action-inner">
+          <Button variant="light" onClick={goPrevious} disabled={currentIndex === 0}>Previous</Button>
+
+          {showTryAgain ? (
+            <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
+              <span style={{ fontSize: 18 }}>↺</span>
+              Try Again
+            </button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={handleCheckAnswer}
+              // disabled when a feedback state is active OR when no option selected
+              disabled={isShown || selectedAnswers[ qid ] === undefined}
+              style={{ minWidth: 160 }}
+            >
+              Check Answer
+            </Button>
+          )}
+
+          <Button variant="light" onClick={goNext} disabled={currentIndex === yearQuestions.length - 1}>Next</Button>
+        </div>
+      </div>
+    );
+  }
 
   /* ================= UI ================= */
   return (
@@ -176,69 +234,55 @@ export default function PhysicsQuestions({ setFocusMode }) {
       .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
-      .exam-topbar{
-        display:flex;justify-content:space-between;align-items:center;
-        background:#0f172a;color:#fff;
-        margin-left:-16px;margin-right:-16px;
-        padding:10px 14px;margin-bottom:14px;
-      }
+      .exam-topbar{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;margin-left:-16px;margin-right:-16px;padding:10px 14px;margin-bottom:14px;border-radius:0}
       .exam-left span{display:block;font-size:12px;opacity:.8}
       .exam-center{font-weight:700}
       .exam-right{display:flex;gap:8px;align-items:center}
 
-      .timer-pill{
-        padding:6px 14px;border-radius:999px;
-        font-weight:800;font-size:13px;
-        background:#e0edff;color:#1d4ed8;
-      }
+      .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;background:#e0edff;color:#1d4ed8}
 
       .option-box{
-        display:flex;
-        align-items:center;
-        gap:16px;
-        padding:16px 18px;
-        margin-bottom:14px;
-        border:1.5px solid #e5e7eb;
-        border-radius:16px;
-        background:#fff;
-        cursor:pointer;
-        transition:all .2s ease;
+        display:flex;align-items:center;gap:15px;
+        border:2px solid #e5e7eb;border-radius:14px;
+        padding:14px 16px;margin-bottom:16px;
+        cursor:pointer;background:#fff;user-select:none;
+        transition: all .18s ease;
       }
 
       .option-box strong{
-        width:38px;
-        height:38px;
-        border-radius:50%;
-        background:#f1f5f9;
-        color:#475569;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:700;
-        font-size:15px;
+        width:38px;height:38px;border-radius:50%;
+        background:#f1f5f9;color:#475569;display:flex;
+        align-items:center;justify-content:center;font-weight:700;font-size:15px;
+        flex-shrink:0;
       }
 
       .option-box.selected{
         border:2px solid #1d4ed8;
         background:#ffffff;
       }
-
       .option-box.selected strong{
         background:#1d4ed8;
-        color:#fff;
+        color:#ffffff;
       }
 
       .option-box.correct{
         border-color:#22c55e;
         background:#f0fdf4;
       }
+      .option-box.correct strong{
+        background:#22c55e;
+        color:#ffffff;
+      }
 
       .option-box.incorrect{
         border-color:#ef4444;
         background:#fef2f2;
       }
+      .option-box.incorrect strong{
+        background:#ef4444;
+        color:#ffffff;
+      }
 
-      /* ===== FIXED BOTTOM BUTTON BAR ===== */
       .bottom-action-bar{
         position:fixed;
         bottom:0;
@@ -267,7 +311,6 @@ export default function PhysicsQuestions({ setFocusMode }) {
         font-size:15px;
       }
 
-      /* light buttons should keep border even when disabled */
       .bottom-action-inner .btn-light{
         border-radius:12px !important;
         border:1.5px solid #d1d5db !important;
@@ -286,7 +329,6 @@ export default function PhysicsQuestions({ setFocusMode }) {
         opacity:1 !important;
       }
 
-      /* TRY AGAIN (center black) style */
       .try-btn{
         background:#111827;
         color:#fff;
@@ -303,9 +345,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
       }
       .try-btn:hover{opacity:.95}
 
-      .mcq-viewer{
-        padding-bottom:120px;
-      }
+      .mcq-viewer{padding-bottom:120px}
 
       @media (max-width:600px){
         .exam-topbar{margin-left:-12px;margin-right:-12px}
@@ -322,25 +362,21 @@ export default function PhysicsQuestions({ setFocusMode }) {
           <div className="small text-muted mb-2">{attemptedCount} attempted</div>
 
           <div className="pyq-list">
-            {years.map((y, i) => {
-              const total = getTotalQuestions(y);
-              const attempted = getAttemptedQuestions(y);
-              return (
-                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                  <div className="pyq-left">
-                    <div className="pyq-year">{y.key}</div>
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{y.year}</div>
-                      <div className="pyq-small">Previous Year Questions</div>
-                    </div>
-                  </div>
+            {years.map((y, i) => (
+              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==="Enter") openYearQuestions(y); }}>
+                <div className="pyq-left">
+                  <div className="pyq-year">{y.key}</div>
                   <div>
-                    <div className="pyq-progress">{attempted}/{total}</div>
-                    <div className="pyq-small">Total {total} • Attempted {attempted}</div>
+                    <div style={{ fontWeight: 700 }}>{y.year}</div>
+                    <div className="pyq-small">Previous Year Questions</div>
                   </div>
                 </div>
-              );
-            })}
+                <div>
+                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  <div className="pyq-small">Total {getTotal(y)} • Attempted {getAttempted(y)}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </>
       )}
@@ -353,9 +389,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
               <strong>Jharkhand D2D</strong>
               <span>Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
             </div>
-            <div className="exam-center">
-              Q {currentIndex + 1} / {yearQuestions.length}
-            </div>
+            <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
             <div className="exam-right">
               <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
               <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
@@ -368,19 +402,41 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
           {yearQuestions[currentIndex].options.map((opt, idx) => {
             const qid = yearQuestions[currentIndex].id;
-            const isChecked = checked[qid];
+            const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
             const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
             const isSelected = selectedAnswers[qid] === idx;
 
             let cls = "option-box";
-            if (!isChecked && isSelected) cls += " selected";
-            if (isChecked && isCorrect) cls += " correct";
-            if (isChecked && isSelected && !isCorrect) cls += " incorrect";
+            /* BEFORE CHECK */
+            if (!showState && isSelected) cls += " selected";
+
+            /* FIRST CHECK (attempt 1) */
+            if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
+            if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
+
+            /* SECOND CHECK (attempt 2+) */
+            if (showState === "FULL" && isCorrect) cls += " correct";
+            if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
 
             return (
-              <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
+              <div
+                key={idx}
+                className={cls}
+                onClick={() => handleSelectOption(qid, idx)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelectOption(qid, idx);
+                  }
+                }}
+                aria-pressed={isSelected}
+                aria-disabled={!!showState}
+                style={{ opacity: 1 }}
+              >
                 <strong>{String.fromCharCode(65 + idx)}</strong>
-                {opt}
+                <div>{opt}</div>
               </div>
             );
           })}
@@ -388,53 +444,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
       )}
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}
-      {viewMode === "viewer" && yearQuestions.length > 0 && (() => {
-        const qid = yearQuestions[currentIndex].id;
-        const isChecked = Boolean(checked[qid]);
-        const isCorrect = isChecked && (yearQuestions[currentIndex].correctIndex === selectedAnswers[qid]);
-
-        return (
-          <div className="bottom-action-bar">
-            <div className="bottom-action-inner">
-              <Button
-                variant="light"
-                onClick={goPrevious}
-                disabled={currentIndex === 0}
-              >
-                Previous
-              </Button>
-
-              {/* CENTER: if checked & incorrect -> Try Again button, else normal Check Answer */}
-              {isChecked && !isCorrect ? (
-                <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
-                  <span style={{fontSize:18}}>↺</span>
-                  Try Again
-                </button>
-              ) : (
-                <Button
-                  variant="primary"
-                  onClick={handleCheckAnswer}
-                  disabled={
-                    isDisabled ||
-                    selectedAnswers[yearQuestions[currentIndex].id] === undefined
-                  }
-                  style={{ minWidth: 160 }}
-                >
-                  Check Answer
-                </Button>
-              )}
-
-              <Button
-                variant="light"
-                onClick={goNext}
-                disabled={currentIndex === yearQuestions.length - 1}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        );
-      })()}
+      {bottomBar}
     </div>
   );
 }
