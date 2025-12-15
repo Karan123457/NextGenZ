@@ -34,6 +34,8 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [viewMode, setViewMode] = useState("years");
+  const [selectedYear, setSelectedYear] = useState(null);
+
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
@@ -92,8 +94,10 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
     setYearQuestions(qs);
     setCurrentIndex(0);
-    setViewMode("viewer");
-    setFocusMode?.(true);
+   setViewMode("viewer");
+setSelectedYear(yearObj);
+setFocusMode?.(true);
+
 
     setChecked(prev => {
       const next = { ...prev };
@@ -136,6 +140,8 @@ export default function PhysicsQuestions({ setFocusMode }) {
     setYearQuestions([]);
     setCurrentIndex(0);
     setFocusMode?.(false);
+    setSelectedYear(null);
+
     timerRef.current && clearInterval(timerRef.current);
   }
 
@@ -312,18 +318,23 @@ export default function PhysicsQuestions({ setFocusMode }) {
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
           <div className="exam-topbar">
-            <div className="exam-left">
-              <strong>Jharkhand D2D</strong>
-              <span>Physics – PYQ</span>
-            </div>
-            <div className="exam-center">
-              Q {currentIndex + 1} / {yearQuestions.length}
-            </div>
-            <div className="exam-right">
-              <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-              <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
-            </div>
-          </div>
+  <div className="exam-left">
+    <strong>Jharkhand D2D</strong>
+    <span>
+      Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}
+    </span>
+  </div>
+
+  <div className="exam-center">
+    Q {currentIndex + 1} / {yearQuestions.length}
+  </div>
+
+  <div className="exam-right">
+    <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
+    <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
+  </div>
+</div>
+
 
           <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
