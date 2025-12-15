@@ -95,6 +95,18 @@ const JHPolytechnic = () => {
           <li>
             <b>Exam Mode:</b> Offline (OMR Based)
           </li>
+           <li>
+            <b>Question Type:</b> Objective Type (MCQ)
+          </li>
+          <li>
+            <b>Exam Timing:</b> 10:30 AM – 1:00 PM
+          </li>
+          <li>
+            <b>Question Paper Language:</b> Hindi & English
+          </li>
+           <li>
+            <b>Official Website:</b> jceceb.jharkhand.gov.in
+          </li>
         </ul>
       </div>
 
@@ -133,11 +145,12 @@ const JHPolytechnic = () => {
           <li>
             Candidate must be a <b>domicile of Jharkhand</b>.
           </li>
-          <li>Minimum Marks: 35% in Class 10th.</li>
+          <li>Minimum Marks: <b>35%</b> in Class 10th.</li>
           <li>
             Age Limit: Minimum <b>17 years</b> for Mining Engineering, no age
             limit for other branches.
           </li>
+          <li>Candidate must be <b>medically fit </b>at the time of admission.</li>
         </ul>
       </div>
 
