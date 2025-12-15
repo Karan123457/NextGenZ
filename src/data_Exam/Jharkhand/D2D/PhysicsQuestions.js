@@ -10,6 +10,7 @@ export const physicsQuestionsByYear = {
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Dynamics?", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2024-q1", text: "What is Computer", options: ["A","B","C","D"], correctIndex: 0 },
   ],
 };
 
@@ -256,6 +257,15 @@ export default function PhysicsQuestions({ setFocusMode }) {
 .bottom-action-inner .btn-light:hover{
   background:#f9fafb !important;
 }
+/* FIX disabled state border loss (FIRST & LAST QUESTION) */
+.bottom-action-inner .btn-light:disabled,
+.bottom-action-inner .btn-light.disabled{
+  border-radius:12px !important;
+  border:1.5px solid #d1d5db !important;
+  background:#ffffff !important;
+  color:#9ca3af !important;
+  opacity:1 !important;   /* stop bootstrap fade */
+}
 
 
       .mcq-viewer{
@@ -332,7 +342,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
             return (
               <div key={idx} className={cls} onClick={() => handleSelectOption(qid, idx)}>
-                <strong>{String.fromCharCode(65 + idx)}.</strong>
+                <strong>{String.fromCharCode(65 + idx)}</strong>
                 {opt}
               </div>
             );
