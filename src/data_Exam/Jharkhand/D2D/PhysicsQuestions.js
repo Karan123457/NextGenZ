@@ -9,8 +9,9 @@ export const physicsQuestionsByYear = {
     { id: "2025-q2", text: "Kinematics?", options: ["A","B","C","D"], correctIndex: 0 },
   ],
   "2024 Questions": [
+    // NOTE: ensure unique IDs if you add more questions
     { id: "2024-q1", text: "Dynamics?", options: ["A","B","C","D"], correctIndex: 0 },
-    { id: "2024-q1", text: "What is Computer", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2024-q2", text: "What is Computer", options: ["A","B","C","D"], correctIndex: 0 },
   ],
 };
 
@@ -35,7 +36,6 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [isDisabled, setIsDisabled] = useState(false);
   const [viewMode, setViewMode] = useState("years");
   const [selectedYear, setSelectedYear] = useState(null);
-
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
@@ -94,10 +94,9 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
     setYearQuestions(qs);
     setCurrentIndex(0);
-   setViewMode("viewer");
-setSelectedYear(yearObj);
-setFocusMode?.(true);
-
+    setViewMode("viewer");
+    setSelectedYear(yearObj);
+    setFocusMode?.(true);
 
     setChecked(prev => {
       const next = { ...prev };
@@ -121,6 +120,25 @@ setFocusMode?.(true);
     timerRef.current && clearInterval(timerRef.current);
   }
 
+  // TRY AGAIN: reset current question so user can attempt again
+  function handleTryAgain() {
+    const q = yearQuestions[currentIndex];
+    if (!q) return;
+    const qid = q.id;
+
+    // clear checked state and selected answer for this question
+    setChecked(prev => ({ ...prev, [qid]: false }));
+    setSelectedAnswers(prev => {
+      const next = { ...prev };
+      delete next[qid];
+      return next;
+    });
+
+    setIsDisabled(false);
+    // restart timer for retry
+    startTimer();
+  }
+
   function goNext() {
     if (currentIndex < yearQuestions.length - 1) {
       setCurrentIndex(i => i + 1);
@@ -141,7 +159,6 @@ setFocusMode?.(true);
     setCurrentIndex(0);
     setFocusMode?.(false);
     setSelectedYear(null);
-
     timerRef.current && clearInterval(timerRef.current);
   }
 
@@ -176,111 +193,125 @@ setFocusMode?.(true);
       }
 
       .option-box{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:16px 18px;
-  margin-bottom:14px;
-  border:1.5px solid #e5e7eb;
-  border-radius:16px;
-  background:#fff;
-  cursor:pointer;
-  transition:all .2s ease;
-}
+        display:flex;
+        align-items:center;
+        gap:16px;
+        padding:16px 18px;
+        margin-bottom:14px;
+        border:1.5px solid #e5e7eb;
+        border-radius:16px;
+        background:#fff;
+        cursor:pointer;
+        transition:all .2s ease;
+      }
 
-.option-box strong{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  background:#f1f5f9;
-  color:#475569;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:15px;
-}
+      .option-box strong{
+        width:38px;
+        height:38px;
+        border-radius:50%;
+        background:#f1f5f9;
+        color:#475569;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        font-size:15px;
+      }
 
-/* Selected (blue border like image) */
-.option-box.selected{
-  border:2px solid #1d4ed8;
-  background:#ffffff;
-}
+      .option-box.selected{
+        border:2px solid #1d4ed8;
+        background:#ffffff;
+      }
 
-.option-box.selected strong{
-  background:#1d4ed8;
-  color:#fff;
-}
+      .option-box.selected strong{
+        background:#1d4ed8;
+        color:#fff;
+      }
 
-/* Correct / Incorrect (after check) */
-.option-box.correct{
-  border-color:#22c55e;
-  background:#f0fdf4;
-}
+      .option-box.correct{
+        border-color:#22c55e;
+        background:#f0fdf4;
+      }
 
-.option-box.incorrect{
-  border-color:#ef4444;
-  background:#fef2f2;
-}
-
+      .option-box.incorrect{
+        border-color:#ef4444;
+        background:#fef2f2;
+      }
 
       /* ===== FIXED BOTTOM BUTTON BAR ===== */
       .bottom-action-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#ffffff;
-  padding:14px 16px 18px;
-  border-top:1px solid #e5e7eb;
-  z-index:1000;
-}
+        position:fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        background:#ffffff;
+        padding:14px 16px 18px;
+        border-top:1px solid #e5e7eb;
+        z-index:1000;
+      }
 
-.bottom-action-inner{
-  max-width:760px;
-  margin:0 auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-}
+      .bottom-action-inner{
+        max-width:760px;
+        margin:0 auto;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+      }
 
-.bottom-action-inner button{
-  min-width:110px;
-  height:44px;
-  border-radius:12px;
-  font-weight:600;
-  font-size:15px;
-}
-  /* FIX Bootstrap override for light buttons */
-.bottom-action-inner .btn-light{
-  border-radius:12px !important;
-  border:1.5px solid #d1d5db !important;
-  background:#ffffff !important;
-  color:#111827;
-}
+      .bottom-action-inner button{
+        min-width:110px;
+        height:44px;
+        border-radius:12px;
+        font-weight:600;
+        font-size:15px;
+      }
 
-.bottom-action-inner .btn-light:hover{
-  background:#f9fafb !important;
-}
-/* FIX disabled state border loss (FIRST & LAST QUESTION) */
-.bottom-action-inner .btn-light:disabled,
-.bottom-action-inner .btn-light.disabled{
-  border-radius:12px !important;
-  border:1.5px solid #d1d5db !important;
-  background:#ffffff !important;
-  color:#9ca3af !important;
-  opacity:1 !important;   /* stop bootstrap fade */
-}
+      /* light buttons should keep border even when disabled */
+      .bottom-action-inner .btn-light{
+        border-radius:12px !important;
+        border:1.5px solid #d1d5db !important;
+        background:#ffffff !important;
+        color:#111827;
+      }
+      .bottom-action-inner .btn-light:hover{
+        background:#f9fafb !important;
+      }
+      .bottom-action-inner .btn-light:disabled,
+      .bottom-action-inner .btn-light.disabled{
+        border-radius:12px !important;
+        border:1.5px solid #d1d5db !important;
+        background:#ffffff !important;
+        color:#9ca3af !important;
+        opacity:1 !important;
+      }
 
+      /* TRY AGAIN (center black) style */
+      .try-btn{
+        background:#111827;
+        color:#fff;
+        border:0;
+        min-width:160px;
+        height:44px;
+        border-radius:12px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        font-weight:700;
+        font-size:15px;
+      }
+      .try-btn:hover{opacity:.95}
 
       .mcq-viewer{
-        padding-bottom:100px;
+        padding-bottom:120px;
       }
+
       @media (max-width:600px){
         .exam-topbar{margin-left:-12px;margin-right:-12px}
         .option-box{padding:12px 14px}
         .option-box strong{min-width:32px;height:32px;font-size:13px}
+        .bottom-action-inner{gap:8px}
       }
       `}</style>
 
@@ -318,23 +349,18 @@ setFocusMode?.(true);
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <div className="mcq-viewer">
           <div className="exam-topbar">
-  <div className="exam-left">
-    <strong>Jharkhand D2D</strong>
-    <span>
-      Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}
-    </span>
-  </div>
-
-  <div className="exam-center">
-    Q {currentIndex + 1} / {yearQuestions.length}
-  </div>
-
-  <div className="exam-right">
-    <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-    <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
-  </div>
-</div>
-
+            <div className="exam-left">
+              <strong>Jharkhand D2D</strong>
+              <span>Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
+            </div>
+            <div className="exam-center">
+              Q {currentIndex + 1} / {yearQuestions.length}
+            </div>
+            <div className="exam-right">
+              <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
+              <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
+            </div>
+          </div>
 
           <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
@@ -362,40 +388,53 @@ setFocusMode?.(true);
       )}
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}
-      {viewMode === "viewer" && yearQuestions.length > 0 && (
-       <div className="bottom-action-bar">
-  <div className="bottom-action-inner">
-    <Button
-      variant="light"
-      onClick={goPrevious}
-      disabled={currentIndex === 0}
-    >
-      Previous
-    </Button>
+      {viewMode === "viewer" && yearQuestions.length > 0 && (() => {
+        const qid = yearQuestions[currentIndex].id;
+        const isChecked = Boolean(checked[qid]);
+        const isCorrect = isChecked && (yearQuestions[currentIndex].correctIndex === selectedAnswers[qid]);
 
-    <Button
-      variant="primary"
-      onClick={handleCheckAnswer}
-      disabled={
-        isDisabled ||
-        selectedAnswers[yearQuestions[currentIndex].id] === undefined
-      }
-      style={{ minWidth: 160 }}
-    >
-      Check Answer
-    </Button>
+        return (
+          <div className="bottom-action-bar">
+            <div className="bottom-action-inner">
+              <Button
+                variant="light"
+                onClick={goPrevious}
+                disabled={currentIndex === 0}
+              >
+                Previous
+              </Button>
 
-    <Button
-      variant="light"
-      onClick={goNext}
-      disabled={currentIndex === yearQuestions.length - 1}
-    >
-      Next
-    </Button>
-  </div>
-</div>
+              {/* CENTER: if checked & incorrect -> Try Again button, else normal Check Answer */}
+              {isChecked && !isCorrect ? (
+                <button className="try-btn" onClick={handleTryAgain} aria-label="Try again">
+                  <span style={{fontSize:18}}>↺</span>
+                  Try Again
+                </button>
+              ) : (
+                <Button
+                  variant="primary"
+                  onClick={handleCheckAnswer}
+                  disabled={
+                    isDisabled ||
+                    selectedAnswers[yearQuestions[currentIndex].id] === undefined
+                  }
+                  style={{ minWidth: 160 }}
+                >
+                  Check Answer
+                </Button>
+              )}
 
-      )}
+              <Button
+                variant="light"
+                onClick={goNext}
+                disabled={currentIndex === yearQuestions.length - 1}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
