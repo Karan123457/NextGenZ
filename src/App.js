@@ -17,6 +17,7 @@ import DetailsPage from "./data_Exam/Jharkhand/D2D/DetailsPage";
 import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/MainPage";
 import ResourcesDetail from "./Pages/ResourcesDetail";
 
+import PrivateRoute from "./MyComponents/PrivateRoute";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 /* ScrollToTopWithMemory component unchanged */
@@ -65,7 +66,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:mainKey/:subId" element={<ResourcesDetail />} />
-          <Route path="/Exam_Preparation" element={<ExamPreparation />} />
+          <Route path="/Exam_Preparation" element={<PrivateRoute><ExamPreparation /></PrivateRoute>} />
           <Route path="/Counselling" element={<Counselling />} />
           <Route path="/Carrer_Advisor" element={<CarrerAdvisor />} />
           <Route path="/jobs" element={<Jobs />} />
