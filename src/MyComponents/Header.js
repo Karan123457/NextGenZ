@@ -8,6 +8,15 @@ export default function Header() {
   const [showPassword, setShowPassword] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation(); // Track current URL
+  const [isRegister, setIsRegister] = useState(false);
+
+const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -26,6 +35,44 @@ export default function Header() {
     { name: "Resources", path: "/resources" },
     { name: "Jobs", path: "/jobs" },
   ];
+const API_BASE = "https://futurely-backend.onrender.com/api";
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+
+  const url = isRegister
+    ? `${API_BASE}/auth/register`
+    : `${API_BASE}/auth/login`;
+
+  const payload = isRegister
+    ? { name, email, password }
+    : { email, password };
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+    }
+
+    handleClose(); // close modal
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
@@ -96,66 +143,93 @@ export default function Header() {
         </Modal.Header>
 
         <Modal.Body className="p-4">
-          <Form>
-            <Form.Group className="mb-3" controlId="formName">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your full name" />
-            </Form.Group>
+  <Form onSubmit={handleSubmit}>
 
-            <Form.Group className="mb-3" controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="your@email.com" />
-            </Form.Group>
+    {/* Name (ONLY for Register) */}
+    {isRegister && (
+      <Form.Group className="mb-3">
+        <Form.Label>Full Name</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Enter your full name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </Form.Group>
+    )}
 
-            <Form.Group className="mb-3" controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <div className="input-group">
-                <Form.Control
-                  type={showPassword ? "text" : "password"}
-                  placeholder="********"
-                />
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => setShowPassword(!showPassword)}
-                  type="button"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </Button>
-              </div>
-            </Form.Group>
+    {/* Email */}
+    <Form.Group className="mb-3">
+      <Form.Label>Email</Form.Label>
+      <Form.Control
+        type="email"
+        placeholder="your@email.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+    </Form.Group>
 
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <Form.Check type="checkbox" label="Remember me" />
-              <button className="btn btn-link text-decoration-none small text-primary p-0" onClick={() => { }}>
-                Forgot password?
-              </button>
-            </div>
+    {/* Password */}
+    <Form.Group className="mb-3">
+      <Form.Label>Password</Form.Label>
+      <div className="input-group">
+        <Form.Control
+          type={showPassword ? "text" : "password"}
+          placeholder="********"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Button
+          variant="outline-secondary"
+          onClick={() => setShowPassword(!showPassword)}
+          type="button"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </Button>
+      </div>
+    </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3">
-              Sign In
-            </Button>
+    {/* Error */}
+    {error && (
+      <div className="text-danger text-center mb-2">
+        {error}
+      </div>
+    )}
 
-            <div className="text-center text-muted mb-3">or continue with</div>
+    {/* Submit */}
+    <Button
+      variant="primary"
+      type="submit"
+      className="w-100 rounded-pill mb-3"
+      disabled={loading}
+    >
+      {loading
+        ? "Please wait..."
+        : isRegister
+        ? "Create Account"
+        : "Sign In"}
+    </Button>
 
-            <div className="d-flex gap-2">
-              <Button variant="outline-danger" className="w-50 rounded-pill">
-                <FaGoogle className="me-2" /> Google
-              </Button>
-              <Button variant="outline-primary" className="w-50 rounded-pill">
-                <FaFacebook className="me-2" /> Facebook
-              </Button>
-            </div>
+    {/* Toggle */}
+    <div className="text-center mt-3">
+      <small>
+        {isRegister ? "Already have an account?" : "Don’t have an account?"}{" "}
+        <button
+          type="button"
+          className="btn btn-link text-decoration-none fw-semibold text-primary p-0"
+          onClick={() => setIsRegister(!isRegister)}
+        >
+          {isRegister ? "Sign In" : "Sign Up"}
+        </button>
+      </small>
+    </div>
 
-            <div className="text-center mt-4">
-              <small>
-                Don’t have an account?{" "}
-                <button className="btn btn-link text-decoration-none fw-semibold text-primary p-0" onClick={() => { }}>
-                  Sign up
-                </button>
-              </small>
-            </div>
-          </Form>
-        </Modal.Body>
+  </Form>
+</Modal.Body>
+
       </Modal>
 
       {/* ✨ Styles Section */}
