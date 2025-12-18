@@ -16,6 +16,13 @@ const [password, setPassword] = useState("");
 
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
+   // 🔐 Auth state
+const isLoggedIn = !!localStorage.getItem("token");
+
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  window.location.reload(); // simple & safe
+};
 
 
   const handleClose = () => setShow(false);
@@ -63,8 +70,11 @@ const handleSubmit = async (e) => {
     }
 
     if (data.token) {
-      localStorage.setItem("token", data.token);
-    }
+  localStorage.setItem("token", data.token);
+  window.location.reload();
+}
+
+
 
     handleClose(); // close modal
   } catch (err) {
@@ -123,13 +133,24 @@ const handleSubmit = async (e) => {
               </Nav.Item>
             </Nav>
 
-            <Button
-              variant="primary"
-              className="px-4 rounded-pill fw-semibold"
-              onClick={handleShow}
-            >
-              Login / Register
-            </Button>
+            {isLoggedIn ? (
+  <Button
+    variant="outline-danger"
+    className="px-4 rounded-pill fw-semibold"
+    onClick={handleLogout}
+  >
+    Logout
+  </Button>
+) : (
+  <Button
+    variant="primary"
+    className="px-4 rounded-pill fw-semibold"
+    onClick={handleShow}
+  >
+    Login / Register
+  </Button>
+)}
+
           </Navbar.Collapse>
         </Container>
       </Navbar>
