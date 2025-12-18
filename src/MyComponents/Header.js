@@ -56,32 +56,35 @@ const handleSubmit = async (e) => {
     ? { name, email, password }
     : { email, password };
 
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+ try {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data.message || "Something went wrong");
-    }
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
 
-    if (data.token) {
-  localStorage.setItem("token", data.token);
-  window.location.reload();
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+
+    setEmail("");
+    setPassword("");
+    setName("");
+
+    handleClose();
+    window.location.reload();
+  }
+} catch (err) {
+  setError(err.message);
+} finally {
+  setLoading(false);
 }
 
-
-
-    handleClose(); // close modal
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
 };
 
   return (
