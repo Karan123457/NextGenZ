@@ -18,11 +18,14 @@ const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
    // 🔐 Auth state
 const isLoggedIn = !!localStorage.getItem("token");
+const userName = localStorage.getItem("userName");
 
 const handleLogout = () => {
   localStorage.removeItem("token");
-  window.location.reload(); // simple & safe
+  localStorage.removeItem("userName"); // ✅ clear name
+  window.location.reload();
 };
+
 
 
   const handleClose = () => setShow(false);
@@ -70,15 +73,21 @@ const handleSubmit = async (e) => {
   }
 
   if (data.token) {
-    localStorage.setItem("token", data.token);
+  localStorage.setItem("token", data.token);
 
-    setEmail("");
-    setPassword("");
-    setName("");
-
-    handleClose();
-    window.location.reload();
+  // ✅ SAVE USER NAME
+  if (data.user?.name) {
+    localStorage.setItem("userName", data.user.name);
   }
+
+  setEmail("");
+  setPassword("");
+  setName("");
+
+  handleClose();
+  window.location.reload();
+}
+
 } catch (err) {
   setError(err.message);
 } finally {
@@ -136,14 +145,20 @@ const handleSubmit = async (e) => {
               </Nav.Item>
             </Nav>
 
-            {isLoggedIn ? (
-  <Button
-    variant="outline-danger"
-    className="px-4 rounded-pill fw-semibold"
-    onClick={handleLogout}
-  >
-    Logout
-  </Button>
+           {isLoggedIn ? (
+  <div className="d-flex align-items-center gap-3">
+    <span className="fw-semibold text-primary">
+      Hi, {userName}
+    </span>
+
+    <Button
+      variant="outline-danger"
+      className="px-4 rounded-pill fw-semibold"
+      onClick={handleLogout}
+    >
+      Logout
+    </Button>
+  </div>
 ) : (
   <Button
     variant="primary"
