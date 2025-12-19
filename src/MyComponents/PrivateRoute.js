@@ -1,9 +1,14 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function PrivateRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const { isLoggedIn, loading } = useAuth();
 
-  if (!token) {
+  // ⏳ Wait until auth is loaded
+  if (loading) return null;
+
+  // 🔐 Not logged in → redirect
+  if (!isLoggedIn) {
     return <Navigate to="/" replace />;
   }
 
