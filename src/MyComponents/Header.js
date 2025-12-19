@@ -137,6 +137,16 @@ export default function Header() {
 
             {isLoggedIn ? (
               <div className="d-flex align-items-center gap-3">
+
+                {/* Dashboard link */}
+                <Link
+                  to="/dashboard"
+                  className="fw-semibold text-primary text-decoration-none"
+                >
+                  Dashboard
+                </Link>
+
+                {/* Profile link */}
                 <Link
                   to="/profile"
                   className="fw-semibold text-primary text-decoration-none"
@@ -144,6 +154,7 @@ export default function Header() {
                   Hi, {user?.name}
                 </Link>
 
+                {/* Logout */}
                 <Button
                   variant="outline-danger"
                   className="px-4 rounded-pill fw-semibold"
@@ -151,6 +162,7 @@ export default function Header() {
                 >
                   Logout
                 </Button>
+
               </div>
             ) : (
               <Button
@@ -161,6 +173,7 @@ export default function Header() {
                 Login / Register
               </Button>
             )}
+
 
 
 
