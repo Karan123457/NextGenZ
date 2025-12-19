@@ -238,6 +238,15 @@ export default function Header() {
                 </Button>
               </div>
             </Form.Group>
+            <div className="text-end mb-3">
+              <Link
+                to="/forgot-password"
+                className="text-primary small text-decoration-none"
+                onClick={handleClose}
+              >
+                Forgot password?
+              </Link>
+            </div>
 
             {/* Error */}
             {error && (
