@@ -10,21 +10,21 @@ export default function Header() {
   const location = useLocation(); // Track current URL
   const [isRegister, setIsRegister] = useState(false);
 
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState("");
-   // 🔐 Auth state
-const isLoggedIn = !!localStorage.getItem("token");
-const userName = localStorage.getItem("userName");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  // 🔐 Auth state
+  const isLoggedIn = !!localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
 
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("userName"); // ✅ clear name
-  window.location.reload();
-};
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName"); // ✅ clear name
+    window.location.reload();
+  };
 
 
 
@@ -45,56 +45,56 @@ const handleLogout = () => {
     { name: "Resources", path: "/resources" },
     { name: "Jobs", path: "/jobs" },
   ];
-const API_BASE = "https://futurely-backend.onrender.com/api";
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
+  const API_BASE = "https://futurely-backend.onrender.com/api";
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  const url = isRegister
-    ? `${API_BASE}/auth/register`
-    : `${API_BASE}/auth/login`;
+    const url = isRegister
+      ? `${API_BASE}/auth/register`
+      : `${API_BASE}/auth/login`;
 
-  const payload = isRegister
-    ? { name, email, password }
-    : { email, password };
+    const payload = isRegister
+      ? { name, email, password }
+      : { email, password };
 
- try {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-  const data = await res.json();
+      const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error(data.message || "Something went wrong");
-  }
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
 
-  if (data.token) {
-  localStorage.setItem("token", data.token);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
 
-  // ✅ SAVE USER NAME
-  if (data.user?.name) {
-    localStorage.setItem("userName", data.user.name);
-  }
+        // ✅ SAVE USER NAME
+        if (data.user?.name) {
+          localStorage.setItem("userName", data.user.name);
+        }
 
-  setEmail("");
-  setPassword("");
-  setName("");
+        setEmail("");
+        setPassword("");
+        setName("");
 
-  handleClose();
-  window.location.reload();
-}
+        handleClose();
+        window.location.reload();
+      }
 
-} catch (err) {
-  setError(err.message);
-} finally {
-  setLoading(false);
-}
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
 
-};
+  };
 
   return (
     <>
@@ -147,9 +147,12 @@ const handleSubmit = async (e) => {
 
            {isLoggedIn ? (
   <div className="d-flex align-items-center gap-3">
-    <span className="fw-semibold text-primary">
-      Hi, {userName}
-    </span>
+    <Link
+      to="/profile"
+      className="fw-semibold text-primary text-decoration-none"
+    >
+      Hi, {userName || "User"}
+    </Link>
 
     <Button
       variant="outline-danger"
@@ -169,6 +172,7 @@ const handleSubmit = async (e) => {
   </Button>
 )}
 
+
           </Navbar.Collapse>
         </Container>
       </Navbar>
@@ -182,92 +186,92 @@ const handleSubmit = async (e) => {
         </Modal.Header>
 
         <Modal.Body className="p-4">
-  <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
 
-    {/* Name (ONLY for Register) */}
-    {isRegister && (
-      <Form.Group className="mb-3">
-        <Form.Label>Full Name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter your full name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </Form.Group>
-    )}
+            {/* Name (ONLY for Register) */}
+            {isRegister && (
+              <Form.Group className="mb-3">
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            )}
 
-    {/* Email */}
-    <Form.Group className="mb-3">
-      <Form.Label>Email</Form.Label>
-      <Form.Control
-        type="email"
-        placeholder="your@email.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-    </Form.Group>
+            {/* Email */}
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </Form.Group>
 
-    {/* Password */}
-    <Form.Group className="mb-3">
-      <Form.Label>Password</Form.Label>
-      <div className="input-group">
-        <Form.Control
-          type={showPassword ? "text" : "password"}
-          placeholder="********"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button
-          variant="outline-secondary"
-          onClick={() => setShowPassword(!showPassword)}
-          type="button"
-        >
-          {showPassword ? "Hide" : "Show"}
-        </Button>
-      </div>
-    </Form.Group>
+            {/* Password */}
+            <Form.Group className="mb-3">
+              <Form.Label>Password</Form.Label>
+              <div className="input-group">
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setShowPassword(!showPassword)}
+                  type="button"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              </div>
+            </Form.Group>
 
-    {/* Error */}
-    {error && (
-      <div className="text-danger text-center mb-2">
-        {error}
-      </div>
-    )}
+            {/* Error */}
+            {error && (
+              <div className="text-danger text-center mb-2">
+                {error}
+              </div>
+            )}
 
-    {/* Submit */}
-    <Button
-      variant="primary"
-      type="submit"
-      className="w-100 rounded-pill mb-3"
-      disabled={loading}
-    >
-      {loading
-        ? "Please wait..."
-        : isRegister
-        ? "Create Account"
-        : "Sign In"}
-    </Button>
+            {/* Submit */}
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100 rounded-pill mb-3"
+              disabled={loading}
+            >
+              {loading
+                ? "Please wait..."
+                : isRegister
+                  ? "Create Account"
+                  : "Sign In"}
+            </Button>
 
-    {/* Toggle */}
-    <div className="text-center mt-3">
-      <small>
-        {isRegister ? "Already have an account?" : "Don’t have an account?"}{" "}
-        <button
-          type="button"
-          className="btn btn-link text-decoration-none fw-semibold text-primary p-0"
-          onClick={() => setIsRegister(!isRegister)}
-        >
-          {isRegister ? "Sign In" : "Sign Up"}
-        </button>
-      </small>
-    </div>
+            {/* Toggle */}
+            <div className="text-center mt-3">
+              <small>
+                {isRegister ? "Already have an account?" : "Don’t have an account?"}{" "}
+                <button
+                  type="button"
+                  className="btn btn-link text-decoration-none fw-semibold text-primary p-0"
+                  onClick={() => setIsRegister(!isRegister)}
+                >
+                  {isRegister ? "Sign In" : "Sign Up"}
+                </button>
+              </small>
+            </div>
 
-  </Form>
-</Modal.Body>
+          </Form>
+        </Modal.Body>
 
       </Modal>
 
