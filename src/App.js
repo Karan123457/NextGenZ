@@ -19,6 +19,8 @@ import ResourcesDetail from "./Pages/ResourcesDetail";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
 import Profile from "./Pages/Profile";
+import Dashboard from "./Pages/Dashboard";
+
 import { Routes, Route, useLocation } from "react-router-dom";
 
 /* ScrollToTopWithMemory component unchanged */
@@ -81,7 +83,9 @@ function App() {
           <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<PolytechnicMain />} />
           <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
 
-          <Route path="/profile" element={ <PrivateRoute><Profile /></PrivateRoute> } />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
         </Routes>
       </div>
       {!hideFooter && <Footer />}
