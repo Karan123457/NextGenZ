@@ -18,6 +18,7 @@ import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/MainPage";
 import ResourcesDetail from "./Pages/ResourcesDetail";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
+import Profile from "./Pages/Profile";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 /* ScrollToTopWithMemory component unchanged */
@@ -79,6 +80,8 @@ function App() {
           {/* Put specific/static routes before param routes */}
           <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<PolytechnicMain />} />
           <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
+
+          <Route path="/profile" element={ <PrivateRoute><Profile /></PrivateRoute> } />
         </Routes>
       </div>
       {!hideFooter && <Footer />}
