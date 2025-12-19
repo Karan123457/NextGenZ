@@ -20,6 +20,8 @@ import ResourcesDetail from "./Pages/ResourcesDetail";
 import PrivateRoute from "./MyComponents/PrivateRoute";
 import Profile from "./Pages/Profile";
 import Dashboard from "./Pages/Dashboard";
+import ForgotPassword from "./Pages/ForgotPassword";
+
 
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -85,6 +87,8 @@ function App() {
 
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
 
         </Routes>
       </div>
