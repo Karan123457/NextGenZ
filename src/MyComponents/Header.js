@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Navbar, Nav, Container, Button, Modal, Form } from "react-bootstrap";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [show, setShow] = useState(false);
@@ -17,14 +18,8 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   // 🔐 Auth state
-  const isLoggedIn = !!localStorage.getItem("token");
-  const userName = localStorage.getItem("userName");
+  const { user, isLoggedIn, login, logout } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName"); // ✅ clear name
-    window.location.reload();
-  };
 
 
 
@@ -73,20 +68,15 @@ export default function Header() {
       }
 
       if (data.token) {
-        localStorage.setItem("token", data.token);
-
-        // ✅ SAVE USER NAME
-        if (data.user?.name) {
-          localStorage.setItem("userName", data.user.name);
-        }
+        login(data.token, data.user);
 
         setEmail("");
         setPassword("");
         setName("");
 
         handleClose();
-        window.location.reload();
       }
+
 
     } catch (err) {
       setError(err.message);
@@ -145,32 +135,33 @@ export default function Header() {
               </Nav.Item>
             </Nav>
 
-           {isLoggedIn ? (
-  <div className="d-flex align-items-center gap-3">
-    <Link
-      to="/profile"
-      className="fw-semibold text-primary text-decoration-none"
-    >
-      Hi, {userName || "User"}
-    </Link>
+            {isLoggedIn ? (
+              <div className="d-flex align-items-center gap-3">
+                <Link
+                  to="/profile"
+                  className="fw-semibold text-primary text-decoration-none"
+                >
+                  Hi, {user?.name}
+                </Link>
 
-    <Button
-      variant="outline-danger"
-      className="px-4 rounded-pill fw-semibold"
-      onClick={handleLogout}
-    >
-      Logout
-    </Button>
-  </div>
-) : (
-  <Button
-    variant="primary"
-    className="px-4 rounded-pill fw-semibold"
-    onClick={handleShow}
-  >
-    Login / Register
-  </Button>
-)}
+                <Button
+                  variant="outline-danger"
+                  className="px-4 rounded-pill fw-semibold"
+                  onClick={logout}
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="primary"
+                className="px-4 rounded-pill fw-semibold"
+                onClick={handleShow}
+              >
+                Login / Register
+              </Button>
+            )}
+
 
 
           </Navbar.Collapse>
@@ -341,3 +332,4 @@ export default function Header() {
     </>
   );
 }
+
