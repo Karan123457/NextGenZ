@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Card, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -8,16 +9,9 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { token, logout } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    // 🔐 If not logged in → redirect
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
     fetch(`${API_BASE}/auth/profile`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -25,8 +19,9 @@ export default function Profile() {
     })
       .then((res) => {
         if (res.status === 401) {
-          localStorage.clear();
+          logout();
           navigate("/");
+          return;
         }
         return res.json();
       })
@@ -37,7 +32,7 @@ export default function Profile() {
       .catch(() => {
         setLoading(false);
       });
-  }, [navigate]);
+  }, [token, logout, navigate]);
 
   if (loading) {
     return (
