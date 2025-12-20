@@ -15,64 +15,72 @@ export default function ForgotPassword() {
 
   /* ================= SEND OTP ================= */
   const sendOTP = async () => {
-    setError("");
-    setMessage("");
-    setLoading(true);
+  if (loading) return; // ✅ prevent multiple clicks
 
-    try {
-      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+  setError("");
+  setMessage("");
+  setLoading(true);
 
-      const data = await res.json();
+  try {
+    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
 
-      if (!res.ok) {
-        throw new Error(data.message);
-      }
+    const data = await res.json();
 
-      setMessage("OTP sent to your email");
-      setStep(2);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(data.message);
     }
-  };
+
+    setMessage("OTP sent to your email");
+    setStep(2);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   /* ================= RESET PASSWORD ================= */
   const resetPassword = async () => {
-    setError("");
-    setMessage("");
-    setLoading(true);
+  if (loading) return;
 
-    try {
-      const res = await fetch(`${API_BASE}/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          otp,
-          newPassword,
-        }),
-      });
+  setError("");
+  setMessage("");
+  setLoading(true);
 
-      const data = await res.json();
+  if (newPassword.length < 6) {
+    setError("Password must be at least 6 characters");
+    setLoading(false);
+    return;
+  }
 
-      if (!res.ok) {
-        throw new Error(data.message);
-      }
+  try {
+    const res = await fetch(`${API_BASE}/auth/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword }),
+    });
 
-      setMessage("Password reset successful. You can login now.");
-      setOtp("");
-      setNewPassword("");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
     }
-  };
+
+    setMessage("Password reset successful. You can login now.");
+    setOtp("");
+    setNewPassword("");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <Container className="mt-5 d-flex justify-content-center">
