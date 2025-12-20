@@ -34,7 +34,7 @@ export default function ForgotPassword() {
       throw new Error(data.message);
     }
 
-    setMessage("OTP sent to your email");
+    setMessage("If the email exists, OTP has been sent");
     setStep(2);
   } catch (err) {
     setError(err.message);
