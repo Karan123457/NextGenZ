@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
 export default function ForgotPassword() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 1=email, 2=otp
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -15,7 +15,72 @@ export default function ForgotPassword() {
 
   const navigate = useNavigate();
 
-  /* sendOTP and resetPassword SAME AS YOUR CODE */
+  /* ================= SEND OTP ================= */
+  const sendOTP = async () => {
+    if (loading) return;
+
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      setMessage("If the email exists, OTP has been sent");
+      setStep(2);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= RESET PASSWORD ================= */
+  const resetPassword = async () => {
+    if (loading) return;
+
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp, newPassword }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      setMessage("Password reset successful. You can login now.");
+      setOtp("");
+      setNewPassword("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal
@@ -24,10 +89,21 @@ export default function ForgotPassword() {
       backdrop="static"
       onHide={() => navigate("/")}
     >
-      <Modal.Body>
-        <Card className="p-4 shadow-sm border-0">
-          <h4 className="mb-3 text-center">Forgot Password</h4>
+      <Modal.Header closeButton className="border-0 pb-0">
+        <Modal.Title className="fw-bold text-primary ms-auto">
+          Forgot Password
+        </Modal.Title>
+      </Modal.Header>
 
+      <Modal.Body className="p-0">
+        <Card className="p-4 border-0">
+          <p className="text-center text-muted small mb-4">
+            {step === 1
+              ? "We’ll send an OTP to your registered email"
+              : "Enter OTP and create a new password"}
+          </p>
+
+          {/* STEP 1 – EMAIL */}
           {step === 1 && (
             <>
               <Form.Group className="mb-3">
@@ -40,12 +116,17 @@ export default function ForgotPassword() {
                 />
               </Form.Group>
 
-              <Button className="w-100" onClick={sendOTP} disabled={loading}>
+              <Button
+                className="w-100 rounded-pill"
+                onClick={sendOTP}
+                disabled={loading}
+              >
                 {loading ? "Sending..." : "Send OTP"}
               </Button>
             </>
           )}
 
+          {/* STEP 2 – OTP + PASSWORD */}
           {step === 2 && (
             <>
               <Form.Group className="mb-3">
@@ -69,7 +150,7 @@ export default function ForgotPassword() {
 
               <Button
                 variant="success"
-                className="w-100"
+                className="w-100 rounded-pill"
                 onClick={resetPassword}
                 disabled={loading}
               >
@@ -78,11 +159,15 @@ export default function ForgotPassword() {
             </>
           )}
 
+          {/* MESSAGES */}
           {error && <div className="text-danger mt-3">{error}</div>}
           {message && <div className="text-success mt-3">{message}</div>}
 
           <div className="text-center mt-3">
-            <Link to="/" className="text-decoration-none">
+            <Link
+              to="/"
+              className="text-decoration-none fw-semibold text-primary"
+            >
               Back to Login
             </Link>
           </div>
