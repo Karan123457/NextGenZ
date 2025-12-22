@@ -1,6 +1,8 @@
 // PhysicsQuestions.js
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "react-bootstrap";
+import { authFetch } from "../utils/api";
+
 
 /* ================= DATA ================= */
 export const physicsQuestionsByYear = {
@@ -124,28 +126,47 @@ export default function PhysicsQuestions({ setFocusMode }) {
     setSelectedAnswers(prev => ({ ...prev, [qid]: idx }));
   }
 
-  function handleCheckAnswer() {
+  async function handleCheckAnswer() {
     const q = yearQuestions[currentIndex];
     if (!q) return;
+
     const qid = q.id;
-    if (selectedAnswers[qid] === undefined) return;
+    const selected = selectedAnswers[qid];
+    if (selected === undefined) return;
+
+    const alreadyAttempted = attempted[qid];
 
     setAttempted(prev => ({ ...prev, [qid]: true }));
 
     setAttemptCount(prev => {
       const next = (prev[qid] || 0) + 1;
 
-      // FIRST attempt -> PARTIAL (only selected shown)
       if (next === 1) setShowAnswer(p => ({ ...p, [qid]: "PARTIAL" }));
-
-      // SECOND (or more) -> FULL (show correct + wrong)
       if (next >= 2) setShowAnswer(p => ({ ...p, [qid]: "FULL" }));
 
       return { ...prev, [qid]: next };
     });
 
+    // 🔐 SAVE ONLY ON FIRST ATTEMPT
+    if (!alreadyAttempted) {
+      try {
+        await authFetch("/exam/physics/attempt", {
+          method: "POST",
+          body: JSON.stringify({
+            questionId: q.id,
+            year: selectedYear?.year || "ALL",
+            isCorrect: selected === q.correctIndex,
+            timeTaken: timeLeft,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to save attempt", err);
+      }
+    }
+
     timerRef.current && clearInterval(timerRef.current);
   }
+
 
   function handleTryAgain() {
     const q = yearQuestions[currentIndex];
@@ -209,7 +230,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
               variant="primary"
               onClick={handleCheckAnswer}
               // disabled when a feedback state is active OR when no option selected
-              disabled={isShown || selectedAnswers[ qid ] === undefined}
+              disabled={isShown || selectedAnswers[qid] === undefined}
               style={{ minWidth: 160 }}
             >
               Check Answer
@@ -363,7 +384,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
           <div className="pyq-list">
             {years.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==="Enter") openYearQuestions(y); }}>
+              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") openYearQuestions(y); }}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
                   <div>
