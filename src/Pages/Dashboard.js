@@ -1,71 +1,38 @@
-import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import User from "../models/User.js";
+import ExamAttempt from "../models/ExamAttempt.js";
 
-const API_BASE = "https://futurely-backend.onrender.com/api";
+export const getDashboard = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("name email");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-export default function Dashboard() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { token, logout } = useAuth();
-  const navigate = useNavigate();
+    const attempts = await ExamAttempt.find({
+      userId: req.userId,
+      subject: "physics",
+    });
 
-  useEffect(() => {
-    fetch(`${API_BASE}/auth/dashboard`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const attempted = attempts.length;
+    const correct = attempts.filter(a => a.isCorrect).length;
+    const wrong = attempted - correct;
+    const accuracy = attempted ? Math.round((correct / attempted) * 100) : 0;
+
+    const totalTime = attempts.reduce((s, a) => s + (a.timeTaken || 0), 0);
+    const avgTime = attempted ? Math.round(totalTime / attempted) : 0;
+
+    return res.json({
+      user,
+      physics: {
+        attempted,
+        correct,
+        wrong,
+        accuracy,
+        avgTime,
       },
-    })
-      .then((res) => {
-        if (res.status === 401) {
-          logout();
-          navigate("/");
-          return;
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [token, logout, navigate]);
-
-  if (loading) {
-    return (
-      <Container className="d-flex justify-content-center mt-5">
-        <Spinner animation="border" />
-      </Container>
-    );
+    });
+  } catch (error) {
+    console.error("DASHBOARD ERROR:", error);
+    return res.status(500).json({ message: "Server error" });
   }
-
-  return (
-    <Container className="mt-5">
-      <h3 className="mb-4">Dashboard</h3>
-
-      <Row className="g-4">
-        <Col md={4}>
-          <Card className="shadow-sm text-center p-3">
-            <h5>Exams Attempted</h5>
-            <h2 className="text-primary">{data.stats.examsAttempted}</h2>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card className="shadow-sm text-center p-3">
-            <h5>Resources Saved</h5>
-            <h2 className="text-success">{data.stats.resourcesSaved}</h2>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card className="shadow-sm text-center p-3">
-            <h5>Jobs Applied</h5>
-            <h2 className="text-warning">{data.stats.jobsApplied}</h2>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
-}
+};
