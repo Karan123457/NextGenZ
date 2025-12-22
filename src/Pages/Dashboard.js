@@ -1,38 +1,87 @@
-import User from "../models/User.js";
-import ExamAttempt from "../models/ExamAttempt.js";
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export const getDashboard = async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select("name email");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+const API_BASE = "https://futurely-backend.onrender.com/api";
 
-    const attempts = await ExamAttempt.find({
-      userId: req.userId,
-      subject: "physics",
-    });
+export default function Dashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
 
-    const attempted = attempts.length;
-    const correct = attempts.filter(a => a.isCorrect).length;
-    const wrong = attempted - correct;
-    const accuracy = attempted ? Math.round((correct / attempted) * 100) : 0;
-
-    const totalTime = attempts.reduce((s, a) => s + (a.timeTaken || 0), 0);
-    const avgTime = attempted ? Math.round(totalTime / attempted) : 0;
-
-    return res.json({
-      user,
-      physics: {
-        attempted,
-        correct,
-        wrong,
-        accuracy,
-        avgTime,
+  useEffect(() => {
+    fetch(`${API_BASE}/auth/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    });
-  } catch (error) {
-    console.error("DASHBOARD ERROR:", error);
-    return res.status(500).json({ message: "Server error" });
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          logout();
+          navigate("/");
+          return;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [token, logout, navigate]);
+
+  if (loading) {
+    return (
+      <Container className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" />
+      </Container>
+    );
   }
-};
+
+  const p = data.physics;
+
+  return (
+    <Container className="mt-5">
+      <h3 className="mb-4">📊 Physics Performance</h3>
+
+      <Row className="g-4">
+        <Col md={3}>
+          <Card className="shadow-sm text-center p-3">
+            <h6>Attempted</h6>
+            <h2 className="text-primary">{p.attempted}</h2>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="shadow-sm text-center p-3">
+            <h6>Correct</h6>
+            <h2 className="text-success">{p.correct}</h2>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="shadow-sm text-center p-3">
+            <h6>Wrong</h6>
+            <h2 className="text-danger">{p.wrong}</h2>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="shadow-sm text-center p-3">
+            <h6>Accuracy</h6>
+            <h2 className="text-warning">{p.accuracy}%</h2>
+          </Card>
+        </Col>
+
+        <Col md={4}>
+          <Card className="shadow-sm text-center p-3">
+            <h6>Avg Time / Question</h6>
+            <h2>{p.avgTime}s</h2>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
