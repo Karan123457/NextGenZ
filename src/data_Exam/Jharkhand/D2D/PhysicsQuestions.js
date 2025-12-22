@@ -1,7 +1,7 @@
 // PhysicsQuestions.js
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { authFetch } from "../utils/api";
+import { authFetch } from "../../../utils/api";
 
 
 /* ================= DATA ================= */
@@ -469,3 +469,4 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
