@@ -151,15 +151,21 @@ export default function PhysicsQuestions({ setFocusMode }) {
     if (!alreadyAttempted) {
       try {
         await authFetch("/physics/attempt", {
-          method: "POST",
-          body: JSON.stringify({
-            subject: "physics",
-            questionId: q.id,
-            year: selectedYear?.year || "ALL",
-            isCorrect: selected === q.correctIndex,
-            timeTaken: timeLeft,
-          }),
-        });
+  method: "POST",
+  body: JSON.stringify({
+    questionId: q.id,
+    year: selectedYear?.year || "ALL",
+
+    // ✅ REQUIRED FIELDS
+    selectedIndex: selected,
+    correctIndex: q.correctIndex,
+
+    // ✅ DERIVED
+    isCorrect: selected === q.correctIndex,
+    timeTaken: timeLeft,
+  }),
+});
+
       } catch (err) {
         console.error("Failed to save attempt", err);
       }
