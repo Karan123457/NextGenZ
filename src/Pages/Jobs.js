@@ -111,7 +111,7 @@ export default function FuturelyPYQExact() {
   font-weight:800;
   color:#2563eb;
   text-align:center;
-  margin-bottom:20px;
+  margin-bottom:30px;
 }
 
 .pyq-card .sub{
@@ -165,12 +165,7 @@ export default function FuturelyPYQExact() {
   text-align:right;
 }
 
-.pyq-small{
-  font-size:11px;
-  color:#6b7280;
-  text-align:right;
-  margin-top:3px;
-}
+
 
 /* ================= SEO CONTENT ================= */
 .pyq-seo{
