@@ -247,6 +247,15 @@ export default function PhysicsQuestions({ setFocusMode }) {
   return (
     <div className="physics-box">
       <style>{`
+      .pyq-title{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #2563eb;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
       .pyq-list{display:flex;flex-direction:column;gap:10px}
       .pyq-row{display:flex;justify-content:space-between;align-items:center;background:#f9fbff;border-radius:14px;padding:12px;cursor:pointer;transition:.2s}
       .pyq-row:hover{background:#eef3ff;transform:translateY(-1px)}
@@ -379,8 +388,13 @@ export default function PhysicsQuestions({ setFocusMode }) {
       {/* ================= YEAR LIST ================= */}
       {viewMode === "years" && (
         <>
-          <h5>Physics Previous Year Questions</h5>
-          <div className="small text-muted mb-2">{attemptedCount} attempted</div>
+          <h2 className="pyq-title">Physics Previous Year Questions</h2>
+          {attemptedCount > 0 && (
+            <div className="small text-muted mb-2">
+              {attemptedCount} attempted
+            </div>
+          )}
+
 
           <div className="pyq-list">
             {years.map((y, i) => (
@@ -388,7 +402,10 @@ export default function PhysicsQuestions({ setFocusMode }) {
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
                   <div>
-                    <div style={{ fontWeight: 700 }}>{y.year}</div>
+                    <div style={{ fontWeight: 500 }}>
+  {y.key === "ALL" ? "All Previous Year Questions" : "D2D Physics PYQ"}
+</div>
+
                   </div>
                 </div>
 
@@ -469,5 +486,4 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
-
 
