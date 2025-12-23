@@ -1,9 +1,10 @@
 import React from "react";
 
 const DATA = [
-  { id: "2025", year: "2025", title: "Question Paper", total: 118, attempted: 4 },
-  { id: "2024", year: "2024", title: "Question Paper", total: 118, attempted: 4 },
-  { id: "2023", year: "2023", title: "Question Paper", total: 70, attempted: 20 },
+  { id: "ALL",year: "ALL", title: "All Previous Year Questions", total: 118, attempted: 4 },
+  { id: "2025", year: "2025", title: "D2D Physics PYQ", total: 118, attempted: 4 },
+  { id: "2024", year: "2024", title: "D2D Physics PYQ", total: 118, attempted: 4 },
+  { id: "2023", year: "2023", title: "D2D Physics PYQ", total: 70, attempted: 20 },
 ];
 
 export default function FuturelyPYQExact() {
@@ -110,6 +111,7 @@ export default function FuturelyPYQExact() {
   font-weight:800;
   color:#2563eb;
   text-align:center;
+  margin-bottom:20px;
 }
 
 .pyq-card .sub{
@@ -278,7 +280,7 @@ export default function FuturelyPYQExact() {
       {/* ================= CONTENT ================= */}
       <div className="pyq-card">
         <h2>Physics Previous Year Questions</h2>
-        <div className="sub">{totalAttempted} attempted</div>
+        
 
         <div className="pyq-list">
           {DATA.map(item => (
