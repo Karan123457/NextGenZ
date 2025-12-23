@@ -261,7 +261,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
       .pyq-row:hover{background:#eef3ff;transform:translateY(-1px)}
       .pyq-left{display:flex;gap:12px;align-items:center}
       .pyq-year{width:42px;height:42px;border-radius:12px;background:#eef3ff;display:flex;align-items:center;justify-content:center;font-weight:800;color:#2563eb}
-      .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
+      .pyq-progress{font-size:14px;font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
       .exam-topbar{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;margin-left:-16px;margin-right:-16px;padding:10px 14px;margin-bottom:14px;border-radius:0}
@@ -402,9 +402,9 @@ export default function PhysicsQuestions({ setFocusMode }) {
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
                   <div>
-                    <div style={{ fontWeight: 500 }}>
-  {y.key === "ALL" ? "All Previous Year Questions" : "D2D Physics PYQ"}
-</div>
+                    <div style={{ fontWeight: 400 }}>
+                      {y.key === "ALL" ? "All Previous Year Questions" : "D2D Physics PYQ"}
+                    </div>
 
                   </div>
                 </div>
