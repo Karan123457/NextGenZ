@@ -151,26 +151,25 @@ export default function PhysicsQuestions({ setFocusMode }) {
     if (!alreadyAttempted) {
       try {
         await authFetch("/physics/attempt", {
-  method: "POST",
-  body: JSON.stringify({
-    questionId: q.id,
-    year: selectedYear?.year || "ALL",
+          method: "POST",
+          body: JSON.stringify({
+            questionId: q.id,
+            year:
+              selectedYear?.key === "ALL"
+                ? q.id.split("-")[0]
+                : selectedYear?.year,
+            selectedIndex: selected,
+            correctIndex: q.correctIndex,
+            timeTaken: timeLeft,
+          }),
+        });
 
-    // ✅ REQUIRED FIELDS
-    selectedIndex: selected,
-    correctIndex: q.correctIndex,
-
-    // ✅ DERIVED
-    isCorrect: selected === q.correctIndex,
-    timeTaken: timeLeft,
-  }),
-});
 
       } catch (err) {
         console.error("Failed to save attempt", err);
       }
     }
-    
+
     timerRef.current && clearInterval(timerRef.current);
   }
 
