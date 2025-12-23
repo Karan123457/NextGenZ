@@ -384,19 +384,19 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
           <div className="pyq-list">
             {years.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") openYearQuestions(y); }}>
+              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
                   <div>
                     <div style={{ fontWeight: 700 }}>{y.year}</div>
-                    <div className="pyq-small">Previous Year Questions</div>
                   </div>
                 </div>
+
                 <div>
                   <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
-                  <div className="pyq-small">Total {getTotal(y)} • Attempted {getAttempted(y)}</div>
                 </div>
               </div>
+
             ))}
           </div>
         </>
@@ -469,4 +469,5 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
