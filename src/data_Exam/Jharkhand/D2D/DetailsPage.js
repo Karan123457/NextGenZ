@@ -45,7 +45,7 @@ export default function FuturelyPYQExact() {
   font-weight:800;
 }
 
-.pyq-header h2{
+.pyq-header p{
   margin:6px 0 14px;
   font-size:clamp(13px, 3.5vw, 14px);
   opacity:.95;
@@ -138,7 +138,7 @@ export default function FuturelyPYQExact() {
       {!focusMode && (
         <div className="pyq-header">
           <h1>Jharkhand D2D Previous Year Questions (PYQ)</h1>
-          <h2>(2021 – 2025) — For 2026 Exam</h2>
+          <p>(2021 – 2025) — For 2026 Exam</p>
 
           <div className="pyq-stats">
             <span><strong>2021–2025</strong>Years</span>
@@ -161,12 +161,12 @@ export default function FuturelyPYQExact() {
           <PhysicsQuestions setFocusMode={setFocusMode} />
         )}
         {activeTab === "Chemistry" && (
-  <ChemistryQuestions setFocusMode={setFocusMode} />
-)}
+          <ChemistryQuestions setFocusMode={setFocusMode} />
+        )}
 
-{activeTab === "Math" && (
-  <MathematicsQuestions setFocusMode={setFocusMode} />
-)}
+        {activeTab === "Math" && (
+          <MathematicsQuestions setFocusMode={setFocusMode} />
+        )}
 
         {activeTab === "Analysis" && (
           <div style={{ textAlign: "center", padding: "40px 0", color: "#6b7280" }}>
@@ -188,3 +188,4 @@ export default function FuturelyPYQExact() {
     </div>
   );
 }
+
