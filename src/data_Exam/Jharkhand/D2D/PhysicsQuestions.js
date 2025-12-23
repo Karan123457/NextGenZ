@@ -150,9 +150,10 @@ export default function PhysicsQuestions({ setFocusMode }) {
     // 🔐 SAVE ONLY ON FIRST ATTEMPT
     if (!alreadyAttempted) {
       try {
-        await authFetch("/exam/physics/attempt", {
+        await authFetch("/physics/attempt", {
           method: "POST",
           body: JSON.stringify({
+            subject: "physics",
             questionId: q.id,
             year: selectedYear?.year || "ALL",
             isCorrect: selected === q.correctIndex,
@@ -163,7 +164,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
         console.error("Failed to save attempt", err);
       }
     }
-
+    
     timerRef.current && clearInterval(timerRef.current);
   }
 
