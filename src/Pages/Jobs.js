@@ -294,9 +294,7 @@ export default function FuturelyPYQExact() {
                 <div className="pyq-progress">
                   {item.attempted}/{item.total}
                 </div>
-                <div className="pyq-small">
-                  Total {item.total} • Attempted {item.attempted}
-                </div>
+                
               </div>
             </div>
           ))}
