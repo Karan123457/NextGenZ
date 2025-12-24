@@ -6,7 +6,7 @@ const API_BASE = "https://futurely-backend.onrender.com/api";
 
 export default function Leaderboard() {
   const [list, setList] = useState([]);
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   useEffect(() => {
     fetch(`${API_BASE}/leaderboard/physics`, {
@@ -28,57 +28,68 @@ export default function Leaderboard() {
   }
 
   return (
-  <Container className="mt-5">
-    <h3 className="mb-4 text-center">🏆 Physics Leaderboard</h3>
+    <Container className="mt-5">
+      <h3 className="mb-4 text-center">🏆 Physics Leaderboard</h3>
 
-    {/* ===== TOP 3 PODIUM ===== */}
-    {list.length >= 3 && (
-      <div className="podium-container mb-5">
-        {/* 🥈 SECOND */}
-        <div className="podium second">
-          <div className="rank">🥈</div>
-          <div className="name">{list[1].name}</div>
-          <div className="points">{list[1].points} pts</div>
+      {/* ===== TOP 3 PODIUM ===== */}
+      {list.length >= 3 && (
+        <div className="podium-container mb-5">
+          {/* 🥈 SECOND */}
+          <div className="podium second">
+            <div className="rank">🥈</div>
+            <div className="name">{list[1].name}</div>
+            <div className="points">{list[1].points} pts</div>
+          </div>
+
+          {/* 🥇 FIRST */}
+          <div className="podium first">
+            <div className="rank">🥇</div>
+            <div className="name">{list[0].name}</div>
+            <div className="points">{list[0].points} pts</div>
+          </div>
+
+          {/* 🥉 THIRD */}
+          <div className="podium third">
+            <div className="rank">🥉</div>
+            <div className="name">{list[2].name}</div>
+            <div className="points">{list[2].points} pts</div>
+          </div>
         </div>
+      )}
 
-        {/* 🥇 FIRST */}
-        <div className="podium first">
-          <div className="rank">🥇</div>
-          <div className="name">{list[0].name}</div>
-          <div className="points">{list[0].points} pts</div>
-        </div>
-
-        {/* 🥉 THIRD */}
-        <div className="podium third">
-          <div className="rank">🥉</div>
-          <div className="name">{list[2].name}</div>
-          <div className="points">{list[2].points} pts</div>
-        </div>
-      </div>
-    )}
-
-    {/* ===== FULL TABLE ===== */}
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Position</th>
-          <th>Name</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        {list.map((u) => (
-          <tr key={u.position}>
-            <td>{u.position}</td>
-            <td>{u.name}</td>
-            <td>{u.points}</td>
+      {/* ===== FULL TABLE ===== */}
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Points</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {list.map((u) => {
+            const isMe = u.userId === user?.id;
 
-    {/* ===== STYLES ===== */}
-    <style>{`
+            return (
+              <tr
+                key={u.position}
+                className={isMe ? "my-rank" : ""}
+              >
+                <td>
+                  {u.position}
+                  {isMe && <span className="you-badge">YOU</span>}
+                </td>
+                <td>{u.name}</td>
+                <td>{u.points}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+
+      </Table>
+
+      {/* ===== STYLES ===== */}
+      <style>{`
       .podium-container {
         display: flex;
         justify-content: center;
@@ -123,6 +134,20 @@ export default function Leaderboard() {
         background: linear-gradient(180deg, #cd7f32, #e0a96d);
         height: 140px;
       }
+        .my-rank {
+  background: #e0edff !important;
+  font-weight: 800;
+}
+
+.you-badge {
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
 
       @media (max-width: 600px) {
         .podium {
@@ -130,7 +155,7 @@ export default function Leaderboard() {
         }
       }
     `}</style>
-  </Container>
-);
+    </Container>
+  );
 
 }
