@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Card } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
@@ -10,31 +10,27 @@ export default function Leaderboard() {
 
   useEffect(() => {
     fetch(`${API_BASE}/leaderboard/physics`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-      .then(res => res.json())
-      .then(setList);
+      .then((res) => res.json())
+      .then((data) => setList(data));
   }, [token]);
 
-  const top3 = list.slice(0, 3);
-  const others = list.slice(3);
+  if (!list.length) {
+    return (
+      <Container className="mt-5 text-center">
+        <h5>No leaderboard data yet</h5>
+        <p>Attempt Physics questions to appear here</p>
+      </Container>
+    );
+  }
 
   return (
     <Container className="mt-5">
       <h3 className="mb-4">🏆 Physics Leaderboard</h3>
 
-      {/* TOP 3 */}
-      <div className="d-flex gap-3 mb-4">
-        {top3.map((u, i) => (
-          <Card key={i} className="text-center p-3 flex-fill">
-            <h4>{["🥇", "🥈", "🥉"][i]}</h4>
-            <h5>{u.name}</h5>
-            <strong>{u.points} pts</strong>
-          </Card>
-        ))}
-      </div>
-
-      {/* FULL TABLE */}
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -44,7 +40,7 @@ export default function Leaderboard() {
           </tr>
         </thead>
         <tbody>
-          {others.map((u) => (
+          {list.map((u) => (
             <tr key={u.position}>
               <td>{u.position}</td>
               <td>{u.name}</td>
