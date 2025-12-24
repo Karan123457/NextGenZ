@@ -93,8 +93,14 @@ export default function Leaderboard() {
             return (
               <tr
                 key={u.position}
-                className={isMe ? "my-rank" : ""}
+                style={{
+                  background:
+                    u.userId === user.id ? "#e0f2ff" : "transparent",
+                  fontWeight:
+                    u.userId === user.id ? 700 : 400,
+                }}
               >
+
                 <td>
                   {u.position}
                   {isMe && <span className="you-badge">YOU</span>}
