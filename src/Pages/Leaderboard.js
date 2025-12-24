@@ -5,11 +5,12 @@ import { useAuth } from "../context/AuthContext";
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
 export default function Leaderboard() {
-  const [list, setList] = useState([]);
   const { token, user } = useAuth();
-  const myRank = list.find(u => u.userId === user?.id);
 
+  const [list, setList] = useState([]);
+  const [myRank, setMyRank] = useState(null);
 
+  /* ================= FETCH LEADERBOARD ================= */
   useEffect(() => {
     fetch(`${API_BASE}/leaderboard/physics`, {
       headers: {
@@ -17,9 +18,19 @@ export default function Leaderboard() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setList(data));
-  }, [token]);
+      .then((data) => {
+        setList(data || []);
 
+        // find current user's rank
+        const mine = data.find(
+          (u) => u.userId === user?.id
+        );
+        setMyRank(mine || null);
+      })
+      .catch((err) => console.error("Leaderboard error:", err));
+  }, [token, user]);
+
+  /* ================= EMPTY STATE ================= */
   if (!list.length) {
     return (
       <Container className="mt-5 text-center">
@@ -32,6 +43,8 @@ export default function Leaderboard() {
   return (
     <Container className="mt-5">
       <h3 className="mb-4 text-center">🏆 Physics Leaderboard</h3>
+
+      {/* ================= YOUR RANK ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
           <div className="rank-left">
@@ -39,7 +52,7 @@ export default function Leaderboard() {
             <div>
               <h5 className="mb-1">Your Rank</h5>
               <small className="text-muted">
-                Physics Leaderboard
+                Physics Performance
               </small>
             </div>
           </div>
@@ -51,7 +64,7 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ===== TOP 3 PODIUM ===== */}
+      {/* ================= TOP 3 PODIUM ================= */}
       {list.length >= 3 && (
         <div className="podium-container mb-5">
           {/* 🥈 SECOND */}
@@ -77,8 +90,8 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* ===== FULL TABLE ===== */}
-      <Table striped bordered hover>
+      {/* ================= FULL TABLE ================= */}
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>Position</th>
@@ -94,13 +107,10 @@ export default function Leaderboard() {
               <tr
                 key={u.position}
                 style={{
-                  background:
-                    u.userId === user.id ? "#e0f2ff" : "transparent",
-                  fontWeight:
-                    u.userId === user.id ? 700 : 400,
+                  background: isMe ? "#e0f2ff" : "transparent",
+                  fontWeight: isMe ? 700 : 400,
                 }}
               >
-
                 <td>
                   {u.position}
                   {isMe && <span className="you-badge">YOU</span>}
@@ -111,111 +121,103 @@ export default function Leaderboard() {
             );
           })}
         </tbody>
-
       </Table>
 
-      {/* ===== STYLES ===== */}
+      {/* ================= STYLES ================= */}
       <style>{`
-      .my-rank-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #e0f2ff, #f8fbff);
-  border-radius: 16px;
-  padding: 16px 18px;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
-}
-
-.rank-left {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
-.rank-badge {
-  font-size: 34px;
-}
-
-.rank-number {
-  font-size: 26px;
-  font-weight: 800;
-  color: #2563eb;
-  text-align: right;
-}
-
-.rank-points {
-  font-size: 14px;
-  font-weight: 600;
-  color: #334155;
-  text-align: right;
-}
-
-      .podium-container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        gap: 20px;
-      }
-
-      .podium {
-        width: 140px;
-        border-radius: 14px;
-        text-align: center;
-        padding: 16px 10px;
-        color: #111;
-        font-weight: 700;
-      }
-
-      .podium .rank {
-        font-size: 32px;
-      }
-
-      .podium .name {
-        margin-top: 8px;
-        font-size: 15px;
-      }
-
-      .podium .points {
-        font-size: 13px;
-        margin-top: 4px;
-      }
-
-      .first {
-        background: linear-gradient(180deg, #ffd700, #ffec8b);
-        height: 200px;
-      }
-
-      .second {
-        background: linear-gradient(180deg, #cfd8dc, #eceff1);
-        height: 160px;
-      }
-
-      .third {
-        background: linear-gradient(180deg, #cd7f32, #e0a96d);
-        height: 140px;
-      }
-        .my-rank {
-  background: #e0edff !important;
-  font-weight: 800;
-}
-
-.you-badge {
-  background: #2563eb;
-  color: #fff;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-left: 6px;
-}
-
-
-      @media (max-width: 600px) {
-        .podium {
-          width: 110px;
+        .my-rank-card {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: linear-gradient(135deg, #e0f2ff, #f8fbff);
+          border-radius: 16px;
+          padding: 16px 18px;
+          box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
         }
-      }
-    `}</style>
+
+        .rank-left {
+          display: flex;
+          gap: 14px;
+          align-items: center;
+        }
+
+        .rank-badge {
+          font-size: 34px;
+        }
+
+        .rank-number {
+          font-size: 26px;
+          font-weight: 800;
+          color: #2563eb;
+          text-align: right;
+        }
+
+        .rank-points {
+          font-size: 14px;
+          font-weight: 600;
+          color: #334155;
+          text-align: right;
+        }
+
+        .podium-container {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          gap: 20px;
+        }
+
+        .podium {
+          width: 140px;
+          border-radius: 14px;
+          text-align: center;
+          padding: 16px 10px;
+          font-weight: 700;
+        }
+
+        .podium .rank {
+          font-size: 32px;
+        }
+
+        .podium .name {
+          margin-top: 8px;
+          font-size: 15px;
+        }
+
+        .podium .points {
+          font-size: 13px;
+          margin-top: 4px;
+        }
+
+        .first {
+          background: linear-gradient(180deg, #ffd700, #ffec8b);
+          height: 200px;
+        }
+
+        .second {
+          background: linear-gradient(180deg, #cfd8dc, #eceff1);
+          height: 160px;
+        }
+
+        .third {
+          background: linear-gradient(180deg, #cd7f32, #e0a96d);
+          height: 140px;
+        }
+
+        .you-badge {
+          background: #2563eb;
+          color: #fff;
+          font-size: 11px;
+          padding: 2px 6px;
+          border-radius: 6px;
+          margin-left: 6px;
+        }
+
+        @media (max-width: 600px) {
+          .podium {
+            width: 110px;
+          }
+        }
+      `}</style>
     </Container>
   );
-
 }
