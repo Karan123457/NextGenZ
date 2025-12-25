@@ -14,7 +14,7 @@ import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 
 import DetailsPage from "./data_Exam/Jharkhand/D2D/DetailsPage";
-import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/MainPage";
+import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/DetailsPageJHP";
 import ResourcesDetail from "./Pages/ResourcesDetail";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
