@@ -215,8 +215,6 @@ export default function ChemistryQuestions({ setFocusMode }) {
     return arr.filter(q => attempted[q.id]).length;
   }
 
-  const attemptedCount = yearQuestions.filter(q => attempted[q.id]).length;
-
   /* ================= bottomBar ================= */
   const showBottomBar = viewMode === "viewer" && yearQuestions.length > 0;
 
@@ -262,12 +260,21 @@ export default function ChemistryQuestions({ setFocusMode }) {
   return (
     <div className="physics-box">
       <style>{`
+      .pyq-title{
+        margin: 0;
+        font-size: 15px;
+        font-weight: 800;
+        color: #2563eb;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
       .pyq-list{display:flex;flex-direction:column;gap:10px}
       .pyq-row{display:flex;justify-content:space-between;align-items:center;background:#f9fbff;border-radius:14px;padding:12px;cursor:pointer;transition:.2s}
       .pyq-row:hover{background:#eef3ff;transform:translateY(-1px)}
       .pyq-left{display:flex;gap:12px;align-items:center}
       .pyq-year{width:42px;height:42px;border-radius:12px;background:#eef3ff;display:flex;align-items:center;justify-content:center;font-weight:800;color:#2563eb}
-      .pyq-progress{font-weight:800;color:#2563eb;text-align:right}
+      .pyq-progress{font-size:14px;font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
       .exam-topbar{
@@ -412,8 +419,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
       {/* ================= YEAR LIST ================= */}
       {viewMode === "years" && (
         <>
-          <h5>Chemistry Previous Year Questions</h5>
-          <div className="small text-muted mb-2">{attemptedCount} attempted</div>
+          <h2 className="pyq-title">Chemistry Previous Year Questions</h2>
 
           <div className="pyq-list">
             {years.map((y, i) => (
@@ -421,13 +427,14 @@ export default function ChemistryQuestions({ setFocusMode }) {
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
                   <div>
-                    <div style={{ fontWeight: 700 }}>{y.year}</div>
-                    <div className="pyq-small">Previous Year Questions</div>
+                    <div style={{ fontWeight: 400 }}>
+                      {y.key === "ALL" ? "All Previous Year Questions" : "D2D Chemistry PYQ"}
+                    </div>
                   </div>
                 </div>
+
                 <div>
                   <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
-                  <div className="pyq-small">Total {getTotal(y)} • Attempted {getAttempted(y)}</div>
                 </div>
               </div>
             ))}
