@@ -23,8 +23,8 @@ export default function Leaderboard() {
 
         // find current user's rank
         const mine = data.find(
-          (u) => u.userId === user?.id
-        );
+  (u) => u.userId === user?._id
+);
         setMyRank(mine || null);
       })
       .catch((err) => console.error("Leaderboard error:", err));
@@ -221,3 +221,4 @@ export default function Leaderboard() {
     </Container>
   );
 }
+
