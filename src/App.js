@@ -14,7 +14,7 @@ import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 
 import DetailsPage from "./data_Exam/Jharkhand/D2D/DetailsPage";
-import PolytechnicMain from "./data_Exam/Jharkhand/Polytechnic/DetailsPageJHP";
+import DetailsPageJHP from "./data_Exam/Jharkhand/Polytechnic/DetailsPageJHP";
 import ResourcesDetail from "./Pages/ResourcesDetail";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
@@ -84,7 +84,7 @@ function App() {
           <Route path="/refund-policy" element={<RefundPolicy />} />
 
           {/* Put specific/static routes before param routes */}
-          <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<PolytechnicMain />} />
+          <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<DetailsPageJHP />} />
           <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
 
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
