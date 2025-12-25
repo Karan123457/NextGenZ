@@ -12,23 +12,24 @@ export default function Leaderboard() {
 
   /* ================= FETCH LEADERBOARD ================= */
   useEffect(() => {
-    fetch(`${API_BASE}/leaderboard/physics`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setList(data || []);
+  fetch(`${API_BASE}/leaderboard/physics`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setList(data || []);
 
-        // find current user's rank
-        const mine = data.find(
-  (u) => u.userId === user?._id
-);
-        setMyRank(mine || null);
-      })
-      .catch((err) => console.error("Leaderboard error:", err));
-  }, [token, user]);
+      const mine = data.find(
+        (u) => u.userId === user?._id
+      );
+      setMyRank(mine || null);
+    })
+    .catch((err) =>
+      console.error("Leaderboard error:", err)
+    );
+}, [token, user]);
 
   /* ================= EMPTY STATE ================= */
   if (!list.length) {
@@ -221,5 +222,6 @@ export default function Leaderboard() {
     </Container>
   );
 }
+
 
 
