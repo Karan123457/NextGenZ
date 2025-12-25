@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
@@ -24,9 +25,10 @@ export default function Leaderboard() {
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
-    if (!user || !list.length) return null;
-    return list.find((u) => u.userId === user._id) || null;
-  }, [list, user]);
+  if (!user || !list.length) return null;
+  return list.find((u) => u.userId === user.id) || null;
+}, [list, user]);
+
 
   /* ================= EMPTY STATE ================= */
   if (!list.length) {
@@ -40,7 +42,7 @@ export default function Leaderboard() {
 
   return (
     <Container className="mt-5">
-      <h3 className="mb-4 text-center">🏆 Physics Leaderboard</h3>
+      <h3 className="mb-4 text-center">🏆 Physics Leaderboar</h3>
 
       {/* ================= YOUR RANK CARD ================= */}
       {myRank && (
@@ -95,6 +97,7 @@ export default function Leaderboard() {
         <tbody>
           {list.map((u) => {
             const isMe = u.userId === user?.id;
+            
 
             return (
               <tr
