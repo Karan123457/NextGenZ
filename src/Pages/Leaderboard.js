@@ -101,7 +101,7 @@ export default function Leaderboard() {
         </thead>
         <tbody>
           {list.map((u) => {
-            const isMe = u.userId === user?.id;
+            const isMe = u.userId === user?._id;
 
             return (
               <tr
@@ -221,4 +221,5 @@ export default function Leaderboard() {
     </Container>
   );
 }
+
 
