@@ -98,7 +98,17 @@ export default function UttarPradeshCards() {
           <Col key={card.id} xs={12} sm={6} md={4} lg={3}>
             <Card
               className="custom-card p-4"
-              onClick={() => handleCardClick(card)}
+              onClick={(e) => {
+                e.stopPropagation();
+                // routing same pattern as JharkhandCards but for Bihar
+                if (card.id === 1) {
+                  alert("Coming Soon!");
+                } else if (card.id === 2) {
+                  alert("Coming Soon!");
+                } else {
+                  alert("Coming Soon!");
+                }
+              }}
               style={{ background: card.gradient, color: card.textColor }}
             >
               <Badge
@@ -107,24 +117,19 @@ export default function UttarPradeshCards() {
               >
                 {card.badge}
               </Badge>
-              <Card.Img
-                variant="top"
-                src={card.logo}
-                className="card-logo mb-3 rounded"
-              />
+
+              <Card.Img variant="top" src={card.logo} className="card-logo mb-3 rounded" />
+
               <Card.Body>
                 {card.extra && (
-                  <div
-                    className="extra-text"
-                    style={{ color: card.textColor + "cc" }}
-                  >
+                  <div className="extra-text" style={{ color: card.textColor + "cc" }}>
                     {card.extra}
                   </div>
                 )}
+
                 <Card.Title>{card.title}</Card.Title>
-                <Card.Text style={{ whiteSpace: "pre-line" }}>
-                  {card.desc}
-                </Card.Text>
+                <Card.Text style={{ whiteSpace: "pre-line" }}>{card.desc}</Card.Text>
+
                 <Button
                   variant="light"
                   className="solve-btn"
