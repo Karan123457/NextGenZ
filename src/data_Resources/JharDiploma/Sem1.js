@@ -166,25 +166,27 @@ Automobile Branch)
                 <td className="one-line">{sub}</td>
                 <td>{year}</td>
                 <td>
-                  {year === 2024 ? (
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="download-btn"
-                    >
-                      📥 Download PDF
-                    </a>
-                  ) : (
-                    <a
-                      href="/"
-                      onClick={(e) => e.preventDefault()}
-                      className="download-btn"
-                    >
-                      📥 Download PDF
-                    </a>
-                  )}
-                </td>
+  {link !== "/" ? (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="download-btn"
+    >
+      📥 Download PDF
+    </a>
+  ) : (
+    <span
+      style={{
+        fontSize: "0.75rem",
+        color: "#999",
+        cursor: "not-allowed",
+      }}
+    >
+      Not Available
+    </span>
+  )}
+</td>
               </tr>
             );
           })}
@@ -422,5 +424,6 @@ td {
 };
 
 export default Sem1;
+
 
 
