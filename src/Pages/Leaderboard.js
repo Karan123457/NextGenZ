@@ -80,7 +80,7 @@ Check your rank on Futurely! 🚀`;
   }
 
   return (
-    <Container className="mt-40">
+    <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
       {/* ================= YOUR RANK ================= */}
@@ -143,6 +143,10 @@ Check your rank on Futurely! 🚀`;
 
       {/* ================= STYLES ================= */}
       <style>{`
+      .leaderboard-container {
+  margin-top: 90px;
+}
+
         .my-rank-card {
           display: flex;
           justify-content: space-between;
