@@ -147,6 +147,19 @@ Automobile Branch)
                   "https://drive.google.com/uc?export=download&id=1_IwKbn4BjXZq4A9ewSIJEuEbyfbZUv-i";
               }
             }
+             else if (year === 2022) {
+              if (sub === "Engineering Physics") {
+                link =
+                  "https://drive.google.com/file/d/1ZwKXeMYt2L7fMjI7zT4gBqBol8AMH8R4/view?usp=drivesdk";
+              } else if (sub === "Engineering Mathematics") {
+                link =
+                  "https://drive.google.com/file/d/1dQscU3njwVPjCjrVfkKjauRQ4lO0A8zs/view?usp=drivesdk";
+              } else if (sub === "Engineering Chemistry") {
+                link =
+                  "https://drive.google.com/file/d/1qfUJbUKbMLvMOC0VQeJtBN3zNcv-R8zO/view?usp=drivesdk";
+              }
+            }
+            
 
             return (
               <tr key={i}>
@@ -409,4 +422,5 @@ td {
 };
 
 export default Sem1;
+
 
