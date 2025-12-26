@@ -8,12 +8,20 @@ const API_BASE = "https://futurely-backend.onrender.com/api";
 export default function Leaderboard() {
   const [list, setList] = useState([]);
   const { token, user } = useAuth();
+  const [activeTab, setActiveTab] = useState("overall");
+  // "overall" | "physics"
+
 
   /* ================= FETCH LEADERBOARD ================= */
   useEffect(() => {
     if (!token) return;
 
-    fetch(`${API_BASE}/leaderboard/physics`, {
+    const endpoint =
+      activeTab === "overall"
+        ? "/leaderboard/overall"
+        : "/leaderboard/physics";
+
+    fetch(`${API_BASE}${endpoint}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -21,7 +29,8 @@ export default function Leaderboard() {
       .then((res) => res.json())
       .then((data) => setList(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Leaderboard error:", err));
-  }, [token]);
+  }, [token, activeTab]);
+
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
@@ -41,7 +50,26 @@ export default function Leaderboard() {
 
   return (
     <Container className="mt-5">
-      <h3 className="mb-4 text-center">🏆 Physics Leaderboar</h3>
+      <div className="d-flex justify-content-center gap-3 mb-4">
+        <button
+          className={`btn ${activeTab === "overall" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setActiveTab("overall")}
+        >
+          Overall
+        </button>
+
+        <button
+          className={`btn ${activeTab === "physics" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setActiveTab("physics")}
+        >
+          Physics
+        </button>
+      </div>
+
+      <h3 className="mb-4 text-center">
+        🏆 {activeTab === "overall" ? "Overall" : "Physics"} Leaderboard
+      </h3>
+
 
       {/* ================= YOUR RANK CARD ================= */}
       {myRank && (
@@ -96,7 +124,7 @@ export default function Leaderboard() {
         <tbody>
           {list.map((u) => {
             const isMe = u.userId === user?.id;
-            
+
 
             return (
               <tr
