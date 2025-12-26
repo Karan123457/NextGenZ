@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { toPng } from "html-to-image"; // make sure html-to-image is installed
+import { toPng } from "html-to-image"; // optional; fallback handled
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -35,68 +35,65 @@ export default function Leaderboard() {
   }, [list, user]);
 
   /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
-  async function handleShareImage() {
-    // Only share if we have a rank
+  async function handleShare() {
     if (!myRank) return;
 
-    const card = document.getElementById("rank-card-for-share");
-    if (!card) return;
-
+    // attempt image share first (if html-to-image available)
     try {
-      const dataUrl = await toPng(card);
-      // If Web Share API with files is available (mobile/secure contexts), use it
-      if (navigator.share && typeof navigator.canShare === "function") {
-        const blob = await (await fetch(dataUrl)).blob();
-        const file = new File([blob], "my-rank.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      const card = document.getElementById("rank-card");
+      if (card && toPng) {
+        const dataUrl = await toPng(card);
+
+        if (navigator.share) {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], "my-rank.png", { type: "image/png" });
+
           await navigator.share({
             files: [file],
-            title: `My Rank #${myRank.position} on Futurely`,
-            text: `I scored ${myRank.points} points on Futurely!`,
+            title: "My Rank on Futurely",
+            text: `My Rank: #${myRank.position} — ${myRank.points} pts`,
           });
+          return;
+        } else {
+          // download image fallback for desktop
+          const link = document.createElement("a");
+          link.download = "my-rank.png";
+          link.href = dataUrl;
+          link.click();
           return;
         }
       }
-
-      // Fallback: trigger download
-      const link = document.createElement("a");
-      link.download = "my-rank.png";
-      link.href = dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
     } catch (e) {
-      // If any error, fallback to copying a simple text share
-      const text = `🏆 My Rank: #${myRank.position}\nPoints: ${myRank.points}\nCheck your rank: https://futurely.in/leaderboard`;
-      try {
+      // continue to fallback text share
+      console.warn("Image share failed, falling back to text.", e);
+    }
+
+    // fallback: copy text to clipboard / navigator.share text
+    const text = `🏆 My Rank: #${myRank.position}\nPoints: ${myRank.points}\nCheck your rank on Futurely: https://futurely.in/leaderboard`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "My Leaderboard Rank",
+          text,
+          url: "https://futurely.in/leaderboard",
+        });
+      } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(text);
         alert("Rank copied to clipboard!");
-      } catch {
+      } else {
         alert(text);
       }
+    } catch (err) {
+      console.error("Share failed:", err);
+      alert("Could not share — copied to clipboard instead.");
+      try {
+        navigator.clipboard && (await navigator.clipboard.writeText(text));
+      } catch {}
     }
   }
 
-  /* ================= TEXT SHARE (fallback) ================= */
-  function handleShareText() {
-    if (!myRank) return;
-    const text = `🏆 My Rank: #${myRank.position}\nPoints: ${myRank.points}\nCheck your rank on Futurely: https://futurely.in/leaderboard`;
-    if (navigator.share) {
-      navigator.share({
-        title: "My Leaderboard Rank",
-        text,
-        url: "https://futurely.in/leaderboard",
-      }).catch(() => {
-        navigator.clipboard.writeText(text);
-        alert("Rank copied to clipboard!");
-      });
-    } else {
-      navigator.clipboard.writeText(text);
-      alert("Rank copied to clipboard!");
-    }
-  }
-
-  /* ================= SKELETON LOADING ================= */
+  /* ================= SKELETON ================= */
   if (loading) {
     return (
       <Container className="mt-5">
@@ -125,36 +122,23 @@ export default function Leaderboard() {
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK (only render if myRank exists; keep original behavior) ================= */}
+      {/* ================= YOUR RANK (unchanged behavior: only rendered when myRank exists) ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
           <div>
             <h5>Your Rank</h5>
             <small className="text-muted">Overall Performance</small>
           </div>
-
           <div style={{ textAlign: "right" }}>
-            {/* show actual rank and points (restore correct values) */}
             <div className="rank-number">#{myRank.position}</div>
             <div className="rank-points">
               {myRank.points} pts
-              {/* Share buttons: image-first (preferred), text fallback */}
               <button
-                className="share-icon-btn"
-                onClick={handleShareImage}
-                title="Share rank as image"
-                style={{ marginLeft: 8 }}
+                className="share-btn mt-2"
+                onClick={handleShare}
+                title="Share Rank"
               >
-                🖼️
-              </button>
-
-              <button
-                className="share-icon-btn"
-                onClick={handleShareText}
-                title="Share rank as text"
-                style={{ marginLeft: 6 }}
-              >
-                🔗
+                🔗 Share Rank
               </button>
             </div>
           </div>
@@ -202,41 +186,34 @@ export default function Leaderboard() {
         </tbody>
       </Table>
 
-      {/* ================= HIDDEN CARD USED FOR IMAGE SHARE (only present when myRank exists) ================= */}
+      {/* ================= HIDDEN SHARE CARD (only present when myRank exists) ================= */}
       {myRank && (
         <div
-          id="rank-card-for-share"
+          id="rank-card"
           style={{
             position: "absolute",
             left: "-9999px",
-            width: 400,
-            padding: 24,
-            borderRadius: 16,
+            width: "320px",
+            padding: "20px",
+            borderRadius: "16px",
             background: "linear-gradient(135deg,#2563eb,#4f83ff)",
             color: "#fff",
             textAlign: "center",
             fontFamily: "Inter, system-ui",
-            boxSizing: "border-box",
           }}
         >
-          <div style={{ fontSize: 16, opacity: 0.95, marginBottom: 8 }}>
-            🏆 Futurely
-          </div>
-          <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 6 }}>
-            #{myRank.position}
-          </div>
-          <div style={{ fontSize: 18, marginBottom: 12 }}>
-            {myRank.points} pts
-          </div>
-          <div style={{ fontSize: 14, opacity: 0.9 }}>Keep learning — Futurely.in</div>
+          <h3>🏆 My Rank</h3>
+          <h1>#{myRank.position}</h1>
+          <p>Points: {myRank.points}</p>
+          <p style={{ fontSize: 12, marginTop: 10 }}>futurely.in</p>
         </div>
       )}
 
-      {/* ================= STYLES (keep existing look & feel) ================= */}
+      {/* ================= STYLES ================= */}
       <style>{`
-        .leaderboard-container {
-          margin-top: 90px;
-        }
+      .leaderboard-container {
+        margin-top: 90px;
+      }
 
         .my-rank-card {
           display: flex;
@@ -256,23 +233,18 @@ export default function Leaderboard() {
         .rank-points {
           font-size: 14px;
           font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          justify-content: flex-end;
+          margin-top: 6px;
         }
 
-        .share-icon-btn {
-          background: transparent;
+        .share-btn {
+          background: #2563eb;
+          color: #fff;
           border: none;
-          font-size: 16px;
-          cursor: pointer;
-          padding: 6px;
+          padding: 6px 12px;
           border-radius: 8px;
-        }
-
-        .share-icon-btn:hover {
-          background: rgba(0,0,0,0.06);
+          font-size: 13px;
+          cursor: pointer;
+          margin-left: 10px;
         }
 
         .podium-container {
