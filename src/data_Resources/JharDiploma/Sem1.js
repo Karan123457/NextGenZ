@@ -183,7 +183,7 @@ Automobile Branch)
         cursor: "not-allowed",
       }}
     >
-      Not Available
+      Uploaded Soon...
     </span>
   )}
 </td>
@@ -424,6 +424,7 @@ td {
 };
 
 export default Sem1;
+
 
 
 
