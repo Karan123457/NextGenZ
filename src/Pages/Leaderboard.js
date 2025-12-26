@@ -34,9 +34,10 @@ export default function Leaderboard() {
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
-    if (!user || !list.length) return null;
-    return list.find((u) => u.userId === user._id) || null;
-  }, [list, user]);
+  if (!user || !list.length) return null;
+  return list.find((u) => u.userId === user.id) || null;
+}, [list, user]);
+
 
   /* ================= EMPTY STATE ================= */
   if (!list.length) {
