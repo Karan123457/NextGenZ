@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { toPng } from "html-to-image"; // ✅ NEW
+import { toPng } from "html-to-image";
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -16,9 +16,7 @@ export default function Leaderboard() {
 
     setLoading(true);
     fetch(`${API_BASE}/leaderboard/overall`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -31,10 +29,20 @@ export default function Leaderboard() {
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
     if (!user || !list.length) return null;
-    return list.find((u) => u.userId === user._id) || null;
+    return (
+      list.find(
+        (u) => String(u.userId) === String(user?._id)
+      ) || null
+    );
   }, [list, user]);
 
-  /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
+  /* ================= AUTO SCROLL TO MY ROW ================= */
+  useEffect(() => {
+    const row = document.getElementById("my-row");
+    row?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [list]);
+
+  /* ================= SHARE ================= */
   async function handleShare() {
     if (!myRank) return;
 
@@ -43,10 +51,11 @@ export default function Leaderboard() {
 
     try {
       const dataUrl = await toPng(card);
-
       if (navigator.share) {
         const blob = await (await fetch(dataUrl)).blob();
-        const file = new File([blob], "my-rank.png", { type: "image/png" });
+        const file = new File([blob], "my-rank.png", {
+          type: "image/png",
+        });
 
         await navigator.share({
           files: [file],
@@ -54,19 +63,17 @@ export default function Leaderboard() {
           text: "Check my rank on Futurely 🚀",
         });
       } else {
-        // fallback → download image
         const link = document.createElement("a");
         link.download = "my-rank.png";
         link.href = dataUrl;
         link.click();
       }
-    } catch (e) {
-      // fallback → text share
+    } catch {
       const text = `🏆 My Rank: #${myRank.position}
 Points: ${myRank.points}
-https://futurely.in/leaderboard`;
+https://futurely.in`;
       navigator.clipboard.writeText(text);
-      alert("Rank copied to clipboard!");
+      alert("Rank copied!");
     }
   }
 
@@ -76,7 +83,6 @@ https://futurely.in/leaderboard`;
       <Container className="mt-5">
         <div className="skeleton title-skel" />
         <div className="skeleton podium-skel" />
-        <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <style>{skeletonCSS}</style>
@@ -97,12 +103,12 @@ https://futurely.in/leaderboard`;
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK ================= */}
+      {/* ================= MY RANK CARD ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
           <div>
             <h5>Your Rank</h5>
-            <small className="text-muted">Overall Performance</small>
+            <small>Overall Performance</small>
           </div>
 
           <div style={{ textAlign: "right" }}>
@@ -111,8 +117,8 @@ https://futurely.in/leaderboard`;
               {myRank.points} pts
               <button
                 className="share-icon-btn"
-                title="Share Rank"
                 onClick={handleShare}
+                title="Share Rank"
               >
                 🔗
               </button>
@@ -141,20 +147,27 @@ https://futurely.in/leaderboard`;
         </thead>
         <tbody>
           {list.map((u) => {
-            const isMe = String(u.userId) === String(user?._id);
+            const isMe =
+              String(u.userId) === String(user?._id);
+
             return (
               <tr
                 key={u.userId}
+                id={isMe ? "my-row" : undefined}
                 style={{
-                  backgroundColor: isMe ? "#dbeafe" : undefined,
+                  backgroundColor: isMe ? "#eef6ff" : undefined,
                   fontWeight: isMe ? 700 : 400,
-                  borderLeft: isMe ? "6px solid #2563eb" : "none",
+                  boxShadow: isMe
+                    ? "0 0 0 2px #2563eb inset"
+                    : "none",
+                  transform: isMe ? "scale(1.01)" : "none",
                 }}
               >
-
                 <td>
                   {u.position}
-                  {isMe && <span className="you-badge">YOU</span>}
+                  {isMe && (
+                    <span className="you-badge">YOU</span>
+                  )}
                 </td>
                 <td>{u.name}</td>
                 <td>{u.points}</td>
@@ -164,26 +177,26 @@ https://futurely.in/leaderboard`;
         </tbody>
       </Table>
 
-      {/* ================= HIDDEN SHARE CARD ================= */}
+      {/* ================= SHARE IMAGE CARD ================= */}
       {myRank && (
         <div
           id="rank-card"
           style={{
             position: "absolute",
             left: "-9999px",
-            width: "320px",
-            padding: "20px",
-            borderRadius: "16px",
-            background: "linear-gradient(135deg,#2563eb,#4f83ff)",
+            width: 320,
+            padding: 20,
+            borderRadius: 16,
+            background:
+              "linear-gradient(135deg,#2563eb,#4f83ff)",
             color: "#fff",
             textAlign: "center",
-            fontFamily: "Inter, system-ui",
           }}
         >
           <h3>🏆 My Rank</h3>
           <h1>#{myRank.position}</h1>
-          <p>Points: {myRank.points}</p>
-          <p style={{ fontSize: 12, marginTop: 10 }}>futurely.in</p>
+          <p>{myRank.points} Points</p>
+          <p style={{ fontSize: 12 }}>futurely.in</p>
         </div>
       )}
 
@@ -191,96 +204,82 @@ https://futurely.in/leaderboard`;
       <style>{`
         .leaderboard-container { margin-top: 90px; }
 
-        .my-rank-card {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: linear-gradient(135deg, #e0f2ff, #f8fbff);
-          border-radius: 16px;
-          padding: 16px 18px;
+        .my-rank-card{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          background:linear-gradient(135deg,#2563eb,#4f83ff);
+          color:#fff;
+          border-radius:18px;
+          padding:18px 20px;
+          box-shadow:0 10px 30px rgba(37,99,235,.25);
         }
 
-        .rank-number {
-          font-size: 26px;
-          font-weight: 800;
-          color: #2563eb;
+        .rank-number{
+          font-size:28px;
+          font-weight:800;
         }
 
-        .rank-points {
-          font-size: 14px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          justify-content: flex-end;
+        .rank-points{
+          display:flex;
+          gap:6px;
+          align-items:center;
         }
 
-        .share-icon-btn {
-          background: transparent;
-          border: none;
-          font-size: 18px;
-          cursor: pointer;
+        .share-icon-btn{
+          background:none;
+          border:none;
+          color:#fff;
+          font-size:18px;
+          cursor:pointer;
         }
 
-        .podium-container {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
+        .podium-container{
+          display:flex;
+          justify-content:center;
+          gap:20px;
         }
 
-        .podium {
-          width: 120px;
-          padding: 14px;
-          border-radius: 14px;
-          font-weight: 700;
-          text-align: center;
-          opacity: 0;
-          transform: translateY(20px);
-          animation: rise 0.6s ease forwards;
+        .podium{
+          width:120px;
+          padding:14px;
+          border-radius:14px;
+          font-weight:700;
+          text-align:center;
+          animation:rise .6s ease forwards;
         }
 
-        .first { background: #ffd700; animation-delay: 0.1s; }
-        .second { background: #cfd8dc; animation-delay: 0.3s; }
-        .third { background: #cd7f32; animation-delay: 0.5s; }
+        .first{background:#ffd700}
+        .second{background:#cfd8dc}
+        .third{background:#cd7f32}
 
-        @keyframes rise {
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .you-badge {
-          background: #2563eb;
-          color: #fff;
-          font-size: 11px;
-          padding: 2px 6px;
-          border-radius: 6px;
-          margin-left: 6px;
+        .you-badge{
+          background:#2563eb;
+          color:#fff;
+          font-size:11px;
+          padding:2px 6px;
+          border-radius:6px;
+          margin-left:6px;
         }
       `}</style>
     </Container>
   );
 }
 
-/* ================= SKELETON CSS ================= */
+/* ================= SKELETON ================= */
 const skeletonCSS = `
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    #e5e7eb 25%,
-    #f3f4f6 37%,
-    #e5e7eb 63%
-  );
-  background-size: 400% 100%;
-  animation: shimmer 1.4s ease infinite;
-  border-radius: 8px;
-  margin-bottom: 14px;
+.skeleton{
+  background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 37%,#e5e7eb 63%);
+  background-size:400% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:8px;
+  margin-bottom:14px;
 }
-
-.title-skel { height: 32px; width: 220px; margin: 0 auto 24px; }
-.podium-skel { height: 120px; }
-.row-skel { height: 20px; }
-
-@keyframes shimmer {
-  0% { background-position: 100% 0 }
-  100% { background-position: -100% 0 }
+.title-skel{height:32px;width:220px;margin:auto}
+.podium-skel{height:120px}
+.row-skel{height:20px}
+@keyframes shimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
 }
 `;
