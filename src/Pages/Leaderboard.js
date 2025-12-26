@@ -80,7 +80,7 @@ Check your rank on Futurely! 🚀`;
   }
 
   return (
-    <Container className="mt-10">
+    <Container className="mt-40">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
       {/* ================= YOUR RANK ================= */}
