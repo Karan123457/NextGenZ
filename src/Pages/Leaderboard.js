@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
+import { toPng } from "html-to-image"; // ✅ NEW
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -33,22 +34,37 @@ export default function Leaderboard() {
     return list.find((u) => u.userId === user._id) || null;
   }, [list, user]);
 
-  /* ================= SHARE ================= */
-  function handleShare() {
+  /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
+  async function handleShare() {
     if (!myRank) return;
 
-    const text = `🏆 My Rank: #${myRank.position}
+    const card = document.getElementById("rank-card");
+    if (!card) return;
+
+    try {
+      const dataUrl = await toPng(card);
+
+      if (navigator.share) {
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], "my-rank.png", { type: "image/png" });
+
+        await navigator.share({
+          files: [file],
+          title: "My Rank on Futurely",
+          text: "Check my rank on Futurely 🚀",
+        });
+      } else {
+        // fallback → download image
+        const link = document.createElement("a");
+        link.download = "my-rank.png";
+        link.href = dataUrl;
+        link.click();
+      }
+    } catch (e) {
+      // fallback → text share
+      const text = `🏆 My Rank: #${myRank.position}
 Points: ${myRank.points}
-
-Check your rank on Futurely! 🚀`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: "My Leaderboard Rank",
-        text,
-        url: "https://futurely.in/leaderboard",
-      });
-    } else {
+https://futurely.in/leaderboard`;
       navigator.clipboard.writeText(text);
       alert("Rank copied to clipboard!");
     }
@@ -63,13 +79,11 @@ Check your rank on Futurely! 🚀`;
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
-
         <style>{skeletonCSS}</style>
       </Container>
     );
   }
 
-  /* ================= EMPTY STATE ================= */
   if (!list.length) {
     return (
       <Container className="mt-5 text-center">
@@ -90,12 +104,19 @@ Check your rank on Futurely! 🚀`;
             <h5>Your Rank</h5>
             <small className="text-muted">Overall Performance</small>
           </div>
+
           <div style={{ textAlign: "right" }}>
             <div className="rank-number">#{myRank.position}</div>
-            <div className="rank-points">{myRank.points} pts</div>
-            <button className="share-btn mt-2" onClick={handleShare}>
-              🔗 Share Rank
-            </button>
+            <div className="rank-points">
+              {myRank.points} pts
+              <button
+                className="share-icon-btn"
+                title="Share Rank"
+                onClick={handleShare}
+              >
+                🔗
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -141,11 +162,32 @@ Check your rank on Futurely! 🚀`;
         </tbody>
       </Table>
 
+      {/* ================= HIDDEN SHARE CARD ================= */}
+      {myRank && (
+        <div
+          id="rank-card"
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            width: "320px",
+            padding: "20px",
+            borderRadius: "16px",
+            background: "linear-gradient(135deg,#2563eb,#4f83ff)",
+            color: "#fff",
+            textAlign: "center",
+            fontFamily: "Inter, system-ui",
+          }}
+        >
+          <h3>🏆 My Rank</h3>
+          <h1>#{myRank.position}</h1>
+          <p>Points: {myRank.points}</p>
+          <p style={{ fontSize: 12, marginTop: 10 }}>futurely.in</p>
+        </div>
+      )}
+
       {/* ================= STYLES ================= */}
       <style>{`
-      .leaderboard-container {
-  margin-top: 90px;
-}
+        .leaderboard-container { margin-top: 90px; }
 
         .my-rank-card {
           display: flex;
@@ -165,15 +207,16 @@ Check your rank on Futurely! 🚀`;
         .rank-points {
           font-size: 14px;
           font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          justify-content: flex-end;
         }
 
-        .share-btn {
-          background: #2563eb;
-          color: #fff;
+        .share-icon-btn {
+          background: transparent;
           border: none;
-          padding: 6px 12px;
-          border-radius: 8px;
-          font-size: 13px;
+          font-size: 18px;
           cursor: pointer;
         }
 
@@ -199,10 +242,7 @@ Check your rank on Futurely! 🚀`;
         .third { background: #cd7f32; animation-delay: 0.5s; }
 
         @keyframes rise {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         .you-badge {
@@ -233,19 +273,9 @@ const skeletonCSS = `
   margin-bottom: 14px;
 }
 
-.title-skel {
-  height: 32px;
-  width: 220px;
-  margin: 0 auto 24px;
-}
-
-.podium-skel {
-  height: 120px;
-}
-
-.row-skel {
-  height: 20px;
-}
+.title-skel { height: 32px; width: 220px; margin: 0 auto 24px; }
+.podium-skel { height: 120px; }
+.row-skel { height: 20px; }
 
 @keyframes shimmer {
   0% { background-position: 100% 0 }
