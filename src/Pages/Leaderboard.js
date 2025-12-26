@@ -27,16 +27,25 @@ export default function Leaderboard() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setList(Array.isArray(data) ? data : []))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setList(data); // physics leaderboard
+        } else if (Array.isArray(data.leaderboard)) {
+          setList(data.leaderboard); // overall leaderboard
+        } else {
+          setList([]);
+        }
+      })
+
       .catch((err) => console.error("Leaderboard error:", err));
   }, [token, activeTab]);
 
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
-  if (!user || !list.length) return null;
-  return list.find((u) => u.userId === user.id) || null;
-}, [list, user]);
+    if (!user || !list.length) return null;
+    return list.find((u) => u.userId === user.id) || null;
+  }, [list, user]);
 
 
   /* ================= EMPTY STATE ================= */
