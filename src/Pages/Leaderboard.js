@@ -1,4 +1,3 @@
-```jsx
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
@@ -351,4 +350,3 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
-```
