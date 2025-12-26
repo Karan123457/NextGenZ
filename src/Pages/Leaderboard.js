@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { toPng } from "html-to-image"; // optional; fallback handled
+import { toPng } from "html-to-image"; // ✅ NEW
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -38,58 +38,35 @@ export default function Leaderboard() {
   async function handleShare() {
     if (!myRank) return;
 
-    // attempt image share first (if html-to-image available)
+    const card = document.getElementById("rank-card");
+    if (!card) return;
+
     try {
-      const card = document.getElementById("rank-card");
-      if (card && toPng) {
-        const dataUrl = await toPng(card);
+      const dataUrl = await toPng(card);
 
-        if (navigator.share) {
-          const blob = await (await fetch(dataUrl)).blob();
-          const file = new File([blob], "my-rank.png", { type: "image/png" });
+      if (navigator.share) {
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], "my-rank.png", { type: "image/png" });
 
-          await navigator.share({
-            files: [file],
-            title: "My Rank on Futurely",
-            text: `My Rank: #${myRank.position} — ${myRank.points} pts`,
-          });
-          return;
-        } else {
-          // download image fallback for desktop
-          const link = document.createElement("a");
-          link.download = "my-rank.png";
-          link.href = dataUrl;
-          link.click();
-          return;
-        }
+        await navigator.share({
+          files: [file],
+          title: "My Rank on Futurely",
+          text: "Check my rank on Futurely 🚀",
+        });
+      } else {
+        // fallback → download image
+        const link = document.createElement("a");
+        link.download = "my-rank.png";
+        link.href = dataUrl;
+        link.click();
       }
     } catch (e) {
-      // continue to fallback text share
-      console.warn("Image share failed, falling back to text.", e);
-    }
-
-    // fallback: copy text to clipboard / navigator.share text
-    const text = `🏆 My Rank: #${myRank.position}\nPoints: ${myRank.points}\nCheck your rank on Futurely: https://futurely.in/leaderboard`;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: "My Leaderboard Rank",
-          text,
-          url: "https://futurely.in/leaderboard",
-        });
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
-        alert("Rank copied to clipboard!");
-      } else {
-        alert(text);
-      }
-    } catch (err) {
-      console.error("Share failed:", err);
-      alert("Could not share — copied to clipboard instead.");
-      try {
-        navigator.clipboard && (await navigator.clipboard.writeText(text));
-      } catch {}
+      // fallback → text share
+      const text = `🏆 My Rank: #${myRank.position}
+Points: ${myRank.points}
+https://futurely.in/leaderboard`;
+      navigator.clipboard.writeText(text);
+      alert("Rank copied to clipboard!");
     }
   }
 
@@ -102,13 +79,11 @@ export default function Leaderboard() {
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
-
         <style>{skeletonCSS}</style>
       </Container>
     );
   }
 
-  /* ================= EMPTY STATE ================= */
   if (!list.length) {
     return (
       <Container className="mt-5 text-center">
@@ -122,30 +97,31 @@ export default function Leaderboard() {
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK (unchanged behavior: only rendered when myRank exists) ================= */}
+      {/* ================= YOUR RANK ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
           <div>
             <h5>Your Rank</h5>
             <small className="text-muted">Overall Performance</small>
           </div>
+
           <div style={{ textAlign: "right" }}>
             <div className="rank-number">#{myRank.position}</div>
             <div className="rank-points">
               {myRank.points} pts
               <button
-                className="share-btn mt-2"
-                onClick={handleShare}
+                className="share-icon-btn"
                 title="Share Rank"
+                onClick={handleShare}
               >
-                🔗 Share Rank
+                🔗
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ================= TOP 3 PODIUM ================= */}
+      {/* ================= PODIUM ================= */}
       {list.length >= 3 && (
         <div className="podium-container mb-5">
           <div className="podium second">🥈 {list[1].name}</div>
@@ -186,7 +162,7 @@ export default function Leaderboard() {
         </tbody>
       </Table>
 
-      {/* ================= HIDDEN SHARE CARD (only present when myRank exists) ================= */}
+      {/* ================= HIDDEN SHARE CARD ================= */}
       {myRank && (
         <div
           id="rank-card"
@@ -211,9 +187,7 @@ export default function Leaderboard() {
 
       {/* ================= STYLES ================= */}
       <style>{`
-      .leaderboard-container {
-        margin-top: 90px;
-      }
+        .leaderboard-container { margin-top: 90px; }
 
         .my-rank-card {
           display: flex;
@@ -233,18 +207,17 @@ export default function Leaderboard() {
         .rank-points {
           font-size: 14px;
           font-weight: 600;
-          margin-top: 6px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          justify-content: flex-end;
         }
 
-        .share-btn {
-          background: #2563eb;
-          color: #fff;
+        .share-icon-btn {
+          background: transparent;
           border: none;
-          padding: 6px 12px;
-          border-radius: 8px;
-          font-size: 13px;
+          font-size: 18px;
           cursor: pointer;
-          margin-left: 10px;
         }
 
         .podium-container {
@@ -269,10 +242,7 @@ export default function Leaderboard() {
         .third { background: #cd7f32; animation-delay: 0.5s; }
 
         @keyframes rise {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         .you-badge {
@@ -303,19 +273,9 @@ const skeletonCSS = `
   margin-bottom: 14px;
 }
 
-.title-skel {
-  height: 32px;
-  width: 220px;
-  margin: 0 auto 24px;
-}
-
-.podium-skel {
-  height: 120px;
-}
-
-.row-skel {
-  height: 20px;
-}
+.title-skel { height: 32px; width: 220px; margin: 0 auto 24px; }
+.podium-skel { height: 120px; }
+.row-skel { height: 20px; }
 
 @keyframes shimmer {
   0% { background-position: 100% 0 }
