@@ -141,15 +141,17 @@ https://futurely.in/leaderboard`;
         </thead>
         <tbody>
           {list.map((u) => {
-            const isMe = u.userId === user?._id;
+            const isMe = String(u.userId) === String(user?._id);
             return (
               <tr
                 key={u.userId}
                 style={{
-                  background: isMe ? "#e0f2ff" : "transparent",
+                  backgroundColor: isMe ? "#dbeafe" : undefined,
                   fontWeight: isMe ? 700 : 400,
+                  borderLeft: isMe ? "6px solid #2563eb" : "none",
                 }}
               >
+
                 <td>
                   {u.position}
                   {isMe && <span className="you-badge">YOU</span>}
