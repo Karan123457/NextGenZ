@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
@@ -8,38 +7,20 @@ const API_BASE = "https://futurely-backend.onrender.com/api";
 export default function Leaderboard() {
   const [list, setList] = useState([]);
   const { token, user } = useAuth();
-  const [activeTab, setActiveTab] = useState("overall");
-  // "overall" | "physics"
 
-
-  /* ================= FETCH LEADERBOARD ================= */
+  /* ================= FETCH OVERALL LEADERBOARD ================= */
   useEffect(() => {
     if (!token) return;
 
-    const endpoint =
-      activeTab === "overall"
-        ? "/leaderboard/overall"
-        : "/leaderboard/physics";
-
-    fetch(`${API_BASE}${endpoint}`, {
+    fetch(`${API_BASE}/leaderboard/overall`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setList(data); // physics leaderboard
-        } else if (Array.isArray(data.leaderboard)) {
-          setList(data.leaderboard); // overall leaderboard
-        } else {
-          setList([]);
-        }
-      })
-
+      .then((data) => setList(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Leaderboard error:", err));
-  }, [token, activeTab]);
-
+  }, [token]);
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
@@ -47,52 +28,28 @@ export default function Leaderboard() {
     return list.find((u) => u.userId === user.id) || null;
   }, [list, user]);
 
-
   /* ================= EMPTY STATE ================= */
   if (!list.length) {
     return (
       <Container className="mt-5 text-center">
         <h5>No leaderboard data yet</h5>
-        <p>Attempt Physics questions to appear here</p>
+        <p>Attempt questions to appear here</p>
       </Container>
     );
   }
 
   return (
     <Container className="mt-5">
-      <div className="d-flex justify-content-center gap-3 mb-4">
-        <button
-          className={`btn ${activeTab === "overall" ? "btn-primary" : "btn-outline-primary"}`}
-          onClick={() => setActiveTab("overall")}
-        >
-          Overall
-        </button>
+      <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-        <button
-          className={`btn ${activeTab === "physics" ? "btn-primary" : "btn-outline-primary"}`}
-          onClick={() => setActiveTab("physics")}
-        >
-          Physics
-        </button>
-      </div>
-
-      <h3 className="mb-4 text-center">
-        🏆 {activeTab === "overall" ? "Overall" : "Physics"} Leaderboard
-      </h3>
-
-
-      {/* ================= YOUR RANK CARD ================= */}
+      {/* ================= YOUR RANK ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
-          <div className="rank-left">
-            <span className="rank-badge">🏅</span>
-            <div>
-              <h5 className="mb-1">Your Rank</h5>
-              <small className="text-muted">Physics Leaderboard</small>
-            </div>
+          <div>
+            <h5>Your Rank</h5>
+            <small className="text-muted">Overall Performance</small>
           </div>
-
-          <div className="rank-right">
+          <div>
             <div className="rank-number">#{myRank.position}</div>
             <div className="rank-points">{myRank.points} pts</div>
           </div>
@@ -102,27 +59,13 @@ export default function Leaderboard() {
       {/* ================= TOP 3 PODIUM ================= */}
       {list.length >= 3 && (
         <div className="podium-container mb-5">
-          <div className="podium second">
-            <div className="rank">🥈</div>
-            <div className="name">{list[1].name}</div>
-            <div className="points">{list[1].points} pts</div>
-          </div>
-
-          <div className="podium first">
-            <div className="rank">🥇</div>
-            <div className="name">{list[0].name}</div>
-            <div className="points">{list[0].points} pts</div>
-          </div>
-
-          <div className="podium third">
-            <div className="rank">🥉</div>
-            <div className="name">{list[2].name}</div>
-            <div className="points">{list[2].points} pts</div>
-          </div>
+          <div className="podium second">🥈 {list[1].name}</div>
+          <div className="podium first">🥇 {list[0].name}</div>
+          <div className="podium third">🥉 {list[2].name}</div>
         </div>
       )}
 
-      {/* ================= FULL TABLE ================= */}
+      {/* ================= TABLE ================= */}
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -134,8 +77,6 @@ export default function Leaderboard() {
         <tbody>
           {list.map((u) => {
             const isMe = u.userId === user?.id;
-
-
             return (
               <tr
                 key={u.position}
@@ -165,17 +106,7 @@ export default function Leaderboard() {
           background: linear-gradient(135deg, #e0f2ff, #f8fbff);
           border-radius: 16px;
           padding: 16px 18px;
-          box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
-        }
-
-        .rank-left {
-          display: flex;
-          gap: 14px;
-          align-items: center;
-        }
-
-        .rank-badge {
-          font-size: 34px;
+          margin-bottom: 20px;
         }
 
         .rank-number {
@@ -187,41 +118,33 @@ export default function Leaderboard() {
         .rank-points {
           font-size: 14px;
           font-weight: 600;
-          color: #334155;
         }
 
         .podium-container {
           display: flex;
           justify-content: center;
-          align-items: flex-end;
           gap: 20px;
+          margin-bottom: 40px;
         }
 
         .podium {
-          width: 140px;
+          width: 120px;
+          padding: 14px;
           border-radius: 14px;
-          text-align: center;
-          padding: 16px 10px;
           font-weight: 700;
-        }
-
-        .podium .rank {
-          font-size: 32px;
+          text-align: center;
         }
 
         .first {
-          background: linear-gradient(180deg, #ffd700, #ffec8b);
-          height: 200px;
+          background: #ffd700;
         }
 
         .second {
-          background: linear-gradient(180deg, #cfd8dc, #eceff1);
-          height: 160px;
+          background: #cfd8dc;
         }
 
         .third {
-          background: linear-gradient(180deg, #cd7f32, #e0a96d);
-          height: 140px;
+          background: #cd7f32;
         }
 
         .you-badge {
