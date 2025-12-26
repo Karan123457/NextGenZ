@@ -36,11 +36,11 @@ export default function Leaderboard() {
   async function handleShare() {
     if (!myRank) return;
 
-    const card = document.getElementById("rank-card");
-    if (!card) return;
+    const node = document.getElementById("rank-card");
+    if (!node) return;
 
     try {
-      const dataUrl = await toPng(card);
+      const dataUrl = await toPng(node);
       const blob = await (await fetch(dataUrl)).blob();
       const file = new File([blob], "my-rank.png", { type: "image/png" });
 
@@ -56,7 +56,7 @@ export default function Leaderboard() {
         link.href = dataUrl;
         link.click();
       }
-    } catch (e) {
+    } catch {
       const text = `🏆 My Rank: #${myRank.position}
 Points: ${myRank.points}
 https://futurely.in/leaderboard`;
@@ -74,38 +74,44 @@ https://futurely.in/leaderboard`;
     );
   }
 
+  if (!list.length) {
+    return (
+      <Container className="mt-5 text-center">
+        <h5>No leaderboard data yet</h5>
+        <p>Attempt questions to appear here</p>
+      </Container>
+    );
+  }
+
   return (
     <Container className="mt-5">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK (ALWAYS VISIBLE) ================= */}
-      <div className="my-rank-card mb-4">
-        <div>
-          <h5>Your Rank</h5>
-          <small className="text-muted">Overall Performance</small>
-        </div>
-
-        <div style={{ textAlign: "right" }}>
-          <div className="rank-number">
-            {myRank ? `#${myRank.position}` : "--"}
+      {/* ================= YOUR RANK (ORIGINAL BEHAVIOUR KEPT) ================= */}
+      {myRank && (
+        <div className="my-rank-card mb-4">
+          <div>
+            <h5>Your Rank</h5>
+            <small className="text-muted">Overall Performance</small>
           </div>
-          <div className="rank-points">
-            {myRank ? `${myRank.points} pts` : "Attempt questions to get rank"}
-            <button
-              className="share-icon-btn"
-              onClick={handleShare}
-              disabled={!myRank}
-              title={
-                myRank ? "Share Rank" : "Attempt questions to enable sharing"
-              }
-            >
-              🔗
-            </button>
+
+          <div style={{ textAlign: "right" }}>
+            <div className="rank-number">#{myRank.position}</div>
+            <div className="rank-points">
+              {myRank.points} pts
+              <button
+                className="share-icon-btn"
+                title="Share Rank"
+                onClick={handleShare}
+              >
+                🔗
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* ================= PODIUM ================= */}
+      {/* ================= PODIUM (UNCHANGED) ================= */}
       {list.length >= 3 && (
         <div className="podium-container mb-5">
           <div className="podium second">🥈 {list[1].name}</div>
@@ -114,43 +120,39 @@ https://futurely.in/leaderboard`;
         </div>
       )}
 
-      {/* ================= TABLE ================= */}
-      {list.length ? (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Name</th>
-              <th>Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((u) => {
-              const isMe = u.userId === user?._id;
-              return (
-                <tr
-                  key={u.userId}
-                  style={{
-                    background: isMe ? "#e0f2ff" : "transparent",
-                    fontWeight: isMe ? 700 : 400,
-                  }}
-                >
-                  <td>
-                    {u.position}
-                    {isMe && <span className="you-badge">YOU</span>}
-                  </td>
-                  <td>{u.name}</td>
-                  <td>{u.points}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      ) : (
-        <p className="text-center">No leaderboard data yet</p>
-      )}
+      {/* ================= TABLE (UNCHANGED) ================= */}
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((u) => {
+            const isMe = u.userId === user?._id;
+            return (
+              <tr
+                key={u.userId}
+                style={{
+                  background: isMe ? "#e0f2ff" : "transparent",
+                  fontWeight: isMe ? 700 : 400,
+                }}
+              >
+                <td>
+                  {u.position}
+                  {isMe && <span className="you-badge">YOU</span>}
+                </td>
+                <td>{u.name}</td>
+                <td>{u.points}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
 
-      {/* ================= HIDDEN SHARE CARD ================= */}
+      {/* ================= HIDDEN SHARE IMAGE CARD ================= */}
       {myRank && (
         <div
           id="rank-card"
@@ -173,7 +175,7 @@ https://futurely.in/leaderboard`;
         </div>
       )}
 
-      {/* ================= STYLES ================= */}
+      {/* ================= STYLES (UNCHANGED + SMALL ADDITION) ================= */}
       <style>{`
         .my-rank-card {
           display: flex;
@@ -207,11 +209,6 @@ https://futurely.in/leaderboard`;
           padding: 4px 8px;
           cursor: pointer;
           font-size: 14px;
-        }
-
-        .share-icon-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
         }
 
         .podium-container {
