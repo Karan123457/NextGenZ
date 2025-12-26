@@ -6,28 +6,68 @@ const API_BASE = "https://futurely-backend.onrender.com/api";
 
 export default function Leaderboard() {
   const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { token, user } = useAuth();
 
   /* ================= FETCH OVERALL LEADERBOARD ================= */
   useEffect(() => {
     if (!token) return;
 
+    setLoading(true);
     fetch(`${API_BASE}/leaderboard/overall`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
-      .then((data) => setList(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Leaderboard error:", err));
+      .then((data) => {
+        setList(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [token]);
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
-  if (!user || !list.length) return null;
-  return list.find((u) => u.userId === user._id) || null;
-}, [list, user]);
+    if (!user || !list.length) return null;
+    return list.find((u) => u.userId === user._id) || null;
+  }, [list, user]);
 
+  /* ================= SHARE ================= */
+  function handleShare() {
+    if (!myRank) return;
+
+    const text = `🏆 My Rank: #${myRank.position}
+Points: ${myRank.points}
+
+Check your rank on Futurely! 🚀`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: "My Leaderboard Rank",
+        text,
+        url: "https://futurely.in/leaderboard",
+      });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert("Rank copied to clipboard!");
+    }
+  }
+
+  /* ================= SKELETON ================= */
+  if (loading) {
+    return (
+      <Container className="mt-5">
+        <div className="skeleton title-skel" />
+        <div className="skeleton podium-skel" />
+        <div className="skeleton row-skel" />
+        <div className="skeleton row-skel" />
+        <div className="skeleton row-skel" />
+
+        <style>{skeletonCSS}</style>
+      </Container>
+    );
+  }
 
   /* ================= EMPTY STATE ================= */
   if (!list.length) {
@@ -50,14 +90,17 @@ export default function Leaderboard() {
             <h5>Your Rank</h5>
             <small className="text-muted">Overall Performance</small>
           </div>
-          <div>
+          <div style={{ textAlign: "right" }}>
             <div className="rank-number">#{myRank.position}</div>
             <div className="rank-points">{myRank.points} pts</div>
+            <button className="share-btn mt-2" onClick={handleShare}>
+              🔗 Share Rank
+            </button>
           </div>
         </div>
       )}
 
-      {/* ================= TOP 3 PODIUM ================= */}
+      {/* ================= PODIUM ================= */}
       {list.length >= 3 && (
         <div className="podium-container mb-5">
           <div className="podium second">🥈 {list[1].name}</div>
@@ -80,7 +123,7 @@ export default function Leaderboard() {
             const isMe = u.userId === user?._id;
             return (
               <tr
-                key={u.position}
+                key={u.userId}
                 style={{
                   background: isMe ? "#e0f2ff" : "transparent",
                   fontWeight: isMe ? 700 : 400,
@@ -107,7 +150,6 @@ export default function Leaderboard() {
           background: linear-gradient(135deg, #e0f2ff, #f8fbff);
           border-radius: 16px;
           padding: 16px 18px;
-          margin-bottom: 20px;
         }
 
         .rank-number {
@@ -121,11 +163,20 @@ export default function Leaderboard() {
           font-weight: 600;
         }
 
+        .share-btn {
+          background: #2563eb;
+          color: #fff;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 13px;
+          cursor: pointer;
+        }
+
         .podium-container {
           display: flex;
           justify-content: center;
           gap: 20px;
-          margin-bottom: 40px;
         }
 
         .podium {
@@ -134,18 +185,20 @@ export default function Leaderboard() {
           border-radius: 14px;
           font-weight: 700;
           text-align: center;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: rise 0.6s ease forwards;
         }
 
-        .first {
-          background: #ffd700;
-        }
+        .first { background: #ffd700; animation-delay: 0.1s; }
+        .second { background: #cfd8dc; animation-delay: 0.3s; }
+        .third { background: #cd7f32; animation-delay: 0.5s; }
 
-        .second {
-          background: #cfd8dc;
-        }
-
-        .third {
-          background: #cd7f32;
+        @keyframes rise {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .you-badge {
@@ -160,3 +213,38 @@ export default function Leaderboard() {
     </Container>
   );
 }
+
+/* ================= SKELETON CSS ================= */
+const skeletonCSS = `
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 37%,
+    #e5e7eb 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.title-skel {
+  height: 32px;
+  width: 220px;
+  margin: 0 auto 24px;
+}
+
+.podium-skel {
+  height: 120px;
+}
+
+.row-skel {
+  height: 20px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0 }
+  100% { background-position: -100% 0 }
+}
+`;
