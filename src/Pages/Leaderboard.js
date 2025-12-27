@@ -343,7 +343,7 @@ async function handlePodiumShare() {
   font-size: 16px;
   font-weight: 900;
   letter-spacing: 0.5px;
-  color: #1e40af;
+ color: #0d6efd; /* ✅ Futurely brand blue */
 }
 
 /* Tagline */
@@ -351,7 +351,8 @@ async function handlePodiumShare() {
   display: block;
   font-size: 10px;
   font-weight: 600;
-  color: #1e40af;
+  color: #0d6efd;
+  opacity: 0.7;
 }
 
 /* 👁 Hide watermark on live UI */
@@ -624,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
