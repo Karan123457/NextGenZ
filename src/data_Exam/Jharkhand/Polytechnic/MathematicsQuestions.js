@@ -7,6 +7,7 @@ export const mathematicsQuestionsByYear = {
   "2025 Questions": [
     { id: "2025-q1", text: "Calculus basic?", options: ["A","B","C","D"], correctIndex: 0 },
     { id: "2025-q2", text: "Algebra question?", options: ["A","B","C","D"], correctIndex: 0 },
+    { id: "2024-q3", text: "What is Biology?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Trigonometry?", options: ["A","B","C","D"], correctIndex: 0 },
@@ -524,3 +525,4 @@ export default function MathematicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
