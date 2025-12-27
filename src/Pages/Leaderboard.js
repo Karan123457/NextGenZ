@@ -155,29 +155,8 @@ async function handlePodiumShare() {
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK ================= */}
-      {myRank && (
-        <div className="my-rank-card mb-4">
-          <div>
-            <h5>Your Rank</h5>
-            <small className="text-muted">Overall Performance</small>
-          </div>
+      {/* ================= YOUR RANK =================  Removed to look clean*/}
 
-          <div style={{ textAlign: "right" }}>
-            <div className="rank-number">#{myRank.position}</div>
-            <div className="rank-points">
-              {myRank.points} pts
-              <button
-                className="share-icon-btn"
-                title="Share Rank"
-                onClick={handleShare}
-              >
-                🔗
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 {/* ================= PODIUM SHARE BUTTON ================= */}
 {list.length >= 3 && (
   <div style={{ textAlign: "center", marginBottom: 12 }}>
@@ -684,17 +663,5 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
-
-
-
-
-
-
-
-
-
-
-
-
 
 
