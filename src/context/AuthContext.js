@@ -10,24 +10,26 @@ export const AuthProvider = ({ children }) => {
   // 🔁 Load auth from localStorage on app start
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("userName");
+    const savedUser = localStorage.getItem("user");
 
-    if (savedToken) {
+    if (savedToken && savedUser) {
       setToken(savedToken);
-      setUser({ name: savedUser });
+      setUser(JSON.parse(savedUser)); // ✅ RESTORE FULL USER
     }
 
     setLoading(false);
   }, []);
 
+
   // ✅ Login
   const login = (token, user) => {
     localStorage.setItem("token", token);
-    localStorage.setItem("userName", user.name);
+    localStorage.setItem("user", JSON.stringify(user)); // ✅ FULL USER
 
     setToken(token);
     setUser(user);
   };
+
 
   // 🚪 Logout
   const logout = () => {
