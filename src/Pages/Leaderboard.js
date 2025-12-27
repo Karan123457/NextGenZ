@@ -245,7 +245,7 @@ async function handlePodiumShare() {
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>Position</th>
+            <th>Rank</th>
             <th>Name</th>
             <th>Points</th>
           </tr>
@@ -625,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
