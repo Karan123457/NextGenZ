@@ -166,7 +166,7 @@ async function handlePodiumShare() {
           <div style={{ textAlign: "right" }}>
             <div className="rank-number">#{myRank.position}</div>
             <div className="rank-points">
-              {myRank.points} 36 Points
+              {myRank.points} pts
               <button
                 className="share-icon-btn"
                 title="Share Rank"
@@ -203,7 +203,7 @@ async function handlePodiumShare() {
         {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
         <div className="medal silver">🥈</div>
         <div className="name">{list[1].name}</div>
-        <div className="points">{list[1].points} 36 Points</div>
+        <div className="points">{list[1].points} pts</div>
         <div className="stand s2" />
       </div>
 
@@ -215,7 +215,7 @@ async function handlePodiumShare() {
         </div>
         <div className="medal gold">🥇</div>
         <div className="name">{list[0].name}</div>
-        <div className="points">{list[0].points} 36 Points</div>
+        <div className="points">{list[0].points} pts</div>
         <div className="stand s1" />
       </div>
 
@@ -224,7 +224,7 @@ async function handlePodiumShare() {
         {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
         <div className="medal bronze">🥉</div>
         <div className="name">{list[2].name}</div>
-        <div className="points">{list[2].points} 36 Points</div>
+        <div className="points">{list[2].points} pts</div>
         <div className="stand s3" />
       </div>
 
@@ -625,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
