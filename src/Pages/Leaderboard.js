@@ -135,13 +135,36 @@ https://futurely.in/leaderboard`;
       )}
 
       {/* ================= PODIUM ================= */}
-      {list.length >= 3 && (
-        <div className="podium-container mb-5">
-          <div className="podium second">🥈 {list[1].name}</div>
-          <div className="podium first">🥇 {list[0].name}</div>
-          <div className="podium third">🥉 {list[2].name}</div>
-        </div>
-      )}
+     {/* ================= ENHANCED PODIUM ================= */}
+{list.length >= 3 && (
+  <div className="podium-wrapper mb-5">
+    {/* 🥈 SECOND */}
+    <div className="podium-card second">
+      <div className="medal silver">🥈</div>
+      <div className="name">{list[1].name}</div>
+      <div className="points">{list[1].points} pts</div>
+      <div className="stand s2" />
+    </div>
+
+    {/* 🥇 FIRST */}
+    <div className="podium-card first">
+      <div className="crown">👑</div>
+      <div className="medal gold">🥇</div>
+      <div className="name">{list[0].name}</div>
+      <div className="points">{list[0].points} pts</div>
+      <div className="stand s1" />
+    </div>
+
+    {/* 🥉 THIRD */}
+    <div className="podium-card third">
+      <div className="medal bronze">🥉</div>
+      <div className="name">{list[2].name}</div>
+      <div className="points">{list[2].points} pts</div>
+      <div className="stand s3" />
+    </div>
+  </div>
+)}
+
 
       {/* ================= TABLE ================= */}
       <Table striped bordered hover responsive>
@@ -223,6 +246,105 @@ https://futurely.in/leaderboard`;
 
       {/* ================= STYLES ================= */}
       <style>{`
+
+      /* ================= ENHANCED PODIUM ================= */
+
+.podium-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 22px;
+  margin-top: 10px;
+}
+
+/* COMMON CARD */
+.podium-card {
+  width: 130px;
+  text-align: center;
+  font-weight: 700;
+  animation: popIn 0.6s ease forwards;
+  position: relative;
+}
+
+.podium-card .name {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.podium-card .points {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* MEDALS */
+.medal {
+  font-size: 26px;
+}
+
+.gold { color: #facc15; }
+.silver { color: #cbd5e1; }
+.bronze { color: #fb923c; }
+
+/* 👑 Crown for #1 */
+.crown {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  animation: bounce 1.5s infinite;
+}
+
+/* STANDS */
+.stand {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  margin-top: 10px;
+}
+
+.s1 {
+  height: 90px;
+  background: linear-gradient(180deg,#fde047,#facc15);
+}
+
+.s2 {
+  height: 70px;
+  background: linear-gradient(180deg,#e5e7eb,#cbd5e1);
+}
+
+.s3 {
+  height: 55px;
+  background: linear-gradient(180deg,#fdba74,#fb923c);
+}
+
+/* POSITION SCALING */
+.podium-card.first {
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.podium-card.second,
+.podium-card.third {
+  opacity: 0.95;
+}
+
+/* ANIMATIONS */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
         .leaderboard-container { margin-top: 90px; }
 
         .my-rank-card {
@@ -318,3 +440,4 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
