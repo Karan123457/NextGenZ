@@ -36,6 +36,10 @@ export default function Leaderboard() {
     return list.find((u) => String(u.userId) === myUserId) || null;
   }, [list, user]);
 
+  /* ================= PODIUM YOU CHECK ================= */
+const isMe = (userId) => String(userId) === myUserId;
+
+
   /* ================= TOP 10 ================= */
   const top10 = useMemo(() => {
     return list.slice(0, 10);
@@ -184,29 +188,35 @@ async function handlePodiumShare() {
   <div id="podium-card">
     <div className="podium-wrapper mb-5">
       {/* 🥈 SECOND */}
-      <div className="podium-card second">
-        <div className="medal silver">🥈</div>
-        <div className="name">{list[1].name}</div>
-        <div className="points">{list[1].points} pts</div>
-        <div className="stand s2" />
-      </div>
+      <div className={`podium-card second ${isMe(list[1].userId) ? "me" : ""}`}>
+  {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
+  <div className="medal silver">🥈</div>
+  <div className="name">{list[1].name}</div>
+  <div className="points">{list[1].points} pts</div>
+  <div className="stand s2" />
+</div>
+
 
       {/* 🥇 FIRST */}
-      <div className="podium-card first">
-        <div className="crown">👑</div>
-        <div className="medal gold">🥇</div>
-        <div className="name">{list[0].name}</div>
-        <div className="points">{list[0].points} pts</div>
-        <div className="stand s1" />
-      </div>
+      <div className={`podium-card first ${isMe(list[0].userId) ? "me" : ""}`}>
+  {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
+  <div className="crown">👑</div>
+  <div className="medal gold">🥇</div>
+  <div className="name">{list[0].name}</div>
+  <div className="points">{list[0].points} pts</div>
+  <div className="stand s1" />
+</div>
+
 
       {/* 🥉 THIRD */}
-      <div className="podium-card third">
-        <div className="medal bronze">🥉</div>
-        <div className="name">{list[2].name}</div>
-        <div className="points">{list[2].points} pts</div>
-        <div className="stand s3" />
-      </div>
+      <div className={`podium-card third ${isMe(list[2].userId) ? "me" : ""}`}>
+  {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
+  <div className="medal bronze">🥉</div>
+  <div className="name">{list[2].name}</div>
+  <div className="points">{list[2].points} pts</div>
+  <div className="stand s3" />
+</div>
+
     </div>
   </div>
 )}
@@ -293,6 +303,34 @@ async function handlePodiumShare() {
 
       {/* ================= STYLES ================= */}
       <style>{`
+      /* ================= YOU PODIUM BADGE ================= */
+.you-podium {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px #fff;
+  animation: glow 1.6s infinite;
+}
+
+/* Highlight card if it's YOU */
+.podium-card.me {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.35);
+  border-radius: 16px;
+}
+
+/* Glow animation */
+@keyframes glow {
+  0% { box-shadow: 0 0 0 0 rgba(37,99,235,0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+
 /* ================= PODIUM SHARE BUTTON ================= */
 .podium-share-btn {
   background: linear-gradient(135deg, #2563eb, #4f83ff);
@@ -502,5 +540,6 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
