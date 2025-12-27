@@ -11,13 +11,6 @@ export default function Leaderboard() {
   const { token, user, loading: authLoading } = useAuth();
   const myUserId = String(user?._id || user?.id || user?.userId || "");
 
-if (authLoading) {
-  return (
-    <Container className="mt-5 text-center">
-      <p>Loading user...</p>
-    </Container>
-  );
-}
 
   /* ================= FETCH OVERALL LEADERBOARD ================= */
   useEffect(() => {
@@ -92,16 +85,22 @@ https://futurely.in/leaderboard`;
     }
   }
 
-  /* ================= SKELETON ================= */
+  
+/* ================= GUARDS ================= */
+  if (authLoading) {
+    return (
+      <Container className="mt-5 text-center">
+        <p>Loading user...</p>
+      </Container>
+    );
+  }
+
   if (loading) {
     return (
       <Container className="mt-5">
         <div className="skeleton title-skel" />
         <div className="skeleton podium-skel" />
         <div className="skeleton row-skel" />
-        <div className="skeleton row-skel" />
-        <div className="skeleton row-skel" />
-        <style>{skeletonCSS}</style>
       </Container>
     );
   }
@@ -327,5 +326,6 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
