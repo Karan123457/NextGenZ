@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { toPng } from "html-to-image";
+import { toPng } from "html-to-image"; // ✅ NEW
 
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
@@ -16,7 +16,9 @@ export default function Leaderboard() {
 
     setLoading(true);
     fetch(`${API_BASE}/leaderboard/overall`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -29,20 +31,21 @@ export default function Leaderboard() {
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
     if (!user || !list.length) return null;
-    return (
-      list.find(
-        (u) => String(u.userId) === String(user?._id)
-      ) || null
-    );
+    return list.find((u) => u.userId === user._id) || null;
   }, [list, user]);
 
-  /* ================= AUTO SCROLL TO MY ROW ================= */
-  useEffect(() => {
-    const row = document.getElementById("my-row");
-    row?.scrollIntoView({ behavior: "smooth", block: "center" });
+  /* ================= TOP 10 ================= */
+  const top10 = useMemo(() => {
+    return list.slice(0, 10);
   }, [list]);
 
-  /* ================= SHARE ================= */
+  const isMeInTop10 = useMemo(() => {
+    if (!myRank) return false;
+    return top10.some((u) => u.userId === myRank.userId);
+  }, [top10, myRank]);
+
+
+  /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
   async function handleShare() {
     if (!myRank) return;
 
@@ -51,11 +54,10 @@ export default function Leaderboard() {
 
     try {
       const dataUrl = await toPng(card);
+
       if (navigator.share) {
         const blob = await (await fetch(dataUrl)).blob();
-        const file = new File([blob], "my-rank.png", {
-          type: "image/png",
-        });
+        const file = new File([blob], "my-rank.png", { type: "image/png" });
 
         await navigator.share({
           files: [file],
@@ -63,17 +65,19 @@ export default function Leaderboard() {
           text: "Check my rank on Futurely 🚀",
         });
       } else {
+        // fallback → download image
         const link = document.createElement("a");
         link.download = "my-rank.png";
         link.href = dataUrl;
         link.click();
       }
-    } catch {
+    } catch (e) {
+      // fallback → text share
       const text = `🏆 My Rank: #${myRank.position}
 Points: ${myRank.points}
-https://futurely.in`;
+https://futurely.in/leaderboard`;
       navigator.clipboard.writeText(text);
-      alert("Rank copied!");
+      alert("Rank copied to clipboard!");
     }
   }
 
@@ -83,6 +87,7 @@ https://futurely.in`;
       <Container className="mt-5">
         <div className="skeleton title-skel" />
         <div className="skeleton podium-skel" />
+        <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <div className="skeleton row-skel" />
         <style>{skeletonCSS}</style>
@@ -103,12 +108,12 @@ https://futurely.in`;
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= MY RANK CARD ================= */}
+      {/* ================= YOUR RANK ================= */}
       {myRank && (
         <div className="my-rank-card mb-4">
           <div>
             <h5>Your Rank</h5>
-            <small>Overall Performance</small>
+            <small className="text-muted">Overall Performance</small>
           </div>
 
           <div style={{ textAlign: "right" }}>
@@ -117,8 +122,8 @@ https://futurely.in`;
               {myRank.points} pts
               <button
                 className="share-icon-btn"
-                onClick={handleShare}
                 title="Share Rank"
+                onClick={handleShare}
               >
                 🔗
               </button>
@@ -146,57 +151,71 @@ https://futurely.in`;
           </tr>
         </thead>
         <tbody>
-          {list.map((u) => {
-            const isMe =
-              String(u.userId) === String(user?._id);
+          {/* ===== TOP 10 USERS ===== */}
+          {top10.map((u) => {
+            const isMe = String(u.userId) === String(user?._id);
 
             return (
               <tr
                 key={u.userId}
-                id={isMe ? "my-row" : undefined}
                 style={{
-                  backgroundColor: isMe ? "#eef6ff" : undefined,
+                  backgroundColor: isMe ? "#dbeafe" : undefined,
                   fontWeight: isMe ? 700 : 400,
-                  boxShadow: isMe
-                    ? "0 0 0 2px #2563eb inset"
-                    : "none",
-                  transform: isMe ? "scale(1.01)" : "none",
+                  borderLeft: isMe ? "6px solid #2563eb" : "none",
                 }}
               >
                 <td>
                   {u.position}
-                  {isMe && (
-                    <span className="you-badge">YOU</span>
-                  )}
+                  {isMe && <span className="you-badge">YOU</span>}
                 </td>
                 <td>{u.name}</td>
                 <td>{u.points}</td>
               </tr>
             );
           })}
+
+          {/* ===== YOUR RANK (IF NOT IN TOP 10) ===== */}
+          {myRank && !isMeInTop10 && (
+            <tr
+              style={{
+                backgroundColor: "#eff6ff",
+                fontWeight: 700,
+                borderTop: "2px dashed #2563eb",
+                borderLeft: "6px solid #2563eb",
+              }}
+            >
+              <td>
+                {myRank.position}
+                <span className="you-badge">YOU</span>
+              </td>
+              <td>{myRank.name}</td>
+              <td>{myRank.points}</td>
+            </tr>
+          )}
         </tbody>
+
       </Table>
 
-      {/* ================= SHARE IMAGE CARD ================= */}
+      {/* ================= HIDDEN SHARE CARD ================= */}
       {myRank && (
         <div
           id="rank-card"
           style={{
             position: "absolute",
             left: "-9999px",
-            width: 320,
-            padding: 20,
-            borderRadius: 16,
-            background:
-              "linear-gradient(135deg,#2563eb,#4f83ff)",
+            width: "320px",
+            padding: "20px",
+            borderRadius: "16px",
+            background: "linear-gradient(135deg,#2563eb,#4f83ff)",
             color: "#fff",
             textAlign: "center",
+            fontFamily: "Inter, system-ui",
           }}
         >
           <h3>🏆 My Rank</h3>
           <h1>#{myRank.position}</h1>
-          <p>{myRank.points} Points</p>
-          <p style={{ fontSize: 12 }}>futurely.in</p>
+          <p>Points: {myRank.points}</p>
+          <p style={{ fontSize: 12, marginTop: 10 }}>futurely.in</p>
         </div>
       )}
 
@@ -204,82 +223,96 @@ https://futurely.in`;
       <style>{`
         .leaderboard-container { margin-top: 90px; }
 
-        .my-rank-card{
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          background:linear-gradient(135deg,#2563eb,#4f83ff);
-          color:#fff;
-          border-radius:18px;
-          padding:18px 20px;
-          box-shadow:0 10px 30px rgba(37,99,235,.25);
+        .my-rank-card {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: linear-gradient(135deg, #e0f2ff, #f8fbff);
+          border-radius: 16px;
+          padding: 16px 18px;
         }
 
-        .rank-number{
-          font-size:28px;
-          font-weight:800;
+        .rank-number {
+          font-size: 26px;
+          font-weight: 800;
+          color: #2563eb;
         }
 
-        .rank-points{
-          display:flex;
-          gap:6px;
-          align-items:center;
+        .rank-points {
+          font-size: 14px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          justify-content: flex-end;
         }
 
-        .share-icon-btn{
-          background:none;
-          border:none;
-          color:#fff;
-          font-size:18px;
-          cursor:pointer;
+        .share-icon-btn {
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
         }
 
-        .podium-container{
-          display:flex;
-          justify-content:center;
-          gap:20px;
+        .podium-container {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
         }
 
-        .podium{
-          width:120px;
-          padding:14px;
-          border-radius:14px;
-          font-weight:700;
-          text-align:center;
-          animation:rise .6s ease forwards;
+        .podium {
+          width: 120px;
+          padding: 14px;
+          border-radius: 14px;
+          font-weight: 700;
+          text-align: center;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: rise 0.6s ease forwards;
         }
 
-        .first{background:#ffd700}
-        .second{background:#cfd8dc}
-        .third{background:#cd7f32}
+        .first { background: #ffd700; animation-delay: 0.1s; }
+        .second { background: #cfd8dc; animation-delay: 0.3s; }
+        .third { background: #cd7f32; animation-delay: 0.5s; }
 
-        .you-badge{
-          background:#2563eb;
-          color:#fff;
-          font-size:11px;
-          padding:2px 6px;
-          border-radius:6px;
-          margin-left:6px;
+        @keyframes rise {
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .you-badge {
+          background: #2563eb;
+          color: #fff;
+          font-size: 11px;
+          padding: 2px 6px;
+          border-radius: 6px;
+          margin-left: 6px;
         }
       `}</style>
     </Container>
   );
 }
 
-/* ================= SKELETON ================= */
+/* ================= SKELETON CSS ================= */
 const skeletonCSS = `
-.skeleton{
-  background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 37%,#e5e7eb 63%);
-  background-size:400% 100%;
-  animation:shimmer 1.4s infinite;
-  border-radius:8px;
-  margin-bottom:14px;
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 37%,
+    #e5e7eb 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
+  margin-bottom: 14px;
 }
-.title-skel{height:32px;width:220px;margin:auto}
-.podium-skel{height:120px}
-.row-skel{height:20px}
-@keyframes shimmer{
-  0%{background-position:100% 0}
-  100%{background-position:-100% 0}
+
+.title-skel { height: 32px; width: 220px; margin: 0 auto 24px; }
+.podium-skel { height: 120px; }
+.row-skel { height: 20px; }
+
+@keyframes shimmer {
+  0% { background-position: 100% 0 }
+  100% { background-position: -100% 0 }
 }
 `;
