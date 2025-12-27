@@ -568,7 +568,7 @@ async function handlePodiumShare() {
   50% { transform: translateX(-50%) translateY(-6px); }
 }
 
-        .leaderboard-container { margin-top: 90px; }
+        .leaderboard-container { margin-top: 80px; }
 
         .my-rank-card {
           display: flex;
@@ -663,5 +663,6 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
