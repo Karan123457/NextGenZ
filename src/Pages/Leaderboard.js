@@ -9,6 +9,8 @@ export default function Leaderboard() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const { token, user } = useAuth();
+  const myUserId = String(user?._id || user?.id || user?.userId || "");
+
 
   /* ================= FETCH OVERALL LEADERBOARD ================= */
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function Leaderboard() {
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
     if (!user || !list.length) return null;
-    return list.find((u) => u.userId === user._id) || null;
+    return list.find((u) => String(u.userId) === myUserId) || null;
   }, [list, user]);
 
   /* ================= TOP 10 ================= */
@@ -153,7 +155,7 @@ https://futurely.in/leaderboard`;
         <tbody>
           {/* ===== TOP 10 USERS ===== */}
           {top10.map((u) => {
-            const isMe = String(u.userId) === String(user?._id);
+            const isMe = String(u.userId) === myUserId;
 
             return (
               <tr
@@ -316,3 +318,4 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
