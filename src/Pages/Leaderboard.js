@@ -352,7 +352,7 @@ async function handlePodiumShare() {
   font-size: 10px;
   font-weight: 600;
   color: #0d6efd;
-  opacity: 0.7;
+  
 }
 
 /* 👁 Hide watermark on live UI */
@@ -625,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
