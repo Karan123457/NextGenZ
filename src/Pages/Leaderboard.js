@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Container, Table } fprom "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import { toPng } from "html-to-image"; // ✅ NEW
 
@@ -185,7 +185,7 @@ async function handlePodiumShare() {
       className="podium-share-btn"
       onClick={handlePodiumShare}
     >
-      📸 Share Top 3 Podium
+       📸 Share Top 3
     </button>
   </div>
 )}
@@ -625,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
