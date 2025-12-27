@@ -37,7 +37,7 @@ export default function Leaderboard() {
   }, [list, user]);
 
   /* ================= PODIUM YOU CHECK ================= */
-const isMe = (userId) => String(userId) === myUserId;
+  const isMe = (userId) => String(userId) === myUserId;
 
 
   /* ================= TOP 10 ================= */
@@ -51,80 +51,46 @@ const isMe = (userId) => String(userId) === myUserId;
   }, [top10, myRank]);
 
 
-  /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
-  async function handleShare() {
-    if (!myRank) return;
-
-    const card = document.getElementById("rank-card");
-    if (!card) return;
+  /* ================= SHARE (IMAGE + FALLBACK TEXT
+  /* ================= PODIUM IMAGE SHARE ================= */
+  async function handlePodiumShare() {
+    const podium = document.getElementById("podium-card");
+    if (!podium) return;
 
     try {
-      const dataUrl = await toPng(card);
+      // 👁️ Enable watermark for export
+      podium.setAttribute("data-export", "true");
+
+      const dataUrl = await toPng(podium, {
+        backgroundColor: "#f8fafc",
+        pixelRatio: 2,
+      });
+
+      // ❌ Remove watermark after export
+      podium.removeAttribute("data-export");
 
       if (navigator.share) {
         const blob = await (await fetch(dataUrl)).blob();
-        const file = new File([blob], "my-rank.png", { type: "image/png" });
+        const file = new File([blob], "futurely-podium.png", {
+          type: "image/png",
+        });
 
         await navigator.share({
           files: [file],
-          title: "My Rank on Futurely",
-          text: "Check my rank on Futurely 🚀",
+          title: "Top 3 on Futurely 🏆",
+          text: "Top performers on Futurely leaderboard 🚀",
         });
       } else {
-        // fallback → download image
         const link = document.createElement("a");
-        link.download = "my-rank.png";
+        link.download = "futurely-podium.png";
         link.href = dataUrl;
         link.click();
       }
-    } catch (e) {
-      // fallback → text share
-      const text = `🏆 My Rank: #${myRank.position}
-Points: ${myRank.points}
-https://futurely.in/leaderboard`;
-      navigator.clipboard.writeText(text);
-      alert("Rank copied to clipboard!");
+    } catch (err) {
+      podium.removeAttribute("data-export");
+      alert("Unable to share podium right now");
     }
   }
-  /* ================= PODIUM IMAGE SHARE ================= */
-async function handlePodiumShare() {
-  const podium = document.getElementById("podium-card");
-  if (!podium) return;
-
-  try {
-    // 👁️ Enable watermark for export
-    podium.setAttribute("data-export", "true");
-
-    const dataUrl = await toPng(podium, {
-      backgroundColor: "#f8fafc",
-      pixelRatio: 2,
-    });
-
-    // ❌ Remove watermark after export
-    podium.removeAttribute("data-export");
-
-    if (navigator.share) {
-      const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], "futurely-podium.png", {
-        type: "image/png",
-      });
-
-      await navigator.share({
-        files: [file],
-        title: "Top 3 on Futurely 🏆",
-        text: "Top performers on Futurely leaderboard 🚀",
-      });
-    } else {
-      const link = document.createElement("a");
-      link.download = "futurely-podium.png";
-      link.href = dataUrl;
-      link.click();
-    }
-  } catch (err) {
-    podium.removeAttribute("data-export");
-    alert("Unable to share podium right now");
-  }
-}
 
 
 
@@ -157,66 +123,66 @@ async function handlePodiumShare() {
 
       {/* ================= YOUR RANK =================  Removed to look clean*/}
 
-{/* ================= PODIUM SHARE BUTTON ================= */}
-{list.length >= 3 && (
-  <div style={{ textAlign: "center", marginBottom: 12 }}>
-    <button
-      className="podium-share-btn"
-      onClick={handlePodiumShare}
-    >
-📸 Share Leaderboard
-    </button>
-  </div>
-)}
+      {/* ================= PODIUM SHARE BUTTON ================= */}
+      {list.length >= 3 && (
+        <div style={{ textAlign: "center", marginBottom: 12 }}>
+          <button
+            className="podium-share-btn"
+            onClick={handlePodiumShare}
+          >
+            📸 Share Leaderboard
+          </button>
+        </div>
+      )}
 
       {/* ================= PODIUM ================= */}
-    {/* ================= ENHANCED PODIUM ================= */}
-{list.length >= 3 && (
-  <div id="podium-card">
+      {/* ================= ENHANCED PODIUM ================= */}
+      {list.length >= 3 && (
+        <div id="podium-card">
 
-    {/* ===== PODIUM ===== */}
-    <div className="podium-wrapper mb-5">
+          {/* ===== PODIUM ===== */}
+          <div className="podium-wrapper mb-5">
 
-      {/* 🥈 SECOND */}
-      <div className={`podium-card second ${isMe(list[1].userId) ? "me" : ""}`}>
-        {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
-        <div className="medal silver">🥈</div>
-        <div className="name">{list[1].name}</div>
-        <div className="points">{list[1].points} pts</div>
-        <div className="stand s2" />
-      </div>
+            {/* 🥈 SECOND */}
+            <div className={`podium-card second ${isMe(list[1].userId) ? "me" : ""}`}>
+              {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
+              <div className="medal silver">🥈</div>
+              <div className="name">{list[1].name}</div>
+              <div className="points">{list[1].points} pts</div>
+              <div className="stand s2" />
+            </div>
 
-      {/* 🥇 FIRST */}
-      <div className={`podium-card first ${isMe(list[0].userId) ? "me" : ""}`}>
-        {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
-        <div className={`crown ${isMe(list[0].userId) ? "crown-you" : ""}`}>
-          👑
+            {/* 🥇 FIRST */}
+            <div className={`podium-card first ${isMe(list[0].userId) ? "me" : ""}`}>
+              {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
+              <div className={`crown ${isMe(list[0].userId) ? "crown-you" : ""}`}>
+                👑
+              </div>
+              <div className="medal gold">🥇</div>
+              <div className="name">{list[0].name}</div>
+              <div className="points">{list[0].points} pts</div>
+              <div className="stand s1" />
+            </div>
+
+            {/* 🥉 THIRD */}
+            <div className={`podium-card third ${isMe(list[2].userId) ? "me" : ""}`}>
+              {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
+              <div className="medal bronze">🥉</div>
+              <div className="name">{list[2].name}</div>
+              <div className="points">{list[2].points} pts</div>
+              <div className="stand s3" />
+            </div>
+
+          </div>
+
+          {/* ===== WATERMARK (IMAGE SHARE ONLY) ===== */}
+          <div className="podium-watermark">
+            <span className="brand">Futurely</span>
+            <span className="tagline">Learn • Compete • Win</span>
+          </div>
+
         </div>
-        <div className="medal gold">🥇</div>
-        <div className="name">{list[0].name}</div>
-        <div className="points">{list[0].points} pts</div>
-        <div className="stand s1" />
-      </div>
-
-      {/* 🥉 THIRD */}
-      <div className={`podium-card third ${isMe(list[2].userId) ? "me" : ""}`}>
-        {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
-        <div className="medal bronze">🥉</div>
-        <div className="name">{list[2].name}</div>
-        <div className="points">{list[2].points} pts</div>
-        <div className="stand s3" />
-      </div>
-
-    </div>
-
-    {/* ===== WATERMARK (IMAGE SHARE ONLY) ===== */}
-    <div className="podium-watermark">
-      <span className="brand">Futurely</span>
-      <span className="tagline">Learn • Compete • Win</span>
-    </div>
-
-  </div>
-)}
+      )}
 
 
 
@@ -274,29 +240,6 @@ async function handlePodiumShare() {
         </tbody>
 
       </Table>
-
-      {/* ================= HIDDEN SHARE CARD ================= */}
-      {myRank && (
-        <div
-          id="rank-card"
-          style={{
-            position: "absolute",
-            left: "-9999px",
-            width: "320px",
-            padding: "20px",
-            borderRadius: "16px",
-            background: "linear-gradient(135deg,#2563eb,#4f83ff)",
-            color: "#fff",
-            textAlign: "center",
-            fontFamily: "Inter, system-ui",
-          }}
-        >
-          <h3>🏆 My Rank</h3>
-          <h1>#{myRank.position}</h1>
-          <p>Points: {myRank.points}</p>
-          <p style={{ fontSize: 12, marginTop: 10 }}>futurely.in</p>
-        </div>
-      )}
 
       {/* ================= STYLES ================= */}
       <style>{`
@@ -632,7 +575,3 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
-
-
-
-
