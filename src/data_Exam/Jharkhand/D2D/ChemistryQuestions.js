@@ -13,6 +13,7 @@ export const chemistryQuestionsByYear = {
     { id: "2025-q4", text: "IUPAC name of H₂SO₄?", options: ["Sulfuric acid", "Sulfurous acid", "Hydrosulfuric acid", "Sulfur acid"], correctIndex: 0 },
     { id: "2025-q5", text: "Ionic bonding involves?", options: ["Transfer of electrons", "Sharing of electrons", "No bonding", "Covalent"], correctIndex: 0 },
     { id: "2025-q6", text: "Molar mass of NaCl?", options: ["58.44 g/mol", "22.99 g/mol", "35.45 g/mol", "40 g/mol"], correctIndex: 0 },
+    { id: "2024-q7", text: "What is Biology?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Water formula?", options: ["H₂O", "HO₂", "OH₂", "H₂O₂"], correctIndex: 0 },
@@ -576,3 +577,4 @@ export default function ChemistryQuestions({ setFocusMode }) {
     </div>
   );
 }
+
