@@ -82,6 +82,39 @@ https://futurely.in/leaderboard`;
       alert("Rank copied to clipboard!");
     }
   }
+  /* ================= PODIUM IMAGE SHARE ================= */
+async function handlePodiumShare() {
+  const podium = document.getElementById("podium-card");
+  if (!podium) return;
+
+  try {
+    const dataUrl = await toPng(podium, {
+      backgroundColor: "#f8fafc",
+      pixelRatio: 2,
+    });
+
+    if (navigator.share) {
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "top-3-podium.png", {
+        type: "image/png",
+      });
+
+      await navigator.share({
+        files: [file],
+        title: "Top 3 on Futurely 🏆",
+        text: "Top performers on Futurely leaderboard 🚀",
+      });
+    } else {
+      const link = document.createElement("a");
+      link.download = "top-3-podium.png";
+      link.href = dataUrl;
+      link.click();
+    }
+  } catch (err) {
+    alert("Unable to share podium right now");
+  }
+}
+
 
   /* ================= SKELETON ================= */
   if (loading) {
@@ -133,37 +166,51 @@ https://futurely.in/leaderboard`;
           </div>
         </div>
       )}
+{/* ================= PODIUM SHARE BUTTON ================= */}
+{list.length >= 3 && (
+  <div style={{ textAlign: "center", marginBottom: 12 }}>
+    <button
+      className="podium-share-btn"
+      onClick={handlePodiumShare}
+    >
+      📸 Share Top 3 Podium
+    </button>
+  </div>
+)}
 
       {/* ================= PODIUM ================= */}
-     {/* ================= ENHANCED PODIUM ================= */}
+    {/* ================= ENHANCED PODIUM ================= */}
 {list.length >= 3 && (
-  <div className="podium-wrapper mb-5">
-    {/* 🥈 SECOND */}
-    <div className="podium-card second">
-      <div className="medal silver">🥈</div>
-      <div className="name">{list[1].name}</div>
-      <div className="points">{list[1].points} pts</div>
-      <div className="stand s2" />
-    </div>
+  <div id="podium-card">
+    <div className="podium-wrapper mb-5">
+      {/* 🥈 SECOND */}
+      <div className="podium-card second">
+        <div className="medal silver">🥈</div>
+        <div className="name">{list[1].name}</div>
+        <div className="points">{list[1].points} pts</div>
+        <div className="stand s2" />
+      </div>
 
-    {/* 🥇 FIRST */}
-    <div className="podium-card first">
-      <div className="crown">👑</div>
-      <div className="medal gold">🥇</div>
-      <div className="name">{list[0].name}</div>
-      <div className="points">{list[0].points} pts</div>
-      <div className="stand s1" />
-    </div>
+      {/* 🥇 FIRST */}
+      <div className="podium-card first">
+        <div className="crown">👑</div>
+        <div className="medal gold">🥇</div>
+        <div className="name">{list[0].name}</div>
+        <div className="points">{list[0].points} pts</div>
+        <div className="stand s1" />
+      </div>
 
-    {/* 🥉 THIRD */}
-    <div className="podium-card third">
-      <div className="medal bronze">🥉</div>
-      <div className="name">{list[2].name}</div>
-      <div className="points">{list[2].points} pts</div>
-      <div className="stand s3" />
+      {/* 🥉 THIRD */}
+      <div className="podium-card third">
+        <div className="medal bronze">🥉</div>
+        <div className="name">{list[2].name}</div>
+        <div className="points">{list[2].points} pts</div>
+        <div className="stand s3" />
+      </div>
     </div>
   </div>
 )}
+
 
 
       {/* ================= TABLE ================= */}
@@ -246,6 +293,21 @@ https://futurely.in/leaderboard`;
 
       {/* ================= STYLES ================= */}
       <style>{`
+/* ================= PODIUM SHARE BUTTON ================= */
+.podium-share-btn {
+  background: linear-gradient(135deg, #2563eb, #4f83ff);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.podium-share-btn:hover {
+  opacity: 0.9;
+}
 
       /* ================= ENHANCED PODIUM ================= */
 
@@ -440,4 +502,5 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
