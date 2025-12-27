@@ -92,14 +92,20 @@ async function handlePodiumShare() {
   if (!podium) return;
 
   try {
+    // 👁️ Enable watermark for export
+    podium.setAttribute("data-export", "true");
+
     const dataUrl = await toPng(podium, {
       backgroundColor: "#f8fafc",
       pixelRatio: 2,
     });
 
+    // ❌ Remove watermark after export
+    podium.removeAttribute("data-export");
+
     if (navigator.share) {
       const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], "top-3-podium.png", {
+      const file = new File([blob], "futurely-podium.png", {
         type: "image/png",
       });
 
@@ -110,14 +116,16 @@ async function handlePodiumShare() {
       });
     } else {
       const link = document.createElement("a");
-      link.download = "top-3-podium.png";
+      link.download = "futurely-podium.png";
       link.href = dataUrl;
       link.click();
     }
   } catch (err) {
+    podium.removeAttribute("data-export");
     alert("Unable to share podium right now");
   }
 }
+
 
 
   /* ================= SKELETON ================= */
@@ -186,38 +194,48 @@ async function handlePodiumShare() {
     {/* ================= ENHANCED PODIUM ================= */}
 {list.length >= 3 && (
   <div id="podium-card">
+
+    {/* ===== PODIUM ===== */}
     <div className="podium-wrapper mb-5">
+
       {/* 🥈 SECOND */}
       <div className={`podium-card second ${isMe(list[1].userId) ? "me" : ""}`}>
-  {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
-  <div className="medal silver">🥈</div>
-  <div className="name">{list[1].name}</div>
-  <div className="points">{list[1].points} pts</div>
-  <div className="stand s2" />
-</div>
-
+        {isMe(list[1].userId) && <div className="you-podium">YOU</div>}
+        <div className="medal silver">🥈</div>
+        <div className="name">{list[1].name}</div>
+        <div className="points">{list[1].points} pts</div>
+        <div className="stand s2" />
+      </div>
 
       {/* 🥇 FIRST */}
       <div className={`podium-card first ${isMe(list[0].userId) ? "me" : ""}`}>
-  {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
-  <div   className={`crown ${     isMe(list[0].userId) ? "crown-you" : ""   }`} >   👑 </div>
-  <div className="medal gold">🥇</div>
-  <div className="name">{list[0].name}</div>
-  <div className="points">{list[0].points} pts</div>
-  <div className="stand s1" />
-</div>
-
+        {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
+        <div className={`crown ${isMe(list[0].userId) ? "crown-you" : ""}`}>
+          👑
+        </div>
+        <div className="medal gold">🥇</div>
+        <div className="name">{list[0].name}</div>
+        <div className="points">{list[0].points} pts</div>
+        <div className="stand s1" />
+      </div>
 
       {/* 🥉 THIRD */}
       <div className={`podium-card third ${isMe(list[2].userId) ? "me" : ""}`}>
-  {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
-  <div className="medal bronze">🥉</div>
-  <div className="name">{list[2].name}</div>
-  <div className="points">{list[2].points} pts</div>
-  <div className="stand s3" />
-</div>
+        {isMe(list[2].userId) && <div className="you-podium">YOU</div>}
+        <div className="medal bronze">🥉</div>
+        <div className="name">{list[2].name}</div>
+        <div className="points">{list[2].points} pts</div>
+        <div className="stand s3" />
+      </div>
 
     </div>
+
+    {/* ===== WATERMARK (IMAGE SHARE ONLY) ===== */}
+    <div className="podium-watermark">
+      <span className="brand">Futurely</span>
+      <span className="tagline">Learn • Compete • Win</span>
+    </div>
+
   </div>
 )}
 
@@ -303,6 +321,49 @@ async function handlePodiumShare() {
 
       {/* ================= STYLES ================= */}
       <style>{`
+
+      /* ================= PODIUM WATERMARK ================= */
+
+#podium-card {
+  position: relative;
+}
+
+/* Hidden on screen, visible in image */
+.podium-watermark {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  opacity: 0.18;
+  text-align: right;
+  pointer-events: none;
+}
+
+/* Brand */
+.podium-watermark .brand {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #1e40af;
+}
+
+/* Tagline */
+.podium-watermark .tagline {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* 👁 Hide watermark on live UI */
+.podium-watermark {
+  visibility: hidden;
+}
+
+/* 📸 Show ONLY during image capture */
+#podium-card[data-export="true"] .podium-watermark {
+  visibility: visible;
+}
+
       /* ================= CROWN ANIMATION (ONLY FOR YOU) ================= */
 
 .crown {
@@ -563,6 +624,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
