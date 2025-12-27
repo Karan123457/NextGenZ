@@ -321,6 +321,65 @@ async function handlePodiumShare() {
 
       {/* ================= STYLES ================= */}
       <style>{`
+/* ================= ENHANCED TOP 10 TABLE ================= */
+
+/* Table container feel */
+.leaderboard-container table {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Header */
+.leaderboard-container thead th {
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #475569;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Rows */
+.leaderboard-container tbody tr {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+/* Hover polish */
+.leaderboard-container tbody tr:hover {
+  background: #f1f5ff;
+  transform: scale(1.005);
+}
+
+/* Cell spacing */
+.leaderboard-container td {
+  vertical-align: middle;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+/* Rank column stronger */
+.leaderboard-container td:first-child {
+  font-weight: 700;
+  color: #1e40af;
+}
+
+/* Top 3 subtle highlight */
+.leaderboard-container tbody tr:nth-child(1) td:first-child {
+  color: #facc15; /* Gold */
+}
+.leaderboard-container tbody tr:nth-child(2) td:first-child {
+  color: #94a3b8; /* Silver */
+}
+.leaderboard-container tbody tr:nth-child(3) td:first-child {
+  color: #fb923c; /* Bronze */
+}
+
+/* YOU row extra clarity (keeps your existing styles) */
+.leaderboard-container tbody tr td .you-badge {
+  margin-left: 8px;
+}
 
       /* ================= PODIUM WATERMARK ================= */
 
@@ -625,6 +684,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
