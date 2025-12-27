@@ -8,7 +8,7 @@ const API_BASE = "https://futurely-backend.onrender.com/api";
 export default function Leaderboard() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { token, user, loading: authLoading } = useAuth();
+  const { token, user } = useAuth();
   const myUserId = String(user?._id || user?.id || user?.userId || "");
 
 
@@ -32,10 +32,9 @@ export default function Leaderboard() {
 
   /* ================= MY RANK ================= */
   const myRank = useMemo(() => {
-  if (!myUserId || !list.length) return null;
-  return list.find((u) => String(u.userId) === myUserId) || null;
-}, [list, myUserId]);
-
+    if (!user || !list.length) return null;
+    return list.find((u) => String(u.userId) === myUserId) || null;
+  }, [list, user]);
 
   /* ================= TOP 10 ================= */
   const top10 = useMemo(() => {
@@ -43,10 +42,9 @@ export default function Leaderboard() {
   }, [list]);
 
   const isMeInTop10 = useMemo(() => {
-  if (!myRank) return false;
-  return top10.some((u) => String(u.userId) === myUserId);
-}, [top10, myUserId, myRank]);
-
+    if (!myRank) return false;
+    return top10.some((u) => u.userId === myRank.userId);
+  }, [top10, myRank]);
 
 
   /* ================= SHARE (IMAGE + FALLBACK TEXT) ================= */
@@ -85,22 +83,16 @@ https://futurely.in/leaderboard`;
     }
   }
 
-  
-/* ================= GUARDS ================= */
-  if (authLoading) {
-    return (
-      <Container className="mt-5 text-center">
-        <p>Loading user...</p>
-      </Container>
-    );
-  }
-
+  /* ================= SKELETON ================= */
   if (loading) {
     return (
       <Container className="mt-5">
         <div className="skeleton title-skel" />
         <div className="skeleton podium-skel" />
         <div className="skeleton row-skel" />
+        <div className="skeleton row-skel" />
+        <div className="skeleton row-skel" />
+        <style>{skeletonCSS}</style>
       </Container>
     );
   }
@@ -326,6 +318,3 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
-
-
-
