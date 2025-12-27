@@ -13,6 +13,7 @@ export const physicsQuestionsByYear = {
   "2024 Questions": [
     { id: "2024-q1", text: "Dynamics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
     { id: "2024-q2", text: "What is Computer?", options: ["A", "B", "C", "D"], correctIndex: 0 },
+    { id: "2024-q3", text: "What is Biology?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
 };
 
@@ -492,4 +493,5 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
