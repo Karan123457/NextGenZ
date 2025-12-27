@@ -185,7 +185,7 @@ async function handlePodiumShare() {
       className="podium-share-btn"
       onClick={handlePodiumShare}
     >
-       📸 Share Top 3
+📸 Share Leaderboard
     </button>
   </div>
 )}
@@ -625,6 +625,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
