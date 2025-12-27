@@ -570,37 +570,6 @@ async function handlePodiumShare() {
 
         .leaderboard-container { margin-top: 80px; }
 
-        .my-rank-card {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: linear-gradient(135deg, #e0f2ff, #f8fbff);
-          border-radius: 16px;
-          padding: 16px 18px;
-        }
-
-        .rank-number {
-          font-size: 26px;
-          font-weight: 800;
-          color: #2563eb;
-        }
-
-        .rank-points {
-          font-size: 14px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          justify-content: flex-end;
-        }
-
-        .share-icon-btn {
-          background: transparent;
-          border: none;
-          font-size: 18px;
-          cursor: pointer;
-        }
-
         .podium-container {
           display: flex;
           justify-content: center;
@@ -663,6 +632,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
