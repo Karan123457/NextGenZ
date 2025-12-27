@@ -200,7 +200,7 @@ async function handlePodiumShare() {
       {/* 🥇 FIRST */}
       <div className={`podium-card first ${isMe(list[0].userId) ? "me" : ""}`}>
   {isMe(list[0].userId) && <div className="you-podium">YOU</div>}
-  <div className="crown">👑</div>
+  <div   className={`crown ${     isMe(list[0].userId) ? "crown-you" : ""   }`} >   👑 </div>
   <div className="medal gold">🥇</div>
   <div className="name">{list[0].name}</div>
   <div className="points">{list[0].points} pts</div>
@@ -303,6 +303,29 @@ async function handlePodiumShare() {
 
       {/* ================= STYLES ================= */}
       <style>{`
+      /* ================= CROWN ANIMATION (ONLY FOR YOU) ================= */
+
+.crown {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+}
+
+/* Animate ONLY when it's YOU */
+.crown-you {
+  animation: crownJump 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px gold);
+}
+
+@keyframes crownJump {
+  0%   { transform: translateX(-50%) translateY(0) rotate(0deg); }
+  30%  { transform: translateX(-50%) translateY(-10px) rotate(-5deg); }
+  60%  { transform: translateX(-50%) translateY(-10px) rotate(5deg); }
+  100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+}
+
       /* ================= YOU PODIUM BADGE ================= */
 .you-podium {
   position: absolute;
@@ -540,6 +563,7 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
 
 
 
