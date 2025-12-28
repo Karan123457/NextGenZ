@@ -1,7 +1,7 @@
 // MathematicsQuestions.js
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { authFetch } from "../../../utils/authFetch";
+import { authFetch } from "../../../utils/api";
 
 /* ================= DATA ================= */
 export const mathematicsQuestionsByYear = {
@@ -564,3 +564,4 @@ export default function MathematicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
