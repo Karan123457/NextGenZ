@@ -3,6 +3,7 @@ import { Container, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import { toPng } from "html-to-image"; // ✅ NEW
 
+
 const API_BASE = "https://futurely-backend.onrender.com/api";
 
 export default function Leaderboard() {
@@ -575,3 +576,6 @@ const skeletonCSS = `
   100% { background-position: -100% 0 }
 }
 `;
+
+
+
