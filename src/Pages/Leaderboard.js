@@ -10,7 +10,7 @@ export default function Leaderboard() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const { token, user } = useAuth();
-  const myUserId = String(user?._id || user?.id || user?.userId || "");
+  const myUserId = user ? String(user.id) : "";
 
 
   /* ================= FETCH OVERALL LEADERBOARD ================= */
