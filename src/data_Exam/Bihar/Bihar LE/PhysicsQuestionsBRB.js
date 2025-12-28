@@ -150,7 +150,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
     // 🔐 SAVE ONLY ON FIRST ATTEMPT
     if (!alreadyAttempted) {
       try {
-        await authFetch("/physics/attempt", {
+        await authFetch("exam/physics/attempt", {
           method: "POST",
           body: JSON.stringify({
             questionId: q.id,
