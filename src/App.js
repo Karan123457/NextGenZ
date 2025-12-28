@@ -87,11 +87,12 @@ function App() {
 
           {/* Put specific/static routes before param routes */}
           <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<DetailsPageJHP />} />
-          <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
-
           <Route path="/Exam_Preparation/Bihar_BCECE_LE" element={<BiharLEDetailsPage />}/>
           <Route path="/Exam_Preparation/Bihar_Polytechnic" element={<BiharPolytechnicDetailsPage />} />
-
+          
+          {/* ✅ Dynamic route LAST (used for D2D and others) */}
+          <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
+          
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
