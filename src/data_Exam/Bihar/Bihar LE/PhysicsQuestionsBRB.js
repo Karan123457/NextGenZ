@@ -9,6 +9,7 @@ export const physicsQuestionsByYear = {
   "2025 Questions": [
     { id: "2025-q1", text: "Newton's Law?", options: ["A", "B", "C", "D"], correctIndex: 0 },
     { id: "2025-q2", text: "Kinematics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
+    { id: "2024-q3", text: "What is Github?", options: ["A", "B", "C", "D"], correctIndex: 0 },
   ],
   "2024 Questions": [
     { id: "2024-q1", text: "Dynamics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
@@ -492,4 +493,5 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
