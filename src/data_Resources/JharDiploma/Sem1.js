@@ -12,7 +12,7 @@ const Sem1 = () => {
   const branchSubjects = [
     "Civil Engineering",
     "Computer Science Engineering",
-    "Mechanical/ Metallurgy/ Automobile  Engineering",
+    "Mech/ Meta/ Auto  Engineering",
     "Electrical Engineering",
     "Electronics & Communication Engineering",
   ];
@@ -163,7 +163,7 @@ const Sem1 = () => {
                       else if (sub === "Computer Science Engineering") {
                         link =
                           "https://drive.google.com/uc?export=download&id=1IY6mF7dVIH8n9_CJwFAbo-N-GeVeSlln";
-                      } else if (sub === "Mechanical/ Metallurgy/ Automobile  Engineering") {
+                      } else if (sub === "Mech/ Meta/ Auto  Engineering") {
                         link =
                           "https://drive.google.com/uc?export=download&id=1kHdxTwtfzAtQrmfTejsPd5M8EMJJY01w";
                       } else if (sub === "Civil Engineering") {
