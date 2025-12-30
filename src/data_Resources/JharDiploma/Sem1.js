@@ -14,7 +14,7 @@ const Sem1 = () => {
     "Computer Science Engineering",
     "Mech/ Meta/ Auto  Engineering",
     "Electrical Engineering",
-    "Electronics & Communication Engineering",
+    "Electronics & Comm Engineering",
   ];
 
 
@@ -171,7 +171,7 @@ const Sem1 = () => {
                           "https://drive.google.com/uc?export=download&id=1XFA3EzbGprCDKHPHUjk0FRHX_vjNFrqA";
                       } else if (
                         sub === "Electrical Engineering" ||
-                        sub === "Electronics & Communication Engineering"
+                        sub === "Electronics & Comm Engineering"
                       ) {
                         link =
                           "https://drive.google.com/uc?export=download&id=18iarYtU6KEyYVefONC3sv-YcpdBKN3dl";
@@ -502,6 +502,7 @@ td {
 };
 
 export default Sem1;
+
 
 
 
