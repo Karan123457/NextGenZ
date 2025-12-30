@@ -4,21 +4,6 @@ import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
 
 
-/* ================= DATA ================= */
-export const physicsQuestionsByYear = {
-  "2025 Questions": [
-    { id: "2025-q1", text: "Newton's Law?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-    { id: "2025-q2", text: "Kinematics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-  "2024 Questions": [
-    { id: "2024-q1", text: "Dynamics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-    { id: "2024-q2", text: "What is Computer?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-};
-
-const questionsByYear = physicsQuestionsByYear;
-
-
 /* ================= COMPONENT ================= */
 export default function PhysicsQuestions({ setFocusMode }) {
   const years = [
@@ -44,7 +29,45 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [viewMode, setViewMode] = useState("years");
 
+  const [questionsByYear, setQuestionsByYear] = useState({});
+  const [loading, setLoading] = useState(false);
+
   /* ================= EFFECTS ================= */
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        setLoading(true);
+
+        const res = await authFetch(
+          "/questions?exam=D2D&subject=Physics"
+        );
+
+        const data = await res.json();
+
+        // group by year (same structure as before)
+        const grouped = {};
+        data.forEach(q => {
+          const key = `${q.year} Questions`;
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push({
+            id: q.questionId,
+            text: q.text,
+            options: q.options,
+            correctIndex: q.correctIndex // frontend still needs it
+          });
+        });
+
+        setQuestionsByYear(grouped);
+      } catch (err) {
+        console.error("Failed to load questions", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchQuestions();
+  }, []);
+
   useEffect(() => {
     if (viewMode === "viewer" && yearQuestions.length > 0) {
       startTimer();
@@ -52,6 +75,8 @@ export default function PhysicsQuestions({ setFocusMode }) {
     return () => timerRef.current && clearInterval(timerRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, yearQuestions]);
+
+
 
   /* ================= HELPERS ================= */
   function startTimer() {
@@ -70,28 +95,28 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
   function getTotal(y) {
     if (y.key === "ALL") {
-      return Object.values(physicsQuestionsByYear).reduce((s, a) => s + a.length, 0);
+      return Object.values(questionsByYear).reduce((s, a) => s + a.length, 0);
     }
-    return physicsQuestionsByYear[y.year]?.length || 0;
+    return questionsByYear[y.year]?.length || 0;
   }
 
   function getAttempted(y) {
-  if (y.key === "ALL") {
-    return Object.keys(attempted).filter(k => attempted[k]).length;
-  }
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
 
-  const arr = questionsByYear[y.year] || [];
-  return arr.filter(q => attempted[q.id]).length;
-}
+    const arr = questionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
+  }
 
 
   /* ================= ACTIONS ================= */
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
-      Object.values(physicsQuestionsByYear).forEach(arr => (qs = qs.concat(arr)));
+      Object.values(questionsByYear).forEach(arr => (qs = qs.concat(arr)));
     } else {
-      qs = physicsQuestionsByYear[yearObj.year] || [];
+      qs = questionsByYear[yearObj.year] || [];
     }
 
     setYearQuestions(qs);
@@ -154,7 +179,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
       return { ...prev, [qid]: next };
     });
 
-    
+
     if (selected === q.correctIndex) {
       try {
         await authFetch("/exam/physics/attempt", {
@@ -167,7 +192,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
                 : selectedYear?.year,
             isCorrect: true,
             timeTaken: timeLeft,
-            exam: "D2D"   
+            exam: "D2D"
           }),
         });
 
