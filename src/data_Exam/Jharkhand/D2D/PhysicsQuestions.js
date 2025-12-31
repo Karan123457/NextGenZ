@@ -24,7 +24,7 @@ import { authFetch } from "../../../utils/api";
   const [questionsByYear, setQuestionsByYear] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const dynamicYears = [
+const dynamicYears = [
   { year: "All Previous Year Questions", key: "ALL" },
   ...Object.keys(questionsByYear)
     .map(y => ({
@@ -454,7 +454,6 @@ import { authFetch } from "../../../utils/api";
 
           <div className="pyq-list">
             {dynamicYears.map((y, i) => (
-
               <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
@@ -547,5 +546,4 @@ import { authFetch } from "../../../utils/api";
     </div>
   );
 }
-
 
