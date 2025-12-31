@@ -51,7 +51,9 @@ export default function PhysicsQuestions({ setFocusMode }) {
         // group by year (same structure as before)
         const grouped = {};
         data.forEach(q => {
-          const key = `${q.year} Questions`;
+          const yearStr = String(q.year).trim();
+          const key = `${yearStr} Questions`;
+          
           if (!grouped[key]) grouped[key] = [];
           grouped[key].push({
             id: q.questionId,
