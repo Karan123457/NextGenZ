@@ -5,6 +5,7 @@ import { authFetch } from "../../../utils/api";
 
 
 /* ================= COMPONENT ================= */
+export default function PhysicsQuestions({ setFocusMode }) {
 
   const timerRef = useRef(null);
 
@@ -22,15 +23,15 @@ import { authFetch } from "../../../utils/api";
   const [viewMode, setViewMode] = useState("years");
 
   const [questionsByYear, setQuestionsByYear] = useState({});
-const dynamicYears = [
-  { year: "All Previous Year Questions", key: "ALL" },
-  ...Object.keys(questionsByYear)
-    .map(y => ({
-      year: y,
-      key: y.split(" ")[0] // "2023 Questions" → "2023"
-    }))
-    .sort((a, b) => Number(b.key) - Number(a.key))
-];
+  const dynamicYears = [
+    { year: "All Previous Year Questions", key: "ALL" },
+    ...Object.keys(questionsByYear)
+      .map(y => ({
+        year: y,
+        key: y.split(" ")[0] // "2023 Questions" → "2023"
+      }))
+      .sort((a, b) => Number(b.key) - Number(a.key))
+  ];
   const [loading, setLoading] = useState(false);
 
 
@@ -546,7 +547,6 @@ const dynamicYears = [
       {bottomBar}
     </div>
   );
-
-
+}
 
 
