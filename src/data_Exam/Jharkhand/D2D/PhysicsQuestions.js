@@ -5,14 +5,6 @@ import { authFetch } from "../../../utils/api";
 
 
 /* ================= COMPONENT ================= */
-export default function PhysicsQuestions({ setFocusMode }) {
-  const years = [
-    { year: "All Previous Year Questions", key: "ALL" },
-    { year: "2025 Questions", key: "2025" },
-    { year: "2024 Questions", key: "2024" },
-    { year: "2023 Questions", key: "2023" },
-    { year: "2022 Questions", key: "2022" },
-  ];
 
   const timerRef = useRef(null);
 
@@ -31,6 +23,16 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
   const [questionsByYear, setQuestionsByYear] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const dynamicYears = [
+  { year: "All Previous Year Questions", key: "ALL" },
+  ...Object.keys(questionsByYear)
+    .map(y => ({
+      year: y,
+      key: y.split(" ")[0] // "2023 Questions" → "2023"
+    }))
+    .sort((a, b) => Number(b.key) - Number(a.key))
+];
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
@@ -451,7 +453,8 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
 
           <div className="pyq-list">
-            {years.map((y, i) => (
+            {dynamicYears.map((y, i) => (
+
               <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
@@ -544,4 +547,5 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
 
