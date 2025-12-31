@@ -22,8 +22,6 @@ import { authFetch } from "../../../utils/api";
   const [viewMode, setViewMode] = useState("years");
 
   const [questionsByYear, setQuestionsByYear] = useState({});
-  const [loading, setLoading] = useState(false);
-
 const dynamicYears = [
   { year: "All Previous Year Questions", key: "ALL" },
   ...Object.keys(questionsByYear)
@@ -33,6 +31,9 @@ const dynamicYears = [
     }))
     .sort((a, b) => Number(b.key) - Number(a.key))
 ];
+  const [loading, setLoading] = useState(false);
+
+
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
@@ -546,4 +547,5 @@ const dynamicYears = [
     </div>
   );
 }
+
 
