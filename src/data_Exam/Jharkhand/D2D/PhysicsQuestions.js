@@ -53,7 +53,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
         data.forEach(q => {
           const yearStr = String(q.year).trim();
           const key = `${yearStr} Questions`;
-          
+
           if (!grouped[key]) grouped[key] = [];
           grouped[key].push({
             id: q.questionId,
@@ -372,6 +372,11 @@ export default function PhysicsQuestions({ setFocusMode }) {
         background:#ef4444;
         color:#ffffff;
       }
+        
+        .question-text {
+  white-space: pre-line;
+}
+
 
       .bottom-action-bar{
         position:fixed;
@@ -494,9 +499,10 @@ export default function PhysicsQuestions({ setFocusMode }) {
             </div>
           </div>
 
-          <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
+          <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
           </div>
+
 
           {yearQuestions[currentIndex].options.map((opt, idx) => {
             const qid =
