@@ -4,36 +4,8 @@ import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
 
 
-/* ================= DATA ================= */
-export const chemistryQuestionsByYear = {
-  "2025 Questions": [
-    { id: "2025-q1", text: "Atomic number of Carbon?", options: ["6", "12", "14", "8"], correctIndex: 0 },
-    { id: "2025-q2", text: "During the reaction of permanganate with thiosulphate, the change in oxidation of manganese occurs by value of Identify which of the below medium will favour the reaction?", options: ["Moles per liter", "Mass per liter", "Moles per kg", "Mass per kg"], correctIndex: 0 },
-    { id: "2025-q3", text: "Le Chatelier's Principle?", options: ["Equilibrium shifts to counter change", "Reaction stops", "Temperature constant", "No effect"], correctIndex: 0 },
-    { id: "2025-q4", text: "IUPAC name of H₂SO₄?", options: ["Sulfuric acid", "Sulfurous acid", "Hydrosulfuric acid", "Sulfur acid"], correctIndex: 0 },
-    { id: "2025-q5", text: "Ionic bonding involves?", options: ["Transfer of electrons", "Sharing of electrons", "No bonding", "Covalent"], correctIndex: 0 },
-    { id: "2025-q6", text: "Molar mass of NaCl?", options: ["58.44 g/mol", "22.99 g/mol", "35.45 g/mol", "40 g/mol"], correctIndex: 0 },
-  ],
-  "2024 Questions": [
-    { id: "2024-q1", text: "Water formula?", options: ["H₂O", "HO₂", "OH₂", "H₂O₂"], correctIndex: 0 },
-    { id: "2024-q2", text: "pH of neutral solution?", options: ["7", "0", "14", "1"], correctIndex: 0 },
-    { id: "2024-q3", text: "What is NaCl?", options: ["Salt", "Sugar", "Acid", "Base"], correctIndex: 0 },
-  ],
-};
-
-const questionsByYear = chemistryQuestionsByYear;
-
-
 /* ================= COMPONENT ================= */
 export default function ChemistryQuestions({ setFocusMode }) {
-  const years = [
-    { year: "All Previous Year Questions", key: "ALL" },
-    { year: "2025 Questions", key: "2025" },
-    { year: "2024 Questions", key: "2024" },
-    { year: "2023 Questions", key: "2023" },
-    { year: "2022 Questions", key: "2022" },
-    { year: "2021 Questions", key: "2021" },
-  ];
 
   const timerRef = useRef(null);
 
@@ -57,8 +29,56 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
   // how many times "Check Answer" clicked per question
   const [attemptCount, setAttemptCount] = useState({});
+  const [questionsByYear, setQuestionsByYear] = useState({});
 
+  const dynamicYears = [
+    { year: "All Previous Year Questions", key: "ALL" },
+    ...Object.keys(questionsByYear)
+      .map(y => ({
+        year: y,
+        key: y.split(" ")[0] // "2023 Questions" → "2023"
+      }))
+      .sort((a, b) => Number(b.key) - Number(a.key))
+  ];
+  const [loading, setLoading] = useState(false);
   /* ================= EFFECTS ================= */
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        setLoading(true);
+
+        const res = await authFetch(
+          "/questions?exam=D2D&subject=Chemistry"
+        );
+
+        const data = await res.json();
+
+        // group by year (same structure as before)
+        const grouped = {};
+        data.forEach(q => {
+          const yearStr = String(q.year).trim();
+          const key = `${yearStr} Questions`;
+
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push({
+            id: q.questionId,
+            text: q.text,
+            options: q.options,
+            correctIndex: q.correctIndex // frontend still needs it
+          });
+        });
+
+        setQuestionsByYear(grouped);
+      } catch (err) {
+        console.error("Failed to load questions", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchQuestions();
+  }, []);
+
   useEffect(() => {
     // when viewer opens a question, disable selection if showAnswer is true for that q
     // we don't keep a separate isDisabled state — compute on render using showAnswer for current q
@@ -91,9 +111,9 @@ export default function ChemistryQuestions({ setFocusMode }) {
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
-      Object.values(chemistryQuestionsByYear).forEach(arr => (qs = qs.concat(arr)));
+      Object.values(questionsByYear).forEach(arr => (qs = qs.concat(arr)));
     } else {
-      qs = chemistryQuestionsByYear[yearObj.year] || [];
+      qs = questionsByYear[yearObj.year] || [];
     }
 
     setYearQuestions(qs);
@@ -170,7 +190,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
       return { ...prev, [qid]: next };
     });
 
-    
+
     if (selected === q.correctIndex) {
       try {
         await authFetch("/exam/chemistry/attempt", {
@@ -241,19 +261,27 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
   function getTotal(y) {
     if (y.key === "ALL") {
-      return Object.values(chemistryQuestionsByYear).reduce((s, a) => s + a.length, 0);
+      return Object.values(questionsByYear).reduce((s, a) => s + a.length, 0);
     }
-    return chemistryQuestionsByYear[y.year]?.length || 0;
+    return questionsByYear[y.year]?.length || 0;
   }
 
   function getAttempted(y) {
-  if (y.key === "ALL") {
-    return Object.keys(attempted).filter(k => attempted[k]).length;
-  }
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
 
-  const arr = questionsByYear[y.year] || [];
-  return arr.filter(q => attempted[q.id]).length;
-}
+    const arr = questionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
+  }
+  const attemptedCount = yearQuestions.filter((q, idx) => {
+    const qid =
+      selectedYear?.key === "ALL"
+        ? `${q.id}-${idx}`
+        : q.id;
+    return attempted[qid];
+  }).length;
+
 
 
   /* ================= bottomBar ================= */
@@ -386,6 +414,10 @@ export default function ChemistryQuestions({ setFocusMode }) {
   color:#ffffff;
 }
 
+.question-text {
+  white-space: pre-line;
+}
+
 /* ===== FIXED BOTTOM BUTTON BAR ===== */
 .bottom-action-bar{
   position:fixed;
@@ -466,24 +498,34 @@ export default function ChemistryQuestions({ setFocusMode }) {
         <>
           <h2 className="pyq-title">Chemistry Previous Year Questions</h2>
 
-          <div className="pyq-list">
-            {years.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
-                  <div>
-                    <div style={{ fontWeight: 400 }}>
-                      {y.key === "ALL" ? "All Previous Year Questions" : "D2D Chemistry PYQ"}
+          {loading ? (
+            <div className="loading-box">
+              <div className="spinner"></div>
+              <p>Loading questions, please wait…</p>
+              <small>This may take a few seconds on first load</small>
+            </div>
+          ) : (
+            <div className="pyq-list">
+              {dynamicYears.map((y, i) => (
+                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                  <div className="pyq-left">
+                    <div className="pyq-year">{y.key}</div>
+                    <div>
+                      <div style={{ fontWeight: 400 }}>
+                        {y.key === "ALL"
+                          ? "All Previous Year Questions"
+                          : "D2D Physics PYQ"}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  <div>
+                    <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -502,7 +544,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
             </div>
           </div>
 
-          <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
+          <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
           </div>
 
@@ -558,7 +600,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
                   }
                 }}
                 aria-pressed={isSelected}
-                aria-disabled={isShown}
+                aria-disabled={!!showState}
                 style={{ opacity: 1 }}
               >
                 <strong>{String.fromCharCode(65 + idx)}</strong>
