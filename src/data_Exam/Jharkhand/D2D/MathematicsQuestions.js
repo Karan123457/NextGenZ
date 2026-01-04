@@ -4,30 +4,9 @@ import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
 
 
-/* ================= DATA ================= */
-export const mathematicsQuestionsByYear = {
-  "2025 Questions": [
-    { id: "2025-q1", text: "Calculus basic?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-    { id: "2025-q2", text: "Algebra question?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-  "2024 Questions": [
-    { id: "2024-q1", text: "Trigonometry?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-};
-
-const questionsByYear = mathematicsQuestionsByYear;
-
-
 /* ================= COMPONENT ================= */
 export default function MathematicsQuestions({ setFocusMode }) {
-  const years = [
-    { year: "All Previous Year Questions", key: "ALL" },
-    { year: "2025 Questions", key: "2025" },
-    { year: "2024 Questions", key: "2024" },
-    { year: "2023 Questions", key: "2023" },
-    { year: "2022 Questions", key: "2022" },
-    { year: "2021 Questions", key: "2021" },
-  ];
+
 
   const timerRef = useRef(null);
 
@@ -52,16 +31,55 @@ export default function MathematicsQuestions({ setFocusMode }) {
   // how many times "Check Answer" clicked per question
   const [attemptCount, setAttemptCount] = useState({});
 
+  const [questionsByYear, setQuestionsByYear] = useState({});
+  const dynamicYears = [
+    { year: "All Previous Year Questions", key: "ALL" },
+    ...Object.keys(questionsByYear)
+      .map(y => ({
+        year: y,
+        key: y.split(" ")[0] // "2023 Questions" → "2023"
+      }))
+      .sort((a, b) => Number(b.key) - Number(a.key))
+  ];
+  const [loading, setLoading] = useState(false);
+
   /* ================= EFFECTS ================= */
   useEffect(() => {
-    if (viewMode === "viewer" && yearQuestions.length > 0) {
-      // ensure timer running when question loaded
-      startTimer();
+  async function fetchQuestions() {
+    try {
+      setLoading(true);
+
+      const res = await authFetch(
+        "/questions?exam=D2D&subject=Math"
+      );
+
+      const data = await res.json();
+
+      const grouped = {};
+      data.forEach(q => {
+        const yearStr = String(q.year).trim();
+        const key = `${yearStr} Questions`;
+
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push({
+          id: q.questionId,
+          text: q.text,
+          options: q.options,
+          correctIndex: q.correctIndex
+        });
+      });
+
+      setQuestionsByYear(grouped);
+    } catch (err) {
+      console.error("Failed to load maths questions", err);
+    } finally {
+      setLoading(false);
     }
-    // cleanup on unmount
-    return () => timerRef.current && clearInterval(timerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewMode, yearQuestions]);
+  }
+
+  fetchQuestions();
+}, []);
+
 
   /* ================= HELPERS ================= */
   function startTimer() {
@@ -160,7 +178,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
       return { ...prev, [qid]: next };
     });
 
-    
+
     if (selected === q.correctIndex) {
       try {
         await authFetch("/exam/maths/attempt", {
@@ -236,14 +254,14 @@ export default function MathematicsQuestions({ setFocusMode }) {
     return questionsByYear[y.year]?.length || 0;
   }
 
- function getAttempted(y) {
-  if (y.key === "ALL") {
-    return Object.keys(attempted).filter(k => attempted[k]).length;
-  }
+  function getAttempted(y) {
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
 
-  const arr = questionsByYear[y.year] || [];
-  return arr.filter(q => attempted[q.id]).length;
-}
+    const arr = questionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
+  }
 
 
   const attemptedCount = yearQuestions.filter((q, idx) => {
@@ -301,7 +319,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
 
   /* ================= UI ================= */
   return (
-    <div className="physics-box">
+    <div className="maths-box">
       <style>{`
       .pyq-title{
         margin: 0;
@@ -412,7 +430,9 @@ export default function MathematicsQuestions({ setFocusMode }) {
   font-weight:600;
   font-size:15px;
 }
-
+ .question-text {
+  white-space: pre-line;
+}
 /* keep light buttons bordered even when disabled */
 .bottom-action-inner .btn-light{
   border-radius:12px !important;
@@ -470,7 +490,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
           )}
 
           <div className="pyq-list">
-            {years.map((y, i) => (
+            {dynamicYears.map((y, i) => (
               <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
@@ -505,7 +525,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
             </div>
           </div>
 
-          <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
+          <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
             {yearQuestions[currentIndex].text}
           </div>
 
