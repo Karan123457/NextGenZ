@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 
 /* ================= COMPONENT ================= */
@@ -531,84 +532,90 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
       {/* ================= MCQ VIEWER ================= */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
-        <div className="mcq-viewer">
-          <div className="exam-topbar">
-            <div className="exam-left">
-              <strong>Jharkhand D2D</strong>
-              <span>Chemistry – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
-            </div>
-            <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
-            <div className="exam-right">
-              <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-              <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
-            </div>
-          </div>
-
-          <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
-            {yearQuestions[currentIndex].text}
-          </div>
-
-          {yearQuestions[currentIndex].options.map((opt, idx) => {
-            const qid =
-              selectedYear?.key === "ALL"
-                ? `${yearQuestions[currentIndex].id}-${currentIndex}`
-                : yearQuestions[currentIndex].id;
-
-
-            const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
-            const isPartial = showState === "PARTIAL";
-            const isFull = showState === "FULL";
-            const isShown = isPartial || isFull;
-
-            const isCorrectOption = yearQuestions[currentIndex].correctIndex === idx;
-            const isSelected = selectedAnswers[qid] === idx;
-
-            let cls = "option-box";
-
-            /* BEFORE CHECK */
-            if (!showState && isSelected) {
-              cls += " selected";
-            }
-
-            /* FIRST CHECK (attempt 1) */
-            if (isPartial && isSelected && isCorrectOption) {
-              cls += " correct";
-            }
-            if (isPartial && isSelected && !isCorrectOption) {
-              cls += " incorrect";
-            }
-
-            /* SECOND CHECK (attempt 2+) */
-            if (isFull && isCorrectOption) {
-              cls += " correct";
-            }
-            if (isFull && isSelected && !isCorrectOption) {
-              cls += " incorrect";
-            }
-
-            return (
-              <div
-                key={idx}
-                className={cls}
-                onClick={() => handleSelectOption(qid, idx)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleSelectOption(qid, idx);
-                  }
-                }}
-                aria-pressed={isSelected}
-                aria-disabled={!!showState}
-                style={{ opacity: 1 }}
-              >
-                <strong>{String.fromCharCode(65 + idx)}</strong>
-                <div>{opt}</div>
+        <MathJaxContext>
+          <div className="mcq-viewer">
+            <div className="exam-topbar">
+              <div className="exam-left">
+                <strong>Jharkhand D2D</strong>
+                <span>Chemistry – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
               </div>
-            );
-          })}
-        </div>
+              <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
+              <div className="exam-right">
+                <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
+                <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
+              </div>
+            </div>
+
+            <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
+              <MathJax dynamic>
+                {yearQuestions[currentIndex].text}
+              </MathJax>
+            </div>
+
+            {yearQuestions[currentIndex].options.map((opt, idx) => {
+              const qid =
+                selectedYear?.key === "ALL"
+                  ? `${yearQuestions[currentIndex].id}-${currentIndex}`
+                  : yearQuestions[currentIndex].id;
+
+
+              const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
+              const isPartial = showState === "PARTIAL";
+              const isFull = showState === "FULL";
+              const isShown = isPartial || isFull;
+
+              const isCorrectOption = yearQuestions[currentIndex].correctIndex === idx;
+              const isSelected = selectedAnswers[qid] === idx;
+
+              let cls = "option-box";
+
+              /* BEFORE CHECK */
+              if (!showState && isSelected) {
+                cls += " selected";
+              }
+
+              /* FIRST CHECK (attempt 1) */
+              if (isPartial && isSelected && isCorrectOption) {
+                cls += " correct";
+              }
+              if (isPartial && isSelected && !isCorrectOption) {
+                cls += " incorrect";
+              }
+
+              /* SECOND CHECK (attempt 2+) */
+              if (isFull && isCorrectOption) {
+                cls += " correct";
+              }
+              if (isFull && isSelected && !isCorrectOption) {
+                cls += " incorrect";
+              }
+
+              return (
+                <div
+                  key={idx}
+                  className={cls}
+                  onClick={() => handleSelectOption(qid, idx)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectOption(qid, idx);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  aria-disabled={!!showState}
+                  style={{ opacity: 1 }}
+                >
+                  <strong>{String.fromCharCode(65 + idx)}</strong>
+                  <div>
+                    <MathJax dynamic>{opt}</MathJax>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </MathJaxContext>
       )}
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}

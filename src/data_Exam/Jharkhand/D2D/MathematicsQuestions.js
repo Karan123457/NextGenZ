@@ -47,44 +47,44 @@ export default function MathematicsQuestions({ setFocusMode }) {
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
-  async function fetchQuestions() {
-    try {
-      setLoading(true);
+    async function fetchQuestions() {
+      try {
+        setLoading(true);
 
-      const res = await authFetch(
-        "/questions?exam=D2D&subject=Math"
-      );
+        const res = await authFetch(
+          "/questions?exam=D2D&subject=Math"
+        );
 
-      const data = await res.json();
+        const data = await res.json();
 
-      const grouped = {};
-      data.forEach(q => {
-        const yearStr = String(q.year).trim();
-        const key = `${yearStr} Questions`;
+        const grouped = {};
+        data.forEach(q => {
+          const yearStr = String(q.year).trim();
+          const key = `${yearStr} Questions`;
 
-        if (!grouped[key]) grouped[key] = [];
-        grouped[key].push({
-          id: q.questionId,
-          text: q.text,
-          options: q.options,
-          correctIndex: q.correctIndex
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push({
+            id: q.questionId,
+            text: q.text,
+            options: q.options,
+            correctIndex: q.correctIndex
+          });
         });
-      });
 
-      setQuestionsByYear(grouped);
-    } catch (err) {
-      console.error("Failed to load maths questions", err);
-    } finally {
-      setLoading(false);
+        setQuestionsByYear(grouped);
+      } catch (err) {
+        console.error("Failed to load maths questions", err);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  fetchQuestions();
-}, []);
+    fetchQuestions();
+  }, []);
 
-const mathJaxConfig = {
-  tex: { inlineMath: [["\\(", "\\)"]] }
-};
+  const mathJaxConfig = {
+    tex: { inlineMath: [["\\(", "\\)"]] }
+  };
 
 
 
@@ -519,71 +519,80 @@ const mathJaxConfig = {
 
       {/* ================= MCQ VIEWER ================= */}
       {/* ================= MCQ VIEWER ================= */}
-{viewMode === "viewer" && yearQuestions.length > 0 && (
-  <MathJaxContext>
-    <div className="mcq-viewer">
-
-      <div className="exam-topbar">
-        <div className="exam-left">
-          <strong>Jharkhand D2D</strong>
-          <span>
-            Mathematics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}
-          </span>
-        </div>
-        <div className="exam-center">
-          Q {currentIndex + 1} / {yearQuestions.length}
-        </div>
-        <div className="exam-right">
-          <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-          <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
-        </div>
-      </div>
-
-      {/* ✅ QUESTION (MathJax applied here) */}
-      <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
-        <MathJax dynamic>
-          {yearQuestions[currentIndex].text}
-        </MathJax>
-      </div>
-
-      {/* ✅ OPTIONS (MathJax applied here) */}
-      {yearQuestions[currentIndex].options.map((opt, idx) => {
-        const qid =
-          selectedYear?.key === "ALL"
-            ? `${yearQuestions[currentIndex].id}-${currentIndex}`
-            : yearQuestions[currentIndex].id;
-
-        const showState = showAnswer[qid];
-        const isShown = showState === "PARTIAL" || showState === "FULL";
-        const isCorrectOption = yearQuestions[currentIndex].correctIndex === idx;
-        const isSelected = selectedAnswers[qid] === idx;
-
-        let cls = "option-box";
-        if (!showState && isSelected) cls += " selected";
-        if (showState && isCorrectOption) cls += " correct";
-        if (showState && isSelected && !isCorrectOption) cls += " incorrect";
-
-        return (
-          <div
-            key={idx}
-            className={cls}
-            onClick={() => handleSelectOption(qid, idx)}
-            role="button"
-            tabIndex={0}
-            aria-disabled={isShown}
-          >
-            <strong>{String.fromCharCode(65 + idx)}</strong>
-
-            {/* 👇 THIS IS THE KEY LINE */}
-            <div>
-              <MathJax dynamic>{opt}</MathJax>
+      {viewMode === "viewer" && yearQuestions.length > 0 && (
+        <MathJaxContext>
+          <div className="mcq-viewer">
+            <div className="exam-topbar">
+              <div className="exam-left">
+                <strong>Jharkhand D2D</strong>
+                <span>Mathematics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
+              </div>
+              <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
+              <div className="exam-right">
+                <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
+                <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
+              </div>
             </div>
+
+            {/* ✅ QUESTION (MathJax applied here) */}
+            <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
+              <MathJax dynamic>
+                {yearQuestions[currentIndex].text}
+              </MathJax>
+            </div>
+
+            {/* ✅ OPTIONS (MathJax applied here) */}
+            {yearQuestions[currentIndex].options.map((opt, idx) => {
+              const qid =
+                selectedYear?.key === "ALL"
+                  ? `${yearQuestions[currentIndex].id}-${currentIndex}`
+                  : yearQuestions[currentIndex].id;
+
+              const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
+              const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
+              const isSelected = selectedAnswers[qid] === idx;
+
+              let cls = "option-box";
+              /* BEFORE CHECK */
+              if (!showState && isSelected) cls += " selected";
+
+              /* FIRST CHECK (attempt 1) */
+              if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
+              if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
+
+              /* SECOND CHECK (attempt 2+) */
+              if (showState === "FULL" && isCorrect) cls += " correct";
+              if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
+
+              return (
+                <div
+                  key={idx}
+                  className={cls}
+                  onClick={() => handleSelectOption(qid, idx)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectOption(qid, idx);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  aria-disabled={!!showState}
+                  style={{ opacity: 1 }}
+                >
+                  <strong>{String.fromCharCode(65 + idx)}</strong>
+
+                  {/* 👇 THIS IS THE KEY LINE */}
+                  <div>
+                    <MathJax dynamic>{opt}</MathJax>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </div>
-  </MathJaxContext>
-)}
+        </MathJaxContext>
+      )}
 
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}

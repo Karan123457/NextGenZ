@@ -530,7 +530,6 @@ export default function PhysicsQuestions({ setFocusMode }) {
       {viewMode === "viewer" && yearQuestions.length > 0 && (
         <MathJaxContext>
           <div className="mcq-viewer">
-
             <div className="exam-topbar">
               <div className="exam-left">
                 <strong>Jharkhand D2D</strong>
@@ -607,3 +606,5 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
+
