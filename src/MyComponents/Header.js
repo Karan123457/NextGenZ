@@ -98,10 +98,18 @@ export default function Header() {
           <Navbar.Brand
             as={Link}
             to="/"
-            className="fw-bold text-primary fs-4 brand-name"
+            className="d-flex align-items-center gap-2 brand-name"
           >
-            Futurely
+            <img
+              src="/logo.png"
+              alt="Futurely Logo"
+              className="brand-logo"
+            />
+            <span className="fw-bold fs-4 text-primary">
+              Futurely
+            </span>
           </Navbar.Brand>
+
 
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -145,7 +153,6 @@ export default function Header() {
                 >
                   Dashboard
                 </Link>
-             <Link to="/leaderboard">Leaderboard</Link>
 
                 {/* Profile link */}
                 <Link
@@ -351,9 +358,18 @@ export default function Header() {
         .navbar {
           transition: all 0.4s ease-in-out;
         }
+          .brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brand-name {
+  letter-spacing: 0.6px;
+}
+
       `}</style>
     </>
   );
 }
-
 
