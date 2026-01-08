@@ -534,6 +534,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
               <MathJax dynamic>
                 {yearQuestions[currentIndex].text}
               </MathJax>
+              </div>
 
               {yearQuestions[currentIndex].options.map((opt, idx) => {
                 const qid =
@@ -607,3 +608,4 @@ export default function MathematicsQuestions({ setFocusMode }) {
     </div>
   );
 }
+
