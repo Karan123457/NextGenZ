@@ -2,31 +2,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 
-/* ================= DATA ================= */
-export const physicsQuestionsByYear = {
-  "2025 Questions": [
-    { id: "2025-q1", text: "Newton's Law?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-    { id: "2025-q2", text: "Kinematics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-  "2024 Questions": [
-    { id: "2024-q1", text: "Dynamics?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-    { id: "2024-q2", text: "What is Computer?", options: ["A", "B", "C", "D"], correctIndex: 0 },
-  ],
-};
 
-const questionsByYear = physicsQuestionsByYear;
 
 /* ================= COMPONENT ================= */
 export default function PhysicsQuestions({ setFocusMode }) {
-  const years = [
-    { year: "All Previous Year Questions", key: "ALL" },
-    { year: "2025 Questions", key: "2025" },
-    { year: "2024 Questions", key: "2024" },
-    { year: "2023 Questions", key: "2023" },
-    { year: "2022 Questions", key: "2022" },
-  ];
 
   const timerRef = useRef(null);
 
@@ -43,7 +25,54 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [viewMode, setViewMode] = useState("years");
 
+  const [questionsByYear, setQuestionsByYear] = useState({});
+  const dynamicYears = [
+    { year: "All Previous Year Questions", key: "ALL" },
+    ...Object.keys(questionsByYear)
+      .map(y => ({
+        year: y,
+        key: y.split(" ")[0] // "2023 Questions" → "2023"
+      }))
+      .sort((a, b) => Number(b.key) - Number(a.key))
+  ];
+  const [loading, setLoading] = useState(false);
+
   /* ================= EFFECTS ================= */
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        setLoading(true);
+
+        const res = await authFetch(
+          "/questions?exam=JHP&subject=Physics"
+        );
+        const data = await res.json();
+
+        const grouped = {};
+        data.forEach(q => {
+          const yearStr = String(q.year).trim();
+          const key = `${yearStr} Questions`;
+
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push({
+            id: q.questionId,
+            text: q.text,
+            options: q.options,
+            correctIndex: q.correctIndex
+          });
+        });
+
+        setQuestionsByYear(grouped);
+      } catch (err) {
+        console.error("Failed to load questions", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchQuestions();
+  }, []);
+
   useEffect(() => {
     if (viewMode === "viewer" && yearQuestions.length > 0) {
       startTimer();
@@ -69,19 +98,19 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
   function getTotal(y) {
     if (y.key === "ALL") {
-      return Object.values(physicsQuestionsByYear).reduce((s, a) => s + a.length, 0);
+      return Object.values(questionsByYear).reduce((s, a) => s + a.length, 0);
     }
-    return physicsQuestionsByYear[y.year]?.length || 0;
+    return questionsByYear[y.year]?.length || 0;
   }
 
- function getAttempted(y) {
-  if (y.key === "ALL") {
-    return Object.keys(attempted).filter(k => attempted[k]).length;
-  }
+  function getAttempted(y) {
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
 
-  const arr = questionsByYear[y.year] || [];
-  return arr.filter(q => attempted[q.id]).length;
-}
+    const arr = questionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
+  }
 
 
 
@@ -89,9 +118,9 @@ export default function PhysicsQuestions({ setFocusMode }) {
   function openYearQuestions(yearObj) {
     let qs = [];
     if (yearObj.key === "ALL") {
-      Object.values(physicsQuestionsByYear).forEach(arr => (qs = qs.concat(arr)));
+      Object.values(questionsByYear).forEach(arr => (qs = qs.concat(arr)));
     } else {
-      qs = physicsQuestionsByYear[yearObj.year] || [];
+      qs = questionsByYear[yearObj.year] || [];
     }
 
     setYearQuestions(qs);
@@ -142,7 +171,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
     const selected = selectedAnswers[qid];
     if (selected === undefined) return;
 
-    
+
 
     setAttempted(prev => ({ ...prev, [qid]: true }));
 
@@ -155,22 +184,22 @@ export default function PhysicsQuestions({ setFocusMode }) {
       return { ...prev, [qid]: next };
     });
 
-    
+
     if (selected === q.correctIndex) {
-         try {
-           await authFetch("/exam/physics/attempt", {
-             method: "POST",
-             body: JSON.stringify({
-               questionId: q.id,
-               year:
-                 selectedYear?.key === "ALL"
-                   ? q.id.split("-")[0]
-                   : selectedYear?.year,
-               isCorrect: true,
-               timeTaken: timeLeft,
-               exam: "JHP"   
-             }),
-           });
+      try {
+        await authFetch("/exam/physics/attempt", {
+          method: "POST",
+          body: JSON.stringify({
+            questionId: q.id,
+            year:
+              selectedYear?.key === "ALL"
+                ? q.id.split("-")[0]
+                : selectedYear?.year,
+            isCorrect: true,
+            timeTaken: timeLeft,
+            exam: "JHP"
+          }),
+        });
 
 
       } catch (err) {
@@ -333,6 +362,9 @@ export default function PhysicsQuestions({ setFocusMode }) {
         background:#ef4444;
         color:#ffffff;
       }
+        .question-text {
+  white-space: pre-line;
+}
 
       .bottom-action-bar{
         position:fixed;
@@ -418,7 +450,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
 
           <div className="pyq-list">
-            {years.map((y, i) => (
+            {dynamicYears.map((y, i) => (
               <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
                 <div className="pyq-left">
                   <div className="pyq-year">{y.key}</div>
@@ -442,68 +474,74 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
       {/* ================= MCQ VIEWER ================= */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
-        <div className="mcq-viewer">
-          <div className="exam-topbar">
-            <div className="exam-left">
-              <strong>Jharkhand Polytechnic</strong>
-              <span>Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
-            </div>
-            <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
-            <div className="exam-right">
-              <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
-              <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
-            </div>
-          </div>
-
-          <div className="fw-bold mb-5" style={{ fontSize: "1.02rem" }}>
-            {yearQuestions[currentIndex].text}
-          </div>
-
-          {yearQuestions[currentIndex].options.map((opt, idx) => {
-            const qid =
-              selectedYear?.key === "ALL"
-                ? `${yearQuestions[currentIndex].id}-${currentIndex}`
-                : yearQuestions[currentIndex].id;
-
-            const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
-            const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
-            const isSelected = selectedAnswers[qid] === idx;
-
-            let cls = "option-box";
-            /* BEFORE CHECK */
-            if (!showState && isSelected) cls += " selected";
-
-            /* FIRST CHECK (attempt 1) */
-            if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
-            if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
-
-            /* SECOND CHECK (attempt 2+) */
-            if (showState === "FULL" && isCorrect) cls += " correct";
-            if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
-
-            return (
-              <div
-                key={idx}
-                className={cls}
-                onClick={() => handleSelectOption(qid, idx)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleSelectOption(qid, idx);
-                  }
-                }}
-                aria-pressed={isSelected}
-                aria-disabled={!!showState}
-                style={{ opacity: 1 }}
-              >
-                <strong>{String.fromCharCode(65 + idx)}</strong>
-                <div>{opt}</div>
+        <MathJaxContext>
+          <div className="mcq-viewer">
+            <div className="exam-topbar">
+              <div className="exam-left">
+                <strong>Jharkhand Polytechnic</strong>
+                <span>Physics – {selectedYear?.key === "ALL" ? "All PYQ" : selectedYear?.year}</span>
               </div>
-            );
-          })}
-        </div>
+              <div className="exam-center">Q {currentIndex + 1} / {yearQuestions.length}</div>
+              <div className="exam-right">
+                <div className="timer-pill">⏱ {formatTime(timeLeft)}</div>
+                <Button size="sm" variant="light" onClick={backToYears}>✕</Button>
+              </div>
+            </div>
+
+            <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
+              <MathJax dynamic>
+                {yearQuestions[currentIndex].text}
+              </MathJax>
+            </div>
+
+            {yearQuestions[currentIndex].options.map((opt, idx) => {
+              const qid =
+                selectedYear?.key === "ALL"
+                  ? `${yearQuestions[currentIndex].id}-${currentIndex}`
+                  : yearQuestions[currentIndex].id;
+
+              const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
+              const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
+              const isSelected = selectedAnswers[qid] === idx;
+
+              let cls = "option-box";
+              /* BEFORE CHECK */
+              if (!showState && isSelected) cls += " selected";
+
+              /* FIRST CHECK (attempt 1) */
+              if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
+              if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
+
+              /* SECOND CHECK (attempt 2+) */
+              if (showState === "FULL" && isCorrect) cls += " correct";
+              if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
+
+              return (
+                <div
+                  key={idx}
+                  className={cls}
+                  onClick={() => handleSelectOption(qid, idx)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectOption(qid, idx);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  aria-disabled={!!showState}
+                  style={{ opacity: 1 }}
+                >
+                  <strong>{String.fromCharCode(65 + idx)}</strong>
+                  <div>
+                    <MathJax dynamic>{opt}</MathJax>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </MathJaxContext>
       )}
 
       {/* ===== FIXED BOTTOM BUTTONS ===== */}
