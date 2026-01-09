@@ -23,7 +23,7 @@ export default function JharkhandCards() {
     {
       id: 2,
       extra: "All Previous Year Questions (PYQ)",
-      title: "Jharkhand Polytechnic PYQ (2018–2025) - For 2026 Exam",
+      title: "Jharkhand Polytechnic PYQ (2021–2025) - For 2026 Exam",
       desc: "For Diploma (Regular Entry) Admission to 1st Year",
       badge: "Just Launched",
       link: "#",
@@ -33,7 +33,7 @@ export default function JharkhandCards() {
     {
       id: 3,
       extra: "All Previous Year Questions (PYQ)",
-      title: "Jharkhand Polytechnic LE PYQ (2018–2025) - For 2026 Exam",
+      title: "Jharkhand Polytechnic LE PYQ (2021–2025) - For 2026 Exam",
       desc: "For Diploma (Lateral Entry) Admission to 2nd Year",
       badge: "Just Launched",
       link: "#",
