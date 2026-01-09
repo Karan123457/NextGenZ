@@ -12,34 +12,34 @@ const Resources = () => {
 
     const data = [
         {
-            key: "0",
+            key: "jharkhand-diploma",
             title: "📘 Jharkhand Diploma Semester PYQ",
             color: "linear-gradient(135deg, #0d6efd, #6ea8fe)",
             subs: [
-                { id: "sub1", title: "1st Semester", type: "fullContent" },
-                { id: "sub2", title: "2nd Semester", type: "fullContent2" },
-                { id: "sub3", title: "3rd Semester", type: "fullContent3" },
-                { id: "sub4", title: "4th Semester", type: "fullContent4" },
-                { id: "sub5", title: "5th Semester", type: "fullContent5" },
-                { id: "sub6", title: "6th Semester", type: "fullContent6" },
+                { id: "semester-1", title: "1st Semester", type: "fullContent" },
+                { id: "semester-2", title: "2nd Semester", type: "fullContent2" },
+                { id: "semester-3", title: "3rd Semester", type: "fullContent3" },
+                { id: "semester-4", title: "4th Semester", type: "fullContent4" },
+                { id: "semester-5", title: "5th Semester", type: "fullContent5" },
+                { id: "semester-6", title: "6th Semester", type: "fullContent6" },
             ],
         },
         {
-            key: "1",
+            key: "jharkhand-polytechnic",
             title: "📚 Jharkhand Polytechnic PYQ",
             color: "linear-gradient(135deg, #198754, #5be49b)",
             subs: [
-                { id: "jhpoly", title: "Exam Information for 2026 ", type: "fullJHPoly" },
-                { id: "jhpoly2", title: "Download All Paper (2021 - 2025)", type: "fullJHPoly2" },
+                { id: "exam-information", title: "Exam Information for 2026 ", type: "fullJHPoly" },
+                { id: "download-paper", title: "Download All Paper (2021 - 2025)", type: "fullJHPoly2" },
             ],
         },
         {
-            key: "2",
+            key: "jharkhand-d2d",
             title: "📚 Jharkhand D2D PYQ",
             color: "linear-gradient(135deg, #fd7e14, #ebc285ff)",
             subs: [
-                { id: "sub_d2d", title: "Exam Information for 2026", type: "D2dExam" },
-                { id: "sub2_d2d", title: "Download All Paper (2021 - 2025)", type: "D2dExam2" },
+                { id: "exam-information", title: "Exam Information for 2026", type: "D2dExam" },
+                { id: "download-paper", title: "Download All Paper (2021 - 2025)", type: "D2dExam2" },
             ],
         },
         {
