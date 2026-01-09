@@ -13,11 +13,11 @@ import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 
-import DetailsPage from "./data_Exam/Jharkhand/D2D/DetailsPage";
+import DetailsPageD2D from "./data_Exam/Jharkhand/D2D/DetailsPageD2D";
 import DetailsPageJHP from "./data_Exam/Jharkhand/Polytechnic/DetailsPageJHP";
 import BiharLEDetailsPage from "./data_Exam/Bihar/Bihar LE/DetailsPageBRB";
 import BiharPolytechnicDetailsPage from "./data_Exam/Bihar/Polytechnic/DetailsPageBRP";
-import ResourcesDetail from "./Pages/ResourcesDetail";
+import Resources_Routes from "./Pages/Resources_Routes";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
 import Profile from "./Pages/Profile";
@@ -28,6 +28,7 @@ import Leaderboard from "./Pages/Leaderboard";
 
 
 import { Routes, Route, useLocation } from "react-router-dom";
+
 
 /* ScrollToTopWithMemory component unchanged */
 function ScrollToTopWithMemory() {
@@ -57,6 +58,12 @@ function ScrollToTopWithMemory() {
     }
   }, [pathname]);
 
+  useEffect(() => {
+    fetch("https://futurely-backend.onrender.com/health")
+      .catch(() => { }); // silent fail
+  }, []);
+
+
   return null;
 }
 
@@ -74,8 +81,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<Resources />} />
-          <Route path="/resources/:mainKey/:subId" element={<ResourcesDetail />} />
-          <Route path="/Exam_Preparation" element={<PrivateRoute><ExamPreparation /></PrivateRoute>} />
+          <Route path="/resources/:mainKey/:subId" element={<Resources_Routes />} />
+          <Route path="/Exam_Preparation" element={<ExamPreparation />} />
           <Route path="/Counselling" element={<Counselling />} />
           <Route path="/Carrer_Advisor" element={<CarrerAdvisor />} />
           <Route path="/jobs" element={<Jobs />} />
@@ -86,13 +93,13 @@ function App() {
           <Route path="/refund-policy" element={<RefundPolicy />} />
 
           {/* Put specific/static routes before param routes */}
-          <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<DetailsPageJHP />} />
-          <Route path="/Exam_Preparation/Bihar_BCECE_LE" element={<BiharLEDetailsPage />}/>
-          <Route path="/Exam_Preparation/Bihar_Polytechnic" element={<BiharPolytechnicDetailsPage />} />
-          
+          <Route path="/Exam_Preparation/Jharkhand_Polytechnic" element={<PrivateRoute><DetailsPageJHP /></PrivateRoute>} />
+          <Route path="/Exam_Preparation/Bihar_BCECE_LE" element={<PrivateRoute><BiharLEDetailsPage /></PrivateRoute>} />
+          <Route path="/Exam_Preparation/Bihar_Polytechnic" element={<PrivateRoute><BiharPolytechnicDetailsPage /></PrivateRoute>} />
+
           {/* ✅ Dynamic route LAST (used for D2D and others) */}
-          <Route path="/Exam_Preparation/:board_subcard" element={<DetailsPage />} />
-          
+          <Route path="/Exam_Preparation/:board_subcard" element={<PrivateRoute><DetailsPageD2D /></PrivateRoute>} />
+
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
