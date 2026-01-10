@@ -25,8 +25,14 @@ export default function Header() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
 
   // Handle scroll background fade
+
+  useEffect(() => {
+  window.openLoginModal = () => setShow(true);
+}, []);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
