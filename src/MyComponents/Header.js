@@ -159,6 +159,8 @@ export default function Header() {
                 >
                   Dashboard
                 </Link>
+                 
+             <Link to="/leaderboard">Leaderboard</Link>
 
                 {/* Profile link */}
                 <Link
