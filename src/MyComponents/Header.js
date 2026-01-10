@@ -153,13 +153,13 @@ export default function Header() {
               <div className="d-flex align-items-center gap-3">
 
                 {/* Dashboard link */}
-                <Link
+               {/* <Link
                   to="/dashboard"
                   className="fw-semibold text-primary text-decoration-none"
                 >
                   Dashboard
                 </Link>
-                 
+                  */}
              <Link to="/leaderboard">Leaderboard</Link>
 
                 {/* Profile link */}
@@ -499,4 +499,5 @@ export default function Header() {
     </>
   );
 }
+
 
