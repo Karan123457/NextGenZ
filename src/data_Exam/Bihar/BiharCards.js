@@ -5,9 +5,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function BiharCards() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const biharCards = [
     {
@@ -41,6 +43,13 @@ export default function BiharCards() {
       textColor: "#000",
     },
   ];
+  const handleProtectedNavigate = (path, card) => {
+    if (!isLoggedIn) {
+      window.openLoginModal(); // opens Header login popup
+      return;
+    }
+    navigate(path, { state: card });
+  };
 
   return (
     <>
@@ -100,15 +109,15 @@ export default function BiharCards() {
               className="custom-card p-4"
               onClick={(e) => {
                 e.stopPropagation();
-                // routing same pattern as JharkhandCards but for Bihar
                 if (card.id === 1) {
-                  navigate(`/Exam_Preparation/Bihar_BCECE_LE`, { state: card });
+                  handleProtectedNavigate("/Exam_Preparation/Bihar_BCECE_LE", card);
                 } else if (card.id === 2) {
-                  navigate(`/Exam_Preparation/Bihar_Polytechnic`, { state: card });
+                  handleProtectedNavigate("/Exam_Preparation/Bihar_Polytechnic", card);
                 } else {
                   alert("Coming Soon!");
                 }
               }}
+
               style={{ background: card.gradient, color: card.textColor }}
             >
               <Badge
@@ -135,15 +144,15 @@ export default function BiharCards() {
                   className="solve-btn"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // same behavior as Card click for available items
                     if (card.id === 1) {
-                      navigate(`/Exam_Preparation/Bihar_BCECE_LE`, { state: card });
+                      handleProtectedNavigate("/Exam_Preparation/Bihar_BCECE_LE", card);
                     } else if (card.id === 2) {
-                      navigate(`/Exam_Preparation/Bihar_Polytechnic`, { state: card });
+                      handleProtectedNavigate("/Exam_Preparation/Bihar_Polytechnic", card);
                     } else {
                       alert("Coming Soon!");
                     }
                   }}
+
                 >
                   🚀 Start Solving
                 </Button>

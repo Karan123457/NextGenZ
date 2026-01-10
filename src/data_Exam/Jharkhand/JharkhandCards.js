@@ -5,9 +5,16 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+
+
 
 export default function JharkhandCards() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+
+
+
 
   const jharkhandCards = [
     {
@@ -40,7 +47,17 @@ export default function JharkhandCards() {
       gradient: "linear-gradient(135deg, #6a11cb, #2575fc)",
       textColor: "#fff",
     },
+
+
   ];
+  const handleProtectedNavigate = (path, card) => {
+    if (!isLoggedIn) {
+      window.openLoginModal(); // opens Header login popup
+      return;
+    }
+    navigate(path, { state: card });
+  };
+
 
   return (
     <>
@@ -100,13 +117,14 @@ export default function JharkhandCards() {
               onClick={(e) => {
                 e.stopPropagation();
                 if (card.id === 1) {
-                  navigate(`/Exam_Preparation/Jharkhand_D2d`, { state: card });
+                  handleProtectedNavigate("/Exam_Preparation/Jharkhand_D2d", card);
                 } else if (card.id === 2) {
-                  navigate(`/Exam_Preparation/Jharkhand_Polytechnic`, { state: card });
+                  handleProtectedNavigate("/Exam_Preparation/Jharkhand_Polytechnic", card);
                 } else {
                   alert("Coming Soon!");
                 }
               }}
+
               style={{ background: card.gradient, color: card.textColor }}
             >
               <Badge
@@ -134,13 +152,15 @@ export default function JharkhandCards() {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (card.id === 1) {
-                      navigate(`/Exam_Preparation/Jharkhand_D2d`, { state: card });
+                      handleProtectedNavigate("/Exam_Preparation/Jharkhand_D2d", card);
                     } else if (card.id === 2) {
-                      navigate(`/Exam_Preparation/Jharkhand_Polytechnic`, { state: card });
+                      handleProtectedNavigate("/Exam_Preparation/Jharkhand_Polytechnic", card);
                     } else {
                       alert("Coming Soon!");
                     }
                   }}
+
+
                 >
                   🚀 Start Solving
                 </Button>
