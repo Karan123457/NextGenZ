@@ -195,196 +195,234 @@ export default function Header() {
         </Container>
       </Navbar>
 
-      {/* ✅ Login Modal */}
-      {/* ✅ Login / Register Modal (Production Ready) */}
-{/* 🌟 Premium Login / Register Modal */}
-<Modal
-  show={show}
-  onHide={handleClose}
-  centered
-  backdrop="static"
-  keyboard={false}
-  size="lg"
->
-  <Modal.Body className="p-0 overflow-hidden rounded-4 position-relative">
-    {/* ❌ Close Button */}
-<button
-  onClick={handleClose}
-  aria-label="Close"
-  style={{
-    position: "absolute",
-    top: "14px",
-    right: "16px",
-    background: "transparent",
-    border: "none",
-    fontSize: "1.5rem",
-    lineHeight: "1",
-    color: "#6c757d",
-    cursor: "pointer",
-    zIndex: 10,
-  }}
->
-  &times;
-</button>
 
-    <div className="d-flex flex-column flex-md-row">
-
-      {/* LEFT SIDE – BRANDING */}
-      <div
-        className="d-none d-md-flex flex-column justify-content-center align-items-center text-white p-4"
-        style={{
-          width: "40%",
-          background: "linear-gradient(135deg, #0d6efd, #6610f2)",
-        }}
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered
+        backdrop="static"
+        keyboard={false}
+        size="lg"
+        dialogClassName="auth-bottom-sheet"
       >
-        <img
-          src="/logo.png"
-          alt="Futurely"
-          style={{ width: "64px", marginBottom: "1rem" }}
-        />
-        <h4 className="fw-bold mb-2">Welcome to Futurely</h4>
-        <p className="text-center small opacity-75">
-          Prepare smarter. Track progress.  
-          Crack exams with confidence.
-        </p>
-      </div>
 
-      {/* RIGHT SIDE – FORM */}
-      <div className="flex-grow-1 p-4">
+        <Modal.Body className="p-0 overflow-hidden rounded-4 position-relative">
 
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h4 className="fw-bold text-primary mb-1">
-            {isRegister ? "Create your account" : "Sign in to your account"}
-          </h4>
-          <p className="text-muted small">
-            {isRegister
-              ? "Join Futurely and start your exam journey"
-              : "Welcome back! Please continue"}
-          </p>
-        </div>
-
-        <Form onSubmit={handleSubmit}>
-
-          {/* Name */}
-          {isRegister && (
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-semibold">Full name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Your full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </Form.Group>
-          )}
-
-          {/* Email */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">Email address</Form.Label>
-            <Form.Control
-              autoFocus
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          {/* Password */}
-          <Form.Group className="mb-2">
-            <Form.Label className="fw-semibold">Password</Form.Label>
-            <div className="input-group">
-              <Form.Control
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <Button
-                variant="outline-secondary"
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </Button>
-            </div>
-          </Form.Group>
-
-          {/* Forgot Password */}
-          {!isRegister && (
-            <div className="text-end mb-3">
-              <Link
-                to="/forgot-password"
-                className="small text-primary text-decoration-none"
-                onClick={handleClose}
-              >
-                Forgot password?
-              </Link>
-            </div>
-          )}
-
-          {/* Error */}
-          {error && (
-            <div className="alert alert-danger py-2 text-center small">
-              {error}
-            </div>
-          )}
-
-          {/* CTA */}
-          <Button
-            type="submit"
-            className="w-100 rounded-pill fw-semibold py-2"
-            disabled={loading}
+          {/* ❌ Close Button */}
+          <button
+            onClick={handleClose}
+            aria-label="Close"
+            style={{
+              position: "absolute",
+              top: "14px",
+              right: "16px",
+              background: "transparent",
+              border: "none",
+              fontSize: "1.8rem",
+              lineHeight: "1",
+              color: "#6c757d",
+              cursor: "pointer",
+              zIndex: 10,
+            }}
           >
-            {loading
-              ? isRegister
-                ? "Creating account..."
-                : "Signing in..."
-              : isRegister
-                ? "Create account"
-                : "Continue"}
-          </Button>
+            &times;
+          </button>
 
-          {/* Terms */}
-          <p
-            className="text-center text-muted mt-3"
-            style={{ fontSize: "0.75rem" }}
-          >
-            By continuing, you agree to Futurely’s{" "}
-            <Link to="/terms-and-conditions">Terms</Link> and{" "}
-            <Link to="/privacy-policy">Privacy Policy</Link>.
-          </p>
+          <div className="d-flex flex-column flex-md-row">
 
-          {/* Toggle */}
-          <div className="text-center mt-3">
-            <small>
-              {isRegister
-                ? "Already have an account?"
-                : "New to Futurely?"}{" "}
-              <button
-                type="button"
-                className="btn btn-link p-0 fw-semibold text-primary"
-                onClick={() => setIsRegister(!isRegister)}
+            {/* LEFT – BRANDING */}
+            <div
+              className="d-none d-md-flex flex-column justify-content-center align-items-center text-white p-4"
+              style={{
+                width: "40%",
+                background: "linear-gradient(135deg, #0d6efd, #6610f2)",
+              }}
+            >
+              <img
+                src="/logo.png"
+                alt="Futurely"
+                style={{ width: "72px", marginBottom: "1.2rem" }}
+              />
+
+              <h3 className="fw-bold mb-3" style={{ fontSize: "1.6rem" }}>
+                Welcome to Futurely
+              </h3>
+
+              <p
+                className="text-center opacity-75"
+                style={{ fontSize: "1rem", lineHeight: "1.6" }}
               >
-                {isRegister ? "Sign in" : "Create an account"}
-              </button>
-            </small>
+                Prepare smarter. Track progress.
+                Crack exams with confidence.
+              </p>
+            </div>
+
+            {/* RIGHT – FORM */}
+            <div className="flex-grow-1 p-4 p-md-5">
+
+              {/* Header */}
+              <div className="text-center mb-4">
+                <h3
+                  className="fw-bold text-primary mb-2"
+                  style={{ fontSize: "1.7rem" }}
+                >
+                  {isRegister ? "Create your account" : "Sign in to your account"}
+                </h3>
+
+                <p
+                  className="text-muted"
+                  style={{ fontSize: "0.95rem", lineHeight: "1.5" }}
+                >
+                  {isRegister
+                    ? "Join Futurely and start your exam journey"
+                    : "Welcome back! Please continue"}
+                </p>
+              </div>
+
+              <Form onSubmit={handleSubmit}>
+
+                {/* Name */}
+                {isRegister && (
+                  <Form.Group className="mb-3">
+                    <Form.Label
+                      className="fw-semibold"
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      Full name
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Your full name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                )}
+
+                {/* Email */}
+                <Form.Group className="mb-3">
+                  <Form.Label
+                    className="fw-semibold"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    Email address
+                  </Form.Label>
+                  <Form.Control
+                    autoFocus
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                {/* Password */}
+                <Form.Group className="mb-2">
+                  <Form.Label
+                    className="fw-semibold"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    Password
+                  </Form.Label>
+                  <div className="input-group">
+                    <Form.Control
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </Button>
+                  </div>
+                </Form.Group>
+
+                {/* Forgot Password */}
+                {!isRegister && (
+                  <div className="text-end mb-3">
+                    <Link
+                      to="/forgot-password"
+                      className="text-primary text-decoration-none"
+                      style={{ fontSize: "0.85rem" }}
+                      onClick={handleClose}
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                )}
+
+                {/* Error */}
+                {error && (
+                  <div
+                    className="alert alert-danger py-2 text-center"
+                    style={{ fontSize: "0.85rem" }}
+                  >
+                    {error}
+                  </div>
+                )}
+
+                {/* CTA */}
+                <Button
+                  type="submit"
+                  className="w-100 rounded-pill fw-semibold py-2 mt-2"
+                  disabled={loading}
+                  style={{ fontSize: "1rem" }}
+                >
+                  {loading
+                    ? isRegister
+                      ? "Creating account..."
+                      : "Signing in..."
+                    : isRegister
+                      ? "Create account"
+                      : "Continue"}
+                </Button>
+
+                {/* Terms */}
+                <p
+                  className="text-center text-muted mt-3"
+                  style={{ fontSize: "0.75rem", lineHeight: "1.4" }}
+                >
+                  By continuing, you agree to Futurely’s{" "}
+                  <Link to="/terms-and-conditions">Terms</Link> and{" "}
+                  <Link to="/privacy-policy">Privacy Policy</Link>.
+                </p>
+
+                {/* Toggle */}
+                <div className="text-center mt-3">
+                  <small style={{ fontSize: "0.85rem" }}>
+                    {isRegister
+                      ? "Already have an account?"
+                      : "New to Futurely?"}{" "}
+                    <button
+                      type="button"
+                      className="btn btn-link p-0 fw-semibold text-primary"
+                      style={{ fontSize: "0.85rem" }}
+                      onClick={() => setIsRegister(!isRegister)}
+                    >
+                      {isRegister ? "Sign in" : "Create an account"}
+                    </button>
+                  </small>
+                </div>
+
+              </Form>
+            </div>
           </div>
+        </Modal.Body>
+      </Modal>
 
-        </Form>
-      </div>
-    </div>
-  </Modal.Body>
-</Modal>
 
 
 
       {/* ✨ Styles Section */}
       <style>{`
+      
         /* Scroll Fade Navbar */
         .navbar-clear {
           background-color: rgba(255, 255, 255, 0.98);
