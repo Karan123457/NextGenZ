@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+/* 🔒 GLOBAL SAFETY FIX */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* App styles */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -27,6 +43,21 @@
 .App-link {
   color: #61dafb;
 }
+
+/* Page wrapper */
+.app-page-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ❌ DO NOT OVERRIDE BOOTSTRAP CONTAINERS */
+/*
+.container,
+.container-fluid {
+  max-width: 100%;
+}
+*/
 
 @keyframes App-logo-spin {
   from {
