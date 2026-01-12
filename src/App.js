@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./MyComponents/Header";
 import Footer from "./MyComponents/Footer";
 import Home from "./Pages/Home";
-import Counselling from "./Pages/Counselling";
+import Colleges from "./Pages/Colleges";
 import Resources from "./Pages/Resources";
 import CarrerAdvisor from "./Pages/Carrer_Advisor";
 import ExamPreparation from "./Pages/Exam_Preparation";
@@ -25,9 +25,12 @@ import Dashboard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 import Leaderboard from "./Pages/Leaderboard";
+import ContactUs from "./Pages/ContactUs";
+import About from "./Pages/About";
 
 
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Contact } from "lucide-react";
 
 
 /* ScrollToTopWithMemory component unchanged */
@@ -77,13 +80,13 @@ function App() {
     <>
       <ScrollToTopWithMemory />
       <Header />
-      <div className="container mt-4">
+      <div className="app-page-wrapper">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:mainKey/:subId" element={<Resources_Routes />} />
           <Route path="/Exam_Preparation" element={<ExamPreparation />} />
-          <Route path="/Counselling" element={<Counselling />} />
+          <Route path="/Colleges" element={<Colleges />} />
           <Route path="/Carrer_Advisor" element={<CarrerAdvisor />} />
           <Route path="/jobs" element={<Jobs />} />
 
@@ -105,6 +108,9 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/about" element={<About />} />
+
 
 
 
