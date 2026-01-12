@@ -41,7 +41,7 @@ export default function Header() {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Career Advisor", path: "/Counselling" },
+    { name: "Colleges", path: "/colleges" },
     { name: "Exam Preparation", path: "/Exam_Preparation" },
     { name: "Resources", path: "/resources" },
     { name: "Jobs", path: "/jobs" },
@@ -153,13 +153,13 @@ export default function Header() {
               <div className="d-flex align-items-center gap-3">
 
                 {/* Dashboard link */}
-               {/* <Link
+                <Link
                   to="/dashboard"
                   className="fw-semibold text-primary text-decoration-none"
                 >
                   Dashboard
                 </Link>
-                  */}
+                 
              <Link to="/leaderboard">Leaderboard</Link>
 
                 {/* Profile link */}
@@ -499,5 +499,4 @@ export default function Header() {
     </>
   );
 }
-
 
