@@ -326,7 +326,17 @@ export default function PhysicsQuestions({ setFocusMode }) {
       .pyq-progress{font-size:14px;font-weight:800;color:#2563eb;text-align:right}
       .pyq-small{font-size:11px;color:#6b7280;margin-top:3px;text-align:right}
 
-      .exam-topbar{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;margin-left:-16px;margin-right:-16px;padding:10px 14px;margin-bottom:14px;border-radius:0}
+      .exam-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+  color:#fff;
+  padding:10px 16px;
+  margin-bottom:14px;
+  border-radius:0;
+}
+
       .exam-left span{display:block;font-size:12px;opacity:.8}
       .exam-center{font-weight:700}
       .exam-right{display:flex;gap:8px;align-items:center}
@@ -381,15 +391,16 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
 
       .bottom-action-bar{
-        position:fixed;
-        bottom:0;
-        left:0;
-        width:100%;
-        background:#ffffff;
-        padding:14px 16px 18px;
-        border-top:1px solid #e5e7eb;
-        z-index:1000;
-      }
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;   /* ✅ KEY */
+  background:#ffffff;
+  padding:14px 16px 18px;
+  border-top:1px solid #e5e7eb;
+  z-index:1000;
+}
+
 
       .bottom-action-inner{
         max-width:760px;
@@ -442,7 +453,12 @@ export default function PhysicsQuestions({ setFocusMode }) {
       }
       .try-btn:hover{opacity:.95}
 
-      .mcq-viewer{padding-bottom:120px}
+      .mcq-viewer{
+  max-width:100%;
+  overflow-x:hidden;
+  padding-bottom:120px;
+}
+
 
       @media (max-width:600px){
         .exam-topbar{margin-left:-12px;margin-right:-12px}
