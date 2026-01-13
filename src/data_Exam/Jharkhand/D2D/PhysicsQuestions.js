@@ -4,8 +4,6 @@ import { Button } from "react-bootstrap";
 import { authFetch } from "../../../utils/api";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 
-
-
 /* ================= COMPONENT ================= */
 export default function PhysicsQuestions({ setFocusMode }) {
 
@@ -343,12 +341,16 @@ export default function PhysicsQuestions({ setFocusMode }) {
 
       .timer-pill{padding:6px 14px;border-radius:999px;font-weight:800;font-size:13px;background:#e0edff;color:#1d4ed8}
 
+/* base option box styles (kept) */
       .option-box{
         display:flex;align-items:center;gap:15px;
         border:2px solid #e5e7eb;border-radius:14px;
         padding:14px 16px;margin-bottom:16px;
         cursor:pointer;background:#fff;user-select:none;
         transition: all .18s ease;
+        padding-left: 18px;
+        padding-right: 18px;
+        box-sizing: border-box;
       }
 
       .option-box strong{
@@ -389,7 +391,44 @@ export default function PhysicsQuestions({ setFocusMode }) {
   white-space: pre-line;
 }
 
+/* ===== UPDATED: make question + options BOTH full-width with same side padding ===== */
 
+/* keep top bar full width (unchanged) */
+.mcq-viewer{
+  width: 100%;
+  padding-bottom: 120px;
+  overflow-x: hidden;
+}
+
+/* QUESTION: full width with safe side padding */
+.question-full{
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+/* OPTIONS: also full width with the same side padding.
+   option-boxes will stretch to the container width (so they line up with question) */
+.mcq-content{
+  width: 100%;
+  margin: 0;
+  padding: 8px 16px 0 16px;
+  box-sizing: border-box;
+  max-width: none;
+}
+
+/* ensure each option-box spans full width available */
+.mcq-content .option-box{
+  width: 100%;
+  max-width: none;
+}
+
+/* tweak question spacing for readability */
+.question-text{
+  line-height: 1.65;
+}
+
+/* ===== bottom bar ===== */
       .bottom-action-bar{
   position:fixed;
   bottom:0;
@@ -453,19 +492,25 @@ export default function PhysicsQuestions({ setFocusMode }) {
       }
       .try-btn:hover{opacity:.95}
 
-      .mcq-viewer{
-  max-width:100%;
-  overflow-x:hidden;
-  padding-bottom:120px;
+      @media (max-width:600px){
+  .mcq-content{
+    padding: 8px 12px 0 12px;
+  }
+
+  .question-full{
+    padding: 0 12px;
+  }
+
+  .exam-topbar{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .option-box{
+    padding: 12px 14px;
+  }
 }
 
-
-      @media (max-width:600px){
-        .exam-topbar{margin-left:-12px;margin-right:-12px}
-        .option-box{padding:12px 14px}
-        .option-box strong{min-width:32px;height:32px;font-size:13px}
-        .bottom-action-inner{gap:8px}
-      }
         .loading-box {
   display: flex;
   flex-direction: column;
@@ -558,60 +603,66 @@ export default function PhysicsQuestions({ setFocusMode }) {
               </div>
             </div>
 
-            <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
-              <MathJax dynamic>
-                {yearQuestions[currentIndex].text}
-              </MathJax>
+            {/* ====== QUESTION FULL WIDTH (topbar preserved) ====== */}
+            <div className="question-full">
+              <div className="fw-bold mb-5 question-text" style={{ fontSize: "1.02rem" }}>
+                <MathJax dynamic>
+                  {yearQuestions[currentIndex].text}
+                </MathJax>
+              </div>
             </div>
 
+            {/* ====== OPTIONS: now also full width with same side padding ====== */}
+            <div className="mcq-content">
+              {yearQuestions[currentIndex].options.map((opt, idx) => {
+                const qid =
+                  selectedYear?.key === "ALL"
+                    ? `${yearQuestions[currentIndex].id}-${currentIndex}`
+                    : yearQuestions[currentIndex].id;
 
-            {yearQuestions[currentIndex].options.map((opt, idx) => {
-              const qid =
-                selectedYear?.key === "ALL"
-                  ? `${yearQuestions[currentIndex].id}-${currentIndex}`
-                  : yearQuestions[currentIndex].id;
+                const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
+                const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
+                const isSelected = selectedAnswers[qid] === idx;
 
-              const showState = showAnswer[qid]; // false | "PARTIAL" | "FULL"
-              const isCorrect = yearQuestions[currentIndex].correctIndex === idx;
-              const isSelected = selectedAnswers[qid] === idx;
+                let cls = "option-box";
+                /* BEFORE CHECK */
+                if (!showState && isSelected) cls += " selected";
 
-              let cls = "option-box";
-              /* BEFORE CHECK */
-              if (!showState && isSelected) cls += " selected";
+                /* FIRST CHECK (attempt 1) */
+                if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
+                if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
 
-              /* FIRST CHECK (attempt 1) */
-              if (showState === "PARTIAL" && isSelected && isCorrect) cls += " correct";
-              if (showState === "PARTIAL" && isSelected && !isCorrect) cls += " incorrect";
+                /* SECOND CHECK (attempt 2+) */
+                if (showState === "FULL" && isCorrect) cls += " correct";
+                if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
 
-              /* SECOND CHECK (attempt 2+) */
-              if (showState === "FULL" && isCorrect) cls += " correct";
-              if (showState === "FULL" && isSelected && !isCorrect) cls += " incorrect";
+                return (
+                  <div
+                    key={idx}
+                    className={cls}
+                    onClick={() => handleSelectOption(qid, idx)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleSelectOption(qid, idx);
+                      }
+                    }}
+                    aria-pressed={isSelected}
+                    aria-disabled={!!showState}
+                    style={{ opacity: 1 }}
+                  >
+                    <strong>{String.fromCharCode(65 + idx)}</strong>
+                    <div>
+                      <MathJax dynamic>{opt}</MathJax>
+                    </div>
 
-              return (
-                <div
-                  key={idx}
-                  className={cls}
-                  onClick={() => handleSelectOption(qid, idx)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      handleSelectOption(qid, idx);
-                    }
-                  }}
-                  aria-pressed={isSelected}
-                  aria-disabled={!!showState}
-                  style={{ opacity: 1 }}
-                >
-                  <strong>{String.fromCharCode(65 + idx)}</strong>
-                  <div>
-                    <MathJax dynamic>{opt}</MathJax>
                   </div>
-
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            {/* ====== end mcq-content ====== */}
           </div>
         </MathJaxContext>
       )}
@@ -622,5 +673,3 @@ export default function PhysicsQuestions({ setFocusMode }) {
     </div>
   );
 }
-
-
