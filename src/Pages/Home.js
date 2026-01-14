@@ -12,64 +12,69 @@ import {
 
 export default function Home() {
   return (
-    <main style={{ background: "#f4f8ff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "#F8FAFC", minHeight: "100vh" }}>
+
       {/* ================= HERO ================= */}
       <section
         style={{
-          padding: "88px 0 64px",
+          padding: "90px 0 70px",
           background:
-            "linear-gradient(135deg, #0d6efd 0%, #4f9cff 100%)",
+            "linear-gradient(135deg, #0F172A 0%, #1E293B 45%, #2563EB 100%)",
           color: "#ffffff",
         }}
       >
         <Container style={{ maxWidth: 1100 }}>
-          <Row className="align-items-center">
+          <Row className="align-items-center g-5">
             <Col md={7}>
               <Badge
-                bg="light"
-                text="primary"
-                style={{ marginBottom: 14 }}
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                  padding: "8px 14px",
+                  fontSize: "0.85rem",
+                }}
               >
                 India’s Engineering Education Platform
               </Badge>
 
-              <h1 style={{ fontWeight: 900, lineHeight: 1.15 }}>
-                One platform for every
-                <br />
-                <span style={{ color: "#ffeb3b" }}>
+              <h1
+                style={{
+                  fontWeight: 900,
+                  lineHeight: 1.15,
+                  marginTop: 18,
+                }}
+              >
+                One Platform for Every <br />
+                <span style={{ color: "#38BDF8" }}>
                   Engineering Student
                 </span>
               </h1>
 
               <p
                 style={{
-                  fontSize: "1.1rem",
+                  fontSize: "1.05rem",
                   marginTop: 18,
-                  opacity: 0.95,
+                  color: "#E5E7EB",
                   maxWidth: 520,
                 }}
               >
                 Diploma & B.Tech exam preparation, PYQs, semester resources,
                 college discovery, and career mentorship — trusted by students
-                across all states of India.
+                across India.
               </p>
 
               <div
                 style={{
                   display: "flex",
                   gap: 14,
-                  marginTop: 26,
+                  marginTop: 28,
                   flexWrap: "wrap",
                 }}
               >
                 <Button size="lg" variant="light" href="/college-finder">
                   Explore Colleges <ArrowRight size={18} />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline-light"
-                  href="/exams"
-                >
+
+                <Button size="lg" variant="outline-light" href="/exams">
                   Prepare for Exams
                 </Button>
               </div>
@@ -78,27 +83,26 @@ export default function Home() {
             <Col md={5} className="d-none d-md-block">
               <div
                 style={{
-                  background: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(12px)",
-                  borderRadius: 18,
-                  padding: 28,
-                  boxShadow: "0 25px 60px rgba(0,0,0,0.2)",
+                  background: "rgba(255,255,255,0.12)",
+                  backdropFilter: "blur(14px)",
+                  borderRadius: 20,
+                  padding: 30,
                 }}
               >
                 <h6 style={{ fontWeight: 700, marginBottom: 16 }}>
-                  Why students choose Futurely
+                  Why Students Choose Futurely
                 </h6>
                 <ul
                   style={{
                     paddingLeft: 18,
                     lineHeight: 1.9,
-                    opacity: 0.95,
+                    color: "#E5E7EB",
                   }}
                 >
                   <li>All engineering exams in one place</li>
                   <li>PYQs & semester resources</li>
                   <li>Diploma & B.Tech colleges nationwide</li>
-                  <li>Career advice & mentorship</li>
+                  <li>Career guidance & mentorship</li>
                 </ul>
               </div>
             </Col>
@@ -107,7 +111,7 @@ export default function Home() {
       </section>
 
       {/* ================= TRUST METRICS ================= */}
-      <section style={{ padding: "56px 0" }}>
+      <section style={{ padding: "60px 0" }}>
         <Container style={{ maxWidth: 1100 }}>
           <Row className="text-center g-4">
             {[
@@ -119,22 +123,22 @@ export default function Home() {
               <Col key={item.label} md={3} sm={6}>
                 <div
                   style={{
-                    background: "#ffffff",
-                    borderRadius: 16,
-                    padding: 26,
-                    boxShadow: "0 15px 40px rgba(0,0,0,0.06)",
+                    background: "#FFFFFF",
+                    borderRadius: 18,
+                    padding: 28,
+                    boxShadow: "0 15px 35px rgba(15,23,42,0.08)",
                   }}
                 >
                   <div
                     style={{
                       fontSize: "1.8rem",
                       fontWeight: 800,
-                      color: "#0d6efd",
+                      color: "#2563EB",
                     }}
                   >
                     {item.value}
                   </div>
-                  <div style={{ color: "#6c757d" }}>
+                  <div style={{ color: "#64748B" }}>
                     {item.label}
                   </div>
                 </div>
@@ -145,14 +149,14 @@ export default function Home() {
       </section>
 
       {/* ================= CORE FEATURES ================= */}
-      <section style={{ padding: "72px 0" }}>
+      <section style={{ padding: "75px 0" }}>
         <Container style={{ maxWidth: 1100 }}>
           <Row className="text-center mb-5">
             <Col>
-              <h2 style={{ fontWeight: 800 }}>
+              <h2 style={{ fontWeight: 800, color: "#0F172A" }}>
                 What You Get on Futurely
               </h2>
-              <p className="text-muted mt-2">
+              <p style={{ color: "#64748B", marginTop: 8 }}>
                 Designed for ITI, Diploma & B.Tech students
               </p>
             </Col>
@@ -178,46 +182,36 @@ export default function Home() {
               {
                 icon: <People size={34} />,
                 title: "Mentorship & Counselling",
-                desc: "Personal mentorship and counselling directly from Futurely for academic and college guidance.",
+                desc: "Personal academic and college guidance from Futurely.",
               },
               {
                 icon: <GraphUp size={34} />,
                 title: "Career Roadmaps",
-                desc: "Clear, realistic career paths for ITI, Diploma, Degree and beyond.",
+                desc: "Clear, realistic career paths for engineering students.",
               },
               {
                 icon: <GlobeCentralSouthAsia size={34} />,
-                title: "Jobs & Career Opportunities",
-                desc: "Internships, job guidance, and career opportunities tailored for engineering students.",
+                title: "Jobs & Opportunities",
+                desc: "Internships and job guidance tailored for students.",
               },
             ].map((f) => (
               <Col md={4} sm={6} key={f.title}>
                 <Card
                   style={{
                     border: "none",
-                    borderRadius: 18,
+                    borderRadius: 20,
                     height: "100%",
-                    boxShadow: "0 18px 50px rgba(0,0,0,0.07)",
+                    boxShadow: "0 18px 45px rgba(15,23,42,0.08)",
                   }}
                 >
-                  <Card.Body style={{ padding: 30 }}>
-                    <div
-                      style={{
-                        marginBottom: 16,
-                        color: "#0d6efd",
-                      }}
-                    >
+                  <Card.Body style={{ padding: 32 }}>
+                    <div style={{ color: "#2563EB", marginBottom: 16 }}>
                       {f.icon}
                     </div>
-                    <h5 style={{ fontWeight: 700 }}>
+                    <h5 style={{ fontWeight: 700, color: "#0F172A" }}>
                       {f.title}
                     </h5>
-                    <p
-                      style={{
-                        color: "#495057",
-                        marginBottom: 0,
-                      }}
-                    >
+                    <p style={{ color: "#475569", marginBottom: 0 }}>
                       {f.desc}
                     </p>
                   </Card.Body>
@@ -229,35 +223,31 @@ export default function Home() {
       </section>
 
       {/* ================= CTA ================= */}
-      <section
-        style={{
-          padding: "72px 0",
-          background: "#ffffff",
-        }}
-      >
-        <Container style={{ maxWidth: 1000 }}>
+      <section style={{ padding: "75px 0", background: "#FFFFFF" }}>
+        <Container style={{ maxWidth: 900 }}>
           <Row className="text-center">
             <Col>
-              <h3 style={{ fontWeight: 800 }}>
-                Shaping the future of engineering education
+              <h3 style={{ fontWeight: 800, color: "#0F172A" }}>
+                Shaping the Future of Engineering Education
               </h3>
               <p
                 style={{
-                  color: "#6c757d",
-                  maxWidth: 700,
-                  margin: "14px auto",
+                  color: "#64748B",
+                  maxWidth: 650,
+                  margin: "14px auto 24px",
                 }}
               >
-                Futurely is evolving into a complete ecosystem for students —
-                learning, discovery, mentorship, and career growth.
+                Futurely is building a complete ecosystem for learning,
+                discovery, mentorship, and career growth.
               </p>
               <Button size="lg" href="/about">
-                Learn more about Futurely
+                Learn More About Futurely
               </Button>
             </Col>
           </Row>
         </Container>
       </section>
+
     </main>
   );
 }
