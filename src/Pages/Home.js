@@ -1,253 +1,248 @@
-import React from "react";
-import { Container, Row, Col, Button, Card, Badge } from "react-bootstrap";
-import {
-  BookHalf,
-  Building,
-  Mortarboard,
-  GraphUp,
-  People,
-  GlobeCentralSouthAsia,
-  ArrowRight,
-} from "react-bootstrap-icons";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const cardsRef = useRef([]);
+
+  useEffect(() => {
+    /* HERO TEXT ANIMATION */
+    gsap.from(".hero span", {
+      y: 90,
+      opacity: 0,
+      stagger: 0.15,
+      duration: 1.2,
+      ease: "power4.out"
+    });
+
+    gsap.from(".hero-sub", {
+      opacity: 0,
+      y: 30,
+      delay: 0.9,
+      duration: 1
+    });
+
+    /* EXAM CARDS */
+    cardsRef.current.forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        },
+        y: 80,
+        opacity: 0,
+        duration: 0.8,
+        delay: i * 0.1,
+        ease: "power3.out"
+      });
+    });
+  }, []);
+
+  const exams = [
+    "D2D Jharkhand",
+    "Jharkhand Polytechnic",
+    "Bihar Polytechnic",
+    "Bihar BTech Lateral Entry",
+    "Other State Exams"
+  ];
+
   return (
-    <main style={{ backgroundColor: "#F8FAFC", minHeight: "100vh" }}>
+    <>
+      {/* INLINE STYLES (NO CSS FILE NEEDED) */}
+      <style>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: Inter, system-ui, sans-serif;
+        }
 
-      {/* ================= HERO ================= */}
-      <section
-        style={{
-          padding: "90px 0 70px",
-          background:
-            "linear-gradient(135deg, #0F172A 0%, #1E293B 45%, #2563EB 100%)",
-          color: "#ffffff",
-        }}
-      >
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="align-items-center g-5">
-            <Col md={7}>
-              <Badge
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.15)",
-                  padding: "8px 14px",
-                  fontSize: "0.85rem",
-                }}
-              >
-                India’s Engineering Education Platform
-              </Badge>
+        body {
+          background: #0b0f1a;
+          color: #fff;
+        }
 
-              <h1
-                style={{
-                  fontWeight: 900,
-                  lineHeight: 1.15,
-                  marginTop: 18,
-                }}
-              >
-                One Platform for Every <br />
-                <span style={{ color: "#38BDF8" }}>
-                  Engineering Student
-                </span>
-              </h1>
+        /* HERO */
+        .hero {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 80px 20px;
+        }
 
-              <p
-                style={{
-                  fontSize: "1.05rem",
-                  marginTop: 18,
-                  color: "#E5E7EB",
-                  maxWidth: 520,
-                }}
-              >
-                Diploma & B.Tech exam preparation, PYQs, semester resources,
-                college discovery, and career mentorship — trusted by students
-                across India.
+        .hero h1 {
+          font-size: clamp(2.5rem, 6vw, 4.8rem);
+          line-height: 1.1;
+        }
+
+        .hero span {
+          display: inline-block;
+          margin-right: 10px;
+        }
+
+        .hero-sub {
+          margin-top: 22px;
+          max-width: 650px;
+          color: #bfc4ff;
+          font-size: 1.1rem;
+        }
+
+        .hero button {
+          margin-top: 35px;
+          padding: 14px 40px;
+          border-radius: 50px;
+          border: none;
+          background: linear-gradient(135deg, #6c7cff, #9f7cff);
+          color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: transform 0.3s ease;
+        }
+
+        .hero button:hover {
+          transform: scale(1.06);
+        }
+
+        /* SECTION */
+        .section {
+          padding: 90px 20px;
+        }
+
+        .section h2 {
+          text-align: center;
+          font-size: 2.3rem;
+          margin-bottom: 55px;
+        }
+
+        /* CARDS */
+        .grid {
+          max-width: 1100px;
+          margin: auto;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 25px;
+        }
+
+        .card {
+          background: #12162a;
+          border-radius: 18px;
+          padding: 28px;
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 45px rgba(108,124,255,0.25);
+        }
+
+        .card h3 {
+          font-size: 1.35rem;
+          margin-bottom: 10px;
+        }
+
+        .card p {
+          color: #b9c0ff;
+          font-size: 0.95rem;
+          margin-bottom: 20px;
+        }
+
+        .card button {
+          background: transparent;
+          border: 1px solid #6c7cff;
+          color: #6c7cff;
+          padding: 10px 22px;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .card button:hover {
+          background: #6c7cff;
+          color: #fff;
+        }
+
+        /* CTA */
+        .cta {
+          text-align: center;
+          padding: 110px 20px;
+          background: linear-gradient(180deg, #0b0f1a, #111633);
+        }
+
+        .cta h2 {
+          font-size: 2.4rem;
+          margin-bottom: 15px;
+        }
+
+        .cta p {
+          color: #cdd1ff;
+          margin-bottom: 30px;
+        }
+
+        .cta button {
+          padding: 14px 42px;
+          border-radius: 50px;
+          border: none;
+          background: linear-gradient(135deg, #9f7cff, #6c7cff);
+          color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+      `}</style>
+
+      {/* HERO */}
+      <section className="hero">
+        <h1>
+          <span>Prepare</span>
+          <span>Smart.</span>
+          <span>Crack</span>
+          <span>State</span>
+          <span>Exams.</span>
+        </h1>
+
+        <p className="hero-sub">
+          Diploma • Polytechnic • BTech • Lateral Entry <br />
+          One platform for all state-level engineering exams
+        </p>
+
+        <button>Start Learning</button>
+      </section>
+
+      {/* EXAMS */}
+      <section className="section">
+        <h2>Popular Exams</h2>
+
+        <div className="grid">
+          {exams.map((exam, i) => (
+            <div
+              className="card"
+              key={i}
+              ref={(el) => (cardsRef.current[i] = el)}
+            >
+              <h3>{exam}</h3>
+              <p>
+                PYQs • Mock Tests • Syllabus <br />
+                Performance Analytics
               </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 14,
-                  marginTop: 28,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Button size="lg" variant="light" href="/college-finder">
-                  Explore Colleges <ArrowRight size={18} />
-                </Button>
-
-                <Button size="lg" variant="outline-light" href="/exams">
-                  Prepare for Exams
-                </Button>
-              </div>
-            </Col>
-
-            <Col md={5} className="d-none d-md-block">
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.12)",
-                  backdropFilter: "blur(14px)",
-                  borderRadius: 20,
-                  padding: 30,
-                }}
-              >
-                <h6 style={{ fontWeight: 700, marginBottom: 16 }}>
-                  Why Students Choose Futurely
-                </h6>
-                <ul
-                  style={{
-                    paddingLeft: 18,
-                    lineHeight: 1.9,
-                    color: "#E5E7EB",
-                  }}
-                >
-                  <li>All engineering exams in one place</li>
-                  <li>PYQs & semester resources</li>
-                  <li>Diploma & B.Tech colleges nationwide</li>
-                  <li>Career guidance & mentorship</li>
-                </ul>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+              <button>Explore</button>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* ================= TRUST METRICS ================= */}
-      <section style={{ padding: "60px 0" }}>
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="text-center g-4">
-            {[
-              { label: "Engineering Exams", value: "20+" },
-              { label: "Colleges Listed", value: "1000+" },
-              { label: "States Covered", value: "All India" },
-              { label: "Resources Updated", value: "Weekly" },
-            ].map((item) => (
-              <Col key={item.label} md={3} sm={6}>
-                <div
-                  style={{
-                    background: "#FFFFFF",
-                    borderRadius: 18,
-                    padding: 28,
-                    boxShadow: "0 15px 35px rgba(15,23,42,0.08)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "1.8rem",
-                      fontWeight: 800,
-                      color: "#2563EB",
-                    }}
-                  >
-                    {item.value}
-                  </div>
-                  <div style={{ color: "#64748B" }}>
-                    {item.label}
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        </Container>
+      {/* CTA */}
+      <section className="cta">
+        <h2>Built for Serious Aspirants</h2>
+        <p>
+          College Finder • Career Guidance • Mentorship <br />
+          Designed for real engineering students
+        </p>
+        <button>Join Futurely</button>
       </section>
-
-      {/* ================= CORE FEATURES ================= */}
-      <section style={{ padding: "75px 0" }}>
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="text-center mb-5">
-            <Col>
-              <h2 style={{ fontWeight: 800, color: "#0F172A" }}>
-                What You Get on Futurely
-              </h2>
-              <p style={{ color: "#64748B", marginTop: 8 }}>
-                Designed for ITI, Diploma & B.Tech students
-              </p>
-            </Col>
-          </Row>
-
-          <Row className="g-4">
-            {[
-              {
-                icon: <BookHalf size={34} />,
-                title: "Exam Preparation",
-                desc: "PYQs, exam updates, and structured preparation for all engineering exams.",
-              },
-              {
-                icon: <Building size={34} />,
-                title: "College Finder",
-                desc: "Explore diploma & B.Tech colleges across every Indian state.",
-              },
-              {
-                icon: <Mortarboard size={34} />,
-                title: "Semester Resources",
-                desc: "Branch-wise notes, syllabus, and semester learning material.",
-              },
-              {
-                icon: <People size={34} />,
-                title: "Mentorship & Counselling",
-                desc: "Personal academic and college guidance from Futurely.",
-              },
-              {
-                icon: <GraphUp size={34} />,
-                title: "Career Roadmaps",
-                desc: "Clear, realistic career paths for engineering students.",
-              },
-              {
-                icon: <GlobeCentralSouthAsia size={34} />,
-                title: "Jobs & Opportunities",
-                desc: "Internships and job guidance tailored for students.",
-              },
-            ].map((f) => (
-              <Col md={4} sm={6} key={f.title}>
-                <Card
-                  style={{
-                    border: "none",
-                    borderRadius: 20,
-                    height: "100%",
-                    boxShadow: "0 18px 45px rgba(15,23,42,0.08)",
-                  }}
-                >
-                  <Card.Body style={{ padding: 32 }}>
-                    <div style={{ color: "#2563EB", marginBottom: 16 }}>
-                      {f.icon}
-                    </div>
-                    <h5 style={{ fontWeight: 700, color: "#0F172A" }}>
-                      {f.title}
-                    </h5>
-                    <p style={{ color: "#475569", marginBottom: 0 }}>
-                      {f.desc}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section>
-
-      {/* ================= CTA ================= */}
-      <section style={{ padding: "75px 0", background: "#FFFFFF" }}>
-        <Container style={{ maxWidth: 900 }}>
-          <Row className="text-center">
-            <Col>
-              <h3 style={{ fontWeight: 800, color: "#0F172A" }}>
-                Shaping the Future of Engineering Education
-              </h3>
-              <p
-                style={{
-                  color: "#64748B",
-                  maxWidth: 650,
-                  margin: "14px auto 24px",
-                }}
-              >
-                Futurely is building a complete ecosystem for learning,
-                discovery, mentorship, and career growth.
-              </p>
-              <Button size="lg" href="/about">
-                Learn More About Futurely
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-    </main>
+    </>
   );
 }
