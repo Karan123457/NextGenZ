@@ -54,7 +54,7 @@ export default function ChemistryQuestions({ setFocusMode }) {
   const [viewMode, setViewMode] = useState("years");
 
   // how many times "Check Answer" clicked per question
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   /* ================= EFFECTS ================= */
   useEffect(() => {
@@ -265,7 +265,6 @@ export default function ChemistryQuestions({ setFocusMode }) {
 
     const chosen = selectedAnswers[qid];
     const correctIdx = yearQuestions[currentIndex].correctIndex;
-    const isCorrectNow = isShown && chosen === correctIdx;
     const showTryAgain = isShown && chosen !== correctIdx; // only when shown and wrong
 
     bottomBar = (

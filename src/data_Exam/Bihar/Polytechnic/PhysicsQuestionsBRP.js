@@ -38,7 +38,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [attempted, setAttempted] = useState({});
   const [showAnswer, setShowAnswer] = useState({}); // false | "PARTIAL" | "FULL"
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   const [timeLeft, setTimeLeft] = useState(0);
   const [viewMode, setViewMode] = useState("years");

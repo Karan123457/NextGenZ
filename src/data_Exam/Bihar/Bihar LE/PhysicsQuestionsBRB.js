@@ -38,7 +38,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [attempted, setAttempted] = useState({});
   const [showAnswer, setShowAnswer] = useState({}); // false | "PARTIAL" | "FULL"
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   const [timeLeft, setTimeLeft] = useState(0);
   const [viewMode, setViewMode] = useState("years");
@@ -75,13 +75,13 @@ export default function PhysicsQuestions({ setFocusMode }) {
   }
 
   function getAttempted(y) {
-  if (y.key === "ALL") {
-    return Object.keys(attempted).filter(k => attempted[k]).length;
-  }
+    if (y.key === "ALL") {
+      return Object.keys(attempted).filter(k => attempted[k]).length;
+    }
 
-  const arr = questionsByYear[y.year] || [];
-  return arr.filter(q => attempted[q.id]).length;
-}
+    const arr = questionsByYear[y.year] || [];
+    return arr.filter(q => attempted[q.id]).length;
+  }
 
 
   /* ================= ACTIONS ================= */
@@ -221,6 +221,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
     timerRef.current && clearInterval(timerRef.current);
   }
 
+  // eslint-disable-next-line no-unused-vars
   const attemptedCount = Object.keys(attempted).filter(k => attempted[k]).length;
 
   /* ================= bottomBar ================= */
