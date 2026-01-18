@@ -140,13 +140,12 @@ const Home = () => {
 
               <h1 ref={titleRef} className="hero-title">
                 Prepare Smart<br />
-                <span className="title-gradient">Crack State Engineering Exams</span>
+                <span className="title-gradient">Crack State Exams</span>
               </h1>
 
               <p ref={subtitleRef} className="hero-subtitle">
                 Diploma • Polytechnic • BTech • Lateral Entry <br />
-          All State-Level Engineering Exams, One Trusted Platform
-          
+           All State-Level Engineering Exams, One Trusted Platform
 
 
               </p>
@@ -154,13 +153,13 @@ const Home = () => {
               <div ref={buttonRef} className="hero-buttons">
                 <Link to="/exam-preparation">
                   <Button className="btn-primary-glow">
-                    Start Free Preparation
+                    Start Free Practice
                     <i className="fas fa-sparkles ms-2"></i>
                   </Button>
                 </Link>
                 <Link to="/resources">
                   <Button className="btn-secondary-outline">
-                    Explore Resources
+                    Find Colleges
                   </Button>
                 </Link>
               </div>
@@ -421,6 +420,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
