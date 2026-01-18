@@ -755,6 +755,52 @@ body {
     font-size: 1rem;
   }
 }
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto;
+    padding: 60px 0 50px;
+  }
+
+  .hero-content {
+    padding: 0 16px;
+  }
+
+  .hero-title {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero-buttons {
+    gap: 14px;
+  }
+
+  .btn-primary-glow,
+  .btn-secondary-outline {
+    width: 100%;
+    max-width: 320px;
+    padding: 12px 20px !important;
+    font-size: 0.95rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-badge {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    margin-bottom: 1.2rem;
+  }
+}
+
 
 /* ========== SCROLLBAR ========== */
 ::-webkit-scrollbar {
