@@ -35,7 +35,7 @@ export default function Leaderboard() {
   const myRank = useMemo(() => {
     if (!user || !list.length) return null;
     return list.find((u) => String(u.userId) === myUserId) || null;
-  }, [list, user]);
+  }, [list, user, myUserId]);
 
   /* ================= PODIUM YOU CHECK ================= */
   const isMe = (userId) => String(userId) === myUserId;
@@ -122,8 +122,6 @@ export default function Leaderboard() {
     <Container className="leaderboard-container">
       <h3 className="mb-4 text-center">🏆 Overall Leaderboard</h3>
 
-      {/* ================= YOUR RANK =================  Removed to look clean*/}
-
       {/* ================= PODIUM SHARE BUTTON ================= */}
       {list.length >= 3 && (
         <div style={{ textAlign: "center", marginBottom: 12 }}>
@@ -137,7 +135,6 @@ export default function Leaderboard() {
       )}
 
       {/* ================= PODIUM ================= */}
-      {/* ================= ENHANCED PODIUM ================= */}
       {list.length >= 3 && (
         <div id="podium-card">
 

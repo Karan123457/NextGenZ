@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Nav, Button } from "react-bootstrap";
-import { Facebook, Instagram, Linkedin, Youtube } from "react-bootstrap-icons";
+import { Instagram, Linkedin, Youtube } from "react-bootstrap-icons";
 
 const Footer = ({ yearOverride }) => {
   const year = yearOverride || new Date().getFullYear();

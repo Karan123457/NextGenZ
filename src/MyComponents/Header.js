@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Navbar, Nav, Container, Button, Modal, Form } from "react-bootstrap";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
@@ -153,12 +152,13 @@ export default function Header() {
               <div className="d-flex align-items-center gap-3">
 
                 {/* Dashboard link */}
-                <Link
+                 {/*<Link
                   to="/dashboard"
                   className="fw-semibold text-primary text-decoration-none"
                 >
                   Dashboard
                 </Link>
+                */}
                  
              <Link to="/leaderboard">Leaderboard</Link>
 
