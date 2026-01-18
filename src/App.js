@@ -17,7 +17,7 @@ import DetailsPageD2D from "./data_Exam/Jharkhand/D2D/DetailsPageD2D";
 import DetailsPageJHP from "./data_Exam/Jharkhand/Polytechnic/DetailsPageJHP";
 import BiharLEDetailsPage from "./data_Exam/Bihar/Bihar LE/DetailsPageBRB";
 import BiharPolytechnicDetailsPage from "./data_Exam/Bihar/Polytechnic/DetailsPageBRP";
-import Resources_Routes from "./Pages/Resources_Routes";
+import ResourcesRoutes from "./Pages/ResourcesRoutes";
 
 import PrivateRoute from "./MyComponents/PrivateRoute";
 import Profile from "./Pages/Profile";
@@ -30,7 +30,6 @@ import About from "./Pages/About";
 
 
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Contact } from "lucide-react";
 
 
 /* ScrollToTopWithMemory component unchanged */
@@ -84,7 +83,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<Resources />} />
-          <Route path="/resources/:mainKey/:subId" element={<Resources_Routes />} />
+          <Route path="/resources/:mainKey/:subId" element={<ResourcesRoutes />} />
           <Route path="/Exam_Preparation" element={<ExamPreparation />} />
           <Route path="/Colleges" element={<Colleges />} />
           <Route path="/Carrer_Advisor" element={<CarrerAdvisor />} />
