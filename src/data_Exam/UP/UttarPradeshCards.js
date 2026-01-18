@@ -4,11 +4,9 @@ import Badge from "react-bootstrap/Badge";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
 
 
 export default function UttarPradeshCards() {
-  const navigate = useNavigate();
 
   const uttarPradeshCards = [
     {
