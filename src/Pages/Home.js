@@ -140,7 +140,7 @@ const Home = () => {
 
               <h1 ref={titleRef} className="hero-title">
                 Prepare Smart<br />
-                <span className="title-gradient">Crack State Exams</span>
+                <span className="title-gradient">Crack State Engineering Exams</span>
               </h1>
 
               <p ref={subtitleRef} className="hero-subtitle">
@@ -421,5 +421,6 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
