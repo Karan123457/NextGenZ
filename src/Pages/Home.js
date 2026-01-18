@@ -12,7 +12,7 @@ const Home = () => {
   const subtitleRef = useRef(null);
   const buttonRef = useRef(null);
   const badgeRef = useRef(null);
-  const statsRef = useRef(null);
+  
 
   useEffect(() => {
     // Timeline for hero animations
@@ -555,3 +555,4 @@ const Home = () => {
 };
 
 export default Home;
+
