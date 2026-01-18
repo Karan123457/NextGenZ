@@ -17,7 +17,7 @@ export default function PhysicsQuestions({ setFocusMode }) {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [attempted, setAttempted] = useState({});
   const [showAnswer, setShowAnswer] = useState({}); // false | "PARTIAL" | "FULL"
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   const [timeLeft, setTimeLeft] = useState(0);
   const [viewMode, setViewMode] = useState("years");
@@ -243,7 +243,6 @@ export default function PhysicsQuestions({ setFocusMode }) {
     timerRef.current && clearInterval(timerRef.current);
   }
 
-  const attemptedCount = Object.keys(attempted).filter(k => attempted[k]).length;
 
   /* ================= bottomBar ================= */
   const showBottomBar = viewMode === "viewer" && yearQuestions.length > 0;
@@ -525,29 +524,35 @@ export default function PhysicsQuestions({ setFocusMode }) {
       {viewMode === "years" && (
         <>
           <h2 className="pyq-title">Physics Previous Year Questions</h2>
-         
 
 
-          <div className="pyq-list">
-            {dynamicYears.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
-                  <div>
-                    <div style={{ fontWeight: 400 }}>
-                      {y.key === "ALL" ? "All Previous Year Questions" : "Polytechnic Physics PYQ"}
+          {loading ? (
+            <div className="loading-box">
+              <div className="spinner"></div>
+              <p>Loading questions, please wait…</p>
+              <small>This may take a few seconds on first load</small>
+            </div>
+          ) : (
+            <div className="pyq-list">
+              {dynamicYears.map((y, i) => (
+                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                  <div className="pyq-left">
+                    <div className="pyq-year">{y.key}</div>
+                    <div>
+                      <div style={{ fontWeight: 400 }}>
+                        {y.key === "ALL" ? "All Previous Year Questions" : "Polytechnic Physics PYQ"}
+                      </div>
+
                     </div>
+                  </div>
 
+                  <div>
+                    <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
                   </div>
                 </div>
-
-                <div>
-                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
-                </div>
-              </div>
-
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 

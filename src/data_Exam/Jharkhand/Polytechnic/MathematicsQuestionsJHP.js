@@ -28,7 +28,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
   const [viewMode, setViewMode] = useState("years");
 
   // how many times "Check Answer" clicked per question
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   const [questionsByYear, setQuestionsByYear] = useState({});
   const dynamicYears = [
@@ -263,8 +263,6 @@ export default function MathematicsQuestions({ setFocusMode }) {
     return arr.filter(q => attempted[q.id]).length;
   }
 
-  const attemptedCount = Object.keys(attempted).filter(k => attempted[k]).length;
-
   /* ================= bottomBar ================= */
   const showBottomBar = viewMode === "viewer" && yearQuestions.length > 0;
 
@@ -279,7 +277,6 @@ export default function MathematicsQuestions({ setFocusMode }) {
 
     const chosen = selectedAnswers[qid];
     const correctIdx = yearQuestions[currentIndex].correctIndex;
-    const isCorrectNow = isShown && chosen === correctIdx;
     const showTryAgain = isShown && chosen !== correctIdx; // only when shown and wrong
 
     bottomBar = (
@@ -515,26 +512,33 @@ export default function MathematicsQuestions({ setFocusMode }) {
       {viewMode === "years" && (
         <>
           <h2 className="pyq-title">Mathematics Previous Year Questions</h2>
-         
 
-          <div className="pyq-list">
-            {dynamicYears.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
-                  <div>
-                    <div style={{ fontWeight: 400 }}>
-                      {y.key === "ALL" ? "All Previous Year Questions" : "Polytechnic Mathematics PYQ"}
+          {loading ? (
+            <div className="loading-box">
+              <div className="spinner"></div>
+              <p>Loading questions, please wait…</p>
+              <small>This may take a few seconds</small>
+            </div>
+          ) : (
+            <div className="pyq-list">
+              {dynamicYears.map((y, i) => (
+                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                  <div className="pyq-left">
+                    <div className="pyq-year">{y.key}</div>
+                    <div>
+                      <div style={{ fontWeight: 400 }}>
+                        {y.key === "ALL" ? "All Previous Year Questions" : "Polytechnic Mathematics PYQ"}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  <div>
+                    <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 
