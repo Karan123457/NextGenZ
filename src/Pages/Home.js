@@ -576,26 +576,6 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-      {/* Final CTA Section */}
-      <section className="final-cta-section">
-        <Container>
-          <Row>
-            <Col lg={10} className="mx-auto text-center">
-              <h2>Ready to Transform Your Future?</h2>
-              <p>Join thousands of successful students preparing with Futurely</p>
-              <div className="cta-buttons">
-                <Link to="/exam-preparation">
-                  <Button className="btn-primary-glow large">
-                    Start Preparation Free
-                    <i className="fas fa-rocket ms-2"></i>
-                  </Button>
-                </Link>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
     </div>
   );
 };
