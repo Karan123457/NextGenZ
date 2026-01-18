@@ -168,59 +168,134 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* Stats Highlight Section */}
-      <section className="stats-highlight-section">
+      {/* College Search Section */}
+      <section className="college-search-section">
         <Container>
-          <Row className="g-4" ref={statsRef}>
-            <Col md={6} lg={3} className="stat-item">
-              <div className="stat-box">
-                <div className="stat-icon-wrapper">
-                  <i className="fas fa-users"></i>
+          <Row className="mb-5 section-header">
+            <Col lg={8} className="mx-auto text-center">
+              <h2>Find Your Perfect College</h2>
+              <p>Explore top colleges with real data on cutoffs, placements, and fees</p>
+            </Col>
+          </Row>
+
+          <Row className="g-4">
+            {/* Polytechnic College */}
+            <Col md={6} lg={4}>
+              <div className="college-search-card">
+                <div className="college-header">
+                  <div className="college-type-badge polytechnic-type">POLYTECHNIC</div>
+                  <div className="college-rating">
+                    <i className="fas fa-star"></i> 4.5/5
+                  </div>
                 </div>
-                <h3>
-                  <span className="stat-value" data-value="5000">
-                    0
-                  </span>
-                  +
-                </h3>
-                <p>Active Students</p>
+                
+                <h4>Government & Private Polytechnic Colleges</h4>
+                <p className="college-location"><i className="fas fa-map-marker-alt"></i> Jharkhand, Bihar & India</p>
+                
+                <div className="college-stats">
+                  <div className="stat-item">
+                    <span className="stat-label">Cutoff Score</span>
+                    <span className="stat-value">50 - 85%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Placement Rate</span>
+                    <span className="stat-value">92%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Avg. Package</span>
+                    <span className="stat-value">₹4.2 LPA</span>
+                  </div>
+                </div>
+
+                <div className="college-info">
+                  <span className="info-badge"><i className="fas fa-graduation-cap"></i> Govt/Pvt</span>
+                  <span className="info-badge"><i className="fas fa-rupee-sign"></i> Affordable</span>
+                  <span className="info-badge"><i className="fas fa-users"></i> 500+ Colleges</span>
+                </div>
+
+                <Link to="/colleges" className="explore-btn">
+                  Explore Colleges <i className="fas fa-arrow-right"></i>
+                </Link>
               </div>
             </Col>
-            <Col md={6} lg={3} className="stat-item">
-              <div className="stat-box">
-                <div className="stat-icon-wrapper">
-                  <i className="fas fa-brain"></i>
+
+            {/* BTech Lateral Entry College */}
+            <Col md={6} lg={4}>
+              <div className="college-search-card">
+                <div className="college-header">
+                  <div className="college-type-badge lateral-type">LATERAL ENTRY BTECH</div>
+                  <div className="college-rating">
+                    <i className="fas fa-star"></i> 4.7/5
+                  </div>
                 </div>
-                <h3>
-                  <span className="stat-value" data-value="10000">
-                    0
-                  </span>
-                  +
-                </h3>
-                <p>Questions Solved</p>
+                
+                <h4>Top Private Engineering College</h4>
+                <p className="college-location"><i className="fas fa-map-marker-alt"></i> Pan India / Metros</p>
+                
+                <div className="college-stats">
+                  <div className="stat-item">
+                    <span className="stat-label">Cutoff Score</span>
+                    <span className="stat-value">80 - 90%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Placement Rate</span>
+                    <span className="stat-value">98%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Avg. Package</span>
+                    <span className="stat-value">₹8.5 LPA</span>
+                  </div>
+                </div>
+
+                <div className="college-info">
+                  <span className="info-badge"><i className="fas fa-building"></i> Private</span>
+                  <span className="info-badge"><i className="fas fa-map-marker-alt"></i> Metro Cities</span>
+                  <span className="info-badge"><i className="fas fa-users"></i> 200+ Students</span>
+                </div>
+
+                <Link to="/colleges" className="explore-btn">
+                  Explore College <i className="fas fa-arrow-right"></i>
+                </Link>
               </div>
             </Col>
-            <Col md={6} lg={3} className="stat-item">
-              <div className="stat-box">
-                <div className="stat-icon-wrapper">
-                  <i className="fas fa-award"></i>
+
+            {/* BTech Regular College */}
+            <Col md={6} lg={4}>
+              <div className="college-search-card">
+                <div className="college-header">
+                  <div className="college-type-badge btech-type">BTECH REGULAR</div>
+                  <div className="college-rating">
+                    <i className="fas fa-star"></i> 4.6/5
+                  </div>
                 </div>
-                <h3>
-                  <span className="stat-value" data-value="95">
-                    0
-                  </span>
-                  %
-                </h3>
-                <p>Success Rate</p>
-              </div>
-            </Col>
-            <Col md={6} lg={3} className="stat-item">
-              <div className="stat-box">
-                <div className="stat-icon-wrapper">
-                  <i className="fas fa-clock"></i>
+                
+                <h4>Top Government Engineering University</h4>
+                <p className="college-location"><i className="fas fa-map-marker-alt"></i> NIT / IIIT Campus</p>
+                
+                <div className="college-stats">
+                  <div className="stat-item">
+                    <span className="stat-label">Cutoff Score</span>
+                    <span className="stat-value">85 - 95%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Placement Rate</span>
+                    <span className="stat-value">99%</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-label">Avg. Package</span>
+                    <span className="stat-value">₹10.2 LPA</span>
+                  </div>
                 </div>
-                <h3>24/7</h3>
-                <p>Available Learning</p>
+
+                <div className="college-info">
+                  <span className="info-badge"><i className="fas fa-graduation-cap"></i> Government</span>
+                  <span className="info-badge"><i className="fas fa-map-marker-alt"></i> National Level</span>
+                  <span className="info-badge"><i className="fas fa-users"></i> 1000+ Students</span>
+                </div>
+
+                <Link to="/colleges" className="explore-btn">
+                  Explore College <i className="fas fa-arrow-right"></i>
+                </Link>
               </div>
             </Col>
           </Row>
@@ -310,87 +385,147 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
+
+      {/* Student Success Stories Section */}
+      <section className="success-stories-section">
         <Container>
           <Row className="mb-5 section-header">
             <Col lg={8} className="mx-auto text-center">
-              <h2>Why Students Love Futurely</h2>
-              <p>Everything you need to ace your exams and build your future</p>
+              <h2>Student Success Stories</h2>
+              <p>Inspiring journeys from students like you</p>
             </Col>
           </Row>
 
           <Row className="g-4">
-            <Col md={6} lg={3} className="feature-item">
-              <div className="feature-box">
-                <div className="feature-icon-wrap">
-                  <i className="fas fa-file-pdf"></i>
+            <Col md={6} lg={4}>
+              <div className="story-card">
+                <div className="story-header">
+                  <div className="story-avatar">
+                    <i className="fas fa-user"></i>
+                  </div>
+                  <div>
+                    <h5>Ravi Kumar</h5>
+                    <p>Jharkhand D2D</p>
+                  </div>
                 </div>
-                <h5>1000+ Questions</h5>
-                <p>Practice with thousands of curated questions from actual exams</p>
+                <div className="story-rating">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                </div>
+                <p className="story-text">
+                  "Futurely helped me score 92% in D2D exam. The practice questions were exactly like the real exam. Highly recommended!"
+                </p>
+                <div className="story-result">
+                  <span className="badge-success">Rank 45</span>
+                  <span className="badge-info">NIT Admission</span>
+                </div>
               </div>
             </Col>
 
-            <Col md={6} lg={3} className="feature-item">
-              <div className="feature-box">
-                <div className="feature-icon-wrap">
-                  <i className="fas fa-lightbulb"></i>
+            <Col md={6} lg={4}>
+              <div className="story-card">
+                <div className="story-header">
+                  <div className="story-avatar">
+                    <i className="fas fa-user"></i>
+                  </div>
+                  <div>
+                    <h5>Priya Singh</h5>
+                    <p>Bihar Polytechnic</p>
+                  </div>
                 </div>
-                <h5>Detailed Solutions</h5>
-                <p>Step-by-step solutions to help you understand every concept</p>
+                <div className="story-rating">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                </div>
+                <p className="story-text">
+                  "Started with basics, improved gradually. The mock tests built my confidence. Now pursuing lateral entry!"
+                </p>
+                <div className="story-result">
+                  <span className="badge-success">95% Score</span>
+                  <span className="badge-info">Lateral Ready</span>
+                </div>
               </div>
             </Col>
 
-            <Col md={6} lg={3} className="feature-item">
-              <div className="feature-box">
-                <div className="feature-icon-wrap">
-                  <i className="fas fa-chart-bar"></i>
+            <Col md={6} lg={4}>
+              <div className="story-card">
+                <div className="story-header">
+                  <div className="story-avatar">
+                    <i className="fas fa-user"></i>
+                  </div>
+                  <div>
+                    <h5>Aman Patel</h5>
+                    <p>Jharkhand Polytechnic</p>
+                  </div>
                 </div>
-                <h5>Progress Tracking</h5>
-                <p>Monitor your performance with detailed analytics and insights</p>
-              </div>
-            </Col>
-
-            <Col md={6} lg={3} className="feature-item">
-              <div className="feature-box">
-                <div className="feature-icon-wrap">
-                  <i className="fas fa-users"></i>
+                <div className="story-rating">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
                 </div>
-                <h5>Expert Support</h5>
-                <p>Get guidance from experienced educators and mentors</p>
+                <p className="story-text">
+                  "Best platform for exam prep! Detailed solutions taught me concepts I didn't understand in class. Got placed!"
+                </p>
+                <div className="story-result">
+                  <span className="badge-success">First Class</span>
+                  <span className="badge-info">Placed</span>
+                </div>
               </div>
             </Col>
           </Row>
         </Container>
       </section>
 
-      {/* Quick Links Section */}
-      <section className="quick-links-section">
+      {/* Counselling & Resources Section */}
+      <section className="counselling-resources-section">
         <Container>
           <Row className="g-4">
-            <Col md={6}>
-              <Link to="/resources" className="quick-link-card">
-                <div className="link-icon">
+            <Col lg={6}>
+              <div className="resource-card study-card">
+                <div className="resource-icon">
                   <i className="fas fa-book-open"></i>
                 </div>
-                <h4>Study Resources</h4>
-                <p>Access question papers, notes, and study materials</p>
-                <span className="link-arrow">
-                  <i className="fas fa-arrow-right"></i>
-                </span>
-              </Link>
-            </Col>
-            <Col md={6}>
-              <Link to="/counselling" className="quick-link-card">
-                <div className="link-icon">
-                  <i className="fas fa-headset"></i>
+                <div className="resource-content">
+                  <h4>Study Materials & PYQ</h4>
+                  <p>Complete notes, question papers, and solutions</p>
+                  <ul className="resource-list">
+                    <li><i className="fas fa-check"></i> Previous Year Questions</li>
+                    <li><i className="fas fa-check"></i> Detailed Solutions</li>
+                    <li><i className="fas fa-check"></i> Chapter-wise Notes</li>
+                  </ul>
                 </div>
-                <h4>Career Counselling</h4>
-                <p>Get expert advice to choose the right career path</p>
-                <span className="link-arrow">
-                  <i className="fas fa-arrow-right"></i>
-                </span>
-              </Link>
+                <Link to="/resources" className="resource-link">
+                  Access Materials <i className="fas fa-arrow-right"></i>
+                </Link>
+              </div>
+            </Col>
+
+            <Col lg={6}>
+              <div className="resource-card counselling-card featured">
+                <div className="resource-icon">
+                  <i className="fas fa-handshake"></i>
+                </div>
+                <div className="resource-content">
+                  <h4>College Counselling</h4>
+                  <p>Expert guidance on college selection and admission</p>
+                  <ul className="resource-list">
+                    <li><i className="fas fa-check"></i> 1-on-1 Expert Guidance</li>
+                    <li><i className="fas fa-check"></i> College Shortlisting</li>
+                    <li><i className="fas fa-check"></i> Admission Support</li>
+                  </ul>
+                </div>
+                <Link to="/counselling" className="resource-link featured-link">
+                  Register Now <i className="fas fa-arrow-right"></i>
+                </Link>
+              </div>
             </Col>
           </Row>
         </Container>
