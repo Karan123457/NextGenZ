@@ -145,7 +145,8 @@ const Home = () => {
 
               <p ref={subtitleRef} className="hero-subtitle">
                 Diploma • Polytechnic • BTech • Lateral Entry <br />
-          One trusted platform for all state-level engineering exams
+          All State-Level Engineering Exams, One Trusted Platform
+          
 
 
               </p>
@@ -420,3 +421,4 @@ const Home = () => {
 };
 
 export default Home;
+
