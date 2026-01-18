@@ -46,10 +46,6 @@ export default function UttarPradeshCards() {
     },
   ];
 
-  const handleCardClick = (card) => {
-    navigate(`/details/${card.id}`, { state: card });
-  };
-
   return (
     <>
       <style>{`
