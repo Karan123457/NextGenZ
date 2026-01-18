@@ -28,7 +28,7 @@ export default function MathematicsQuestions({ setFocusMode }) {
   const [viewMode, setViewMode] = useState("years");
 
   // how many times "Check Answer" clicked per question
-  const [attemptCount, setAttemptCount] = useState({});
+  const [, setAttemptCount] = useState({});
 
   const [questionsByYear, setQuestionsByYear] = useState({});
   const dynamicYears = [
@@ -284,7 +284,6 @@ export default function MathematicsQuestions({ setFocusMode }) {
 
     const chosen = selectedAnswers[qid];
     const correctIdx = yearQuestions[currentIndex].correctIndex;
-    const isCorrectNow = isShown && chosen === correctIdx;
     const showTryAgain = isShown && chosen !== correctIdx; // only when shown and wrong
 
     bottomBar = (
@@ -524,27 +523,35 @@ export default function MathematicsQuestions({ setFocusMode }) {
               {attemptedCount} attempted
             </div>
           )}
-
-          <div className="pyq-list">
-            {dynamicYears.map((y, i) => (
-              <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
-                <div className="pyq-left">
-                  <div className="pyq-year">{y.key}</div>
-                  <div>
-                    <div style={{ fontWeight: 400 }}>
-                      {y.key === "ALL" ? "All Previous Year Questions" : "D2D Mathematics PYQ"}
+          {loading ? (
+            <div className="loading-box">
+              <div className="spinner"></div>
+              <p>Loading questions, please wait…</p>
+              <small>This may take a few seconds</small>
+            </div>
+          ) : (
+            <div className="pyq-list">
+              {dynamicYears.map((y, i) => (
+                <div key={i} className="pyq-row" onClick={() => openYearQuestions(y)}>
+                  <div className="pyq-left">
+                    <div className="pyq-year">{y.key}</div>
+                    <div>
+                      <div style={{ fontWeight: 400 }}>
+                        {y.key === "ALL" ? "All Previous Year Questions" : "D2D Mathematics PYQ"}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  <div>
+                    <div className="pyq-progress">{getAttempted(y)}/{getTotal(y)}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
+
 
       {/* ================= MCQ VIEWER ================= */}
       {viewMode === "viewer" && yearQuestions.length > 0 && (
