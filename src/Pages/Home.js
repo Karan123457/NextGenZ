@@ -12,7 +12,7 @@ const Home = () => {
   const subtitleRef = useRef(null);
   const buttonRef = useRef(null);
   const badgeRef = useRef(null);
-  
+
 
   useEffect(() => {
     // Timeline for hero animations
@@ -23,14 +23,61 @@ const Home = () => {
       { opacity: 0, y: -20 },
       { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
       0
-    )
-      .fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-        0.2
-      )
-      .fromTo(
+    );
+
+    // Slide up + fade in for title
+    tl.fromTo(
+      titleRef.current,
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
+      0.2
+    );
+
+    // Typewriter effect for title text
+    if (titleRef.current) {
+      const titleElement = titleRef.current;
+      const firstLineText = 'Prepare Smart';
+      const secondLineText = 'Crack State Exams';
+      
+      // Get the text nodes
+      const childNodes = Array.from(titleElement.childNodes);
+      const firstTextNode = childNodes[0]; // "Prepare Smart" text node
+      const brElement = childNodes[1]; // <br>
+      const gradientSpan = childNodes[2]; // <span> with "Crack State Exams"
+      
+      // Clear initial text
+      firstTextNode.textContent = '';
+      gradientSpan.textContent = '';
+      
+      let charIndex = 0;
+      let charIndex2 = 0;
+      
+      // Typewriter effect for first line
+      const typeFirstLine = () => {
+        if (charIndex < firstLineText.length) {
+          firstTextNode.textContent += firstLineText[charIndex];
+          charIndex++;
+          setTimeout(typeFirstLine, 70);
+        } else {
+          // Start typing second line after delay
+          setTimeout(typeSecondLine, 150);
+        }
+      };
+      
+      // Typewriter effect for second line (with gradient)
+      const typeSecondLine = () => {
+        if (charIndex2 < secondLineText.length) {
+          gradientSpan.textContent += secondLineText[charIndex2];
+          charIndex2++;
+          setTimeout(typeSecondLine, 70);
+        }
+      };
+      
+      // Start typewriter after slide-up animation completes
+      setTimeout(typeFirstLine, 1200);
+    }
+
+    tl.fromTo(
         subtitleRef.current,
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
@@ -555,4 +602,3 @@ const Home = () => {
 };
 
 export default Home;
-
