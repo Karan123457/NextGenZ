@@ -1319,7 +1319,7 @@ body {
 @media (max-width: 576px) {
   .hero-section {
     min-height: auto;
-    padding: 20px 0 60px 0;
+    padding: 10px 0 60px 0;
   }
 
   .hero-content {
@@ -1604,5 +1604,6 @@ body {
     box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
   }
 }
+
 
 
