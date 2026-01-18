@@ -135,7 +135,7 @@ const Home = () => {
             <Col lg={10} xl={8} className="text-center">
               <div ref={badgeRef} className="hero-badge">
                 <i className="fas fa-star"></i>
-                &nbsp;&nbsp;Trusted by 5000+ Students
+                &nbsp;&nbsp;Trusted by 1000+ Students
               </div>
 
               <h1 ref={titleRef} className="hero-title">
@@ -421,4 +421,5 @@ const Home = () => {
 };
 
 export default Home;
+
 
