@@ -1,263 +1,422 @@
-import React from "react";
-import { Container, Row, Col, Button, Card, Badge } from "react-bootstrap";
-import {
-  BookHalf,
-  Building,
-  Mortarboard,
-  GraphUp,
-  People,
-  GlobeCentralSouthAsia,
-  ArrowRight,
-} from "react-bootstrap-icons";
+import React, { useEffect, useRef } from 'react';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import '../styles/Home.css';
 
-export default function Home() {
+gsap.registerPlugin(ScrollTrigger);
+
+const Home = () => {
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const buttonRef = useRef(null);
+  const badgeRef = useRef(null);
+  const statsRef = useRef(null);
+
+  useEffect(() => {
+    // Timeline for hero animations
+    const tl = gsap.timeline();
+
+    tl.fromTo(
+      badgeRef.current,
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+      0
+    )
+      .fromTo(
+        titleRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        0.2
+      )
+      .fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        0.4
+      )
+      .fromTo(
+        buttonRef.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out' },
+        0.6
+      );
+
+    // Animate exam cards on scroll
+    const cards = gsap.utils.toArray('.exam-card');
+    cards.forEach((card, index) => {
+      gsap.fromTo(
+        card,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: index * 0.15,
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Animate feature boxes
+    const features = gsap.utils.toArray('.feature-item');
+    features.forEach((feature, index) => {
+      gsap.fromTo(
+        feature,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          delay: index * 0.1,
+          scrollTrigger: {
+            trigger: feature,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Stats animation
+    const statNumbers = gsap.utils.toArray('.stat-value');
+    statNumbers.forEach((stat) => {
+      const finalValue = parseInt(stat.getAttribute('data-value'));
+      gsap.fromTo(
+        stat,
+        { textContent: 0 },
+        {
+          textContent: finalValue,
+          duration: 2.5,
+          ease: 'power2.out',
+          snap: { textContent: 1 },
+          scrollTrigger: {
+            trigger: stat,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    });
+
+    // Parallax effect for background elements
+    gsap.to('.hero-shapes', {
+      y: (i, target) => -parseFloat(target.getAttribute('data-speed')) * window.innerHeight,
+      scrollTrigger: {
+        trigger: '.hero-section',
+        scrub: 0.5,
+        start: 'top top',
+        end: 'bottom center',
+      },
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
   return (
-    <main style={{ background: "#f4f8ff", minHeight: "100vh" }}>
-      {/* ================= HERO ================= */}
-      <section
-        style={{
-          padding: "88px 0 64px",
-          background:
-            "linear-gradient(135deg, #0d6efd 0%, #4f9cff 100%)",
-          color: "#ffffff",
-        }}
-      >
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="align-items-center">
-            <Col md={7}>
-              <Badge
-                bg="light"
-                text="primary"
-                style={{ marginBottom: 14 }}
-              >
-                India’s Engineering Education Platform
-              </Badge>
+    <div className="home-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-background">
+          <div className="hero-shapes shape-1" data-speed="1"></div>
+          <div className="hero-shapes shape-2" data-speed="1.5"></div>
+          <div className="hero-shapes shape-3" data-speed="2"></div>
+        </div>
 
-              <h1 style={{ fontWeight: 900, lineHeight: 1.15 }}>
-                One platform for every
-                <br />
-                <span style={{ color: "#ffeb3b" }}>
-                  Engineering Student
-                </span>
+        <Container className="hero-content">
+          <Row className="align-items-center justify-content-center min-vh-100">
+            <Col lg={10} xl={8} className="text-center">
+              <div ref={badgeRef} className="hero-badge">
+                <i className="fas fa-star"></i>
+                &nbsp;&nbsp;Trusted by 5000+ Students
+              </div>
+
+              <h1 ref={titleRef} className="hero-title">
+                Prepare Smart<br />
+                <span className="title-gradient">Crack State Exams</span>
               </h1>
 
-              <p
-                style={{
-                  fontSize: "1.1rem",
-                  marginTop: 18,
-                  opacity: 0.95,
-                  maxWidth: 520,
-                }}
-              >
-                Diploma & B.Tech exam preparation, PYQs, semester resources,
-                college discovery, and career mentorship — trusted by students
-                across all states of India.
+              <p ref={subtitleRef} className="hero-subtitle">
+                Diploma • Polytechnic • BTech • Lateral Entry <br />
+          One trusted platform for all state-level engineering exams
+
+
               </p>
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: 14,
-                  marginTop: 26,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Button size="lg" variant="light" href="/college-finder">
-                  Explore Colleges <ArrowRight size={18} />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline-light"
-                  href="/exams"
-                >
-                  Prepare for Exams
-                </Button>
-              </div>
-            </Col>
-
-            <Col md={5} className="d-none d-md-block">
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(12px)",
-                  borderRadius: 18,
-                  padding: 28,
-                  boxShadow: "0 25px 60px rgba(0,0,0,0.2)",
-                }}
-              >
-                <h6 style={{ fontWeight: 700, marginBottom: 16 }}>
-                  Why students choose Futurely
-                </h6>
-                <ul
-                  style={{
-                    paddingLeft: 18,
-                    lineHeight: 1.9,
-                    opacity: 0.95,
-                  }}
-                >
-                  <li>All engineering exams in one place</li>
-                  <li>PYQs & semester resources</li>
-                  <li>Diploma & B.Tech colleges nationwide</li>
-                  <li>Career advice & mentorship</li>
-                </ul>
+              <div ref={buttonRef} className="hero-buttons">
+                <Link to="/exam-preparation">
+                  <Button className="btn-primary-glow">
+                    Start Free Preparation
+                    <i className="fas fa-sparkles ms-2"></i>
+                  </Button>
+                </Link>
+                <Link to="/resources">
+                  <Button className="btn-secondary-outline">
+                    Explore Resources
+                  </Button>
+                </Link>
               </div>
             </Col>
           </Row>
         </Container>
       </section>
 
-      {/* ================= TRUST METRICS ================= */}
-      <section style={{ padding: "56px 0" }}>
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="text-center g-4">
-            {[
-              { label: "Engineering Exams", value: "20+" },
-              { label: "Colleges Listed", value: "1000+" },
-              { label: "States Covered", value: "All India" },
-              { label: "Resources Updated", value: "Weekly" },
-            ].map((item) => (
-              <Col key={item.label} md={3} sm={6}>
-                <div
-                  style={{
-                    background: "#ffffff",
-                    borderRadius: 16,
-                    padding: 26,
-                    boxShadow: "0 15px 40px rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "1.8rem",
-                      fontWeight: 800,
-                      color: "#0d6efd",
-                    }}
-                  >
-                    {item.value}
-                  </div>
-                  <div style={{ color: "#6c757d" }}>
-                    {item.label}
-                  </div>
+      {/* Stats Highlight Section */}
+      <section className="stats-highlight-section">
+        <Container>
+          <Row className="g-4" ref={statsRef}>
+            <Col md={6} lg={3} className="stat-item">
+              <div className="stat-box">
+                <div className="stat-icon-wrapper">
+                  <i className="fas fa-users"></i>
                 </div>
-              </Col>
-            ))}
+                <h3>
+                  <span className="stat-value" data-value="5000">
+                    0
+                  </span>
+                  +
+                </h3>
+                <p>Active Students</p>
+              </div>
+            </Col>
+            <Col md={6} lg={3} className="stat-item">
+              <div className="stat-box">
+                <div className="stat-icon-wrapper">
+                  <i className="fas fa-brain"></i>
+                </div>
+                <h3>
+                  <span className="stat-value" data-value="10000">
+                    0
+                  </span>
+                  +
+                </h3>
+                <p>Questions Solved</p>
+              </div>
+            </Col>
+            <Col md={6} lg={3} className="stat-item">
+              <div className="stat-box">
+                <div className="stat-icon-wrapper">
+                  <i className="fas fa-award"></i>
+                </div>
+                <h3>
+                  <span className="stat-value" data-value="95">
+                    0
+                  </span>
+                  %
+                </h3>
+                <p>Success Rate</p>
+              </div>
+            </Col>
+            <Col md={6} lg={3} className="stat-item">
+              <div className="stat-box">
+                <div className="stat-icon-wrapper">
+                  <i className="fas fa-clock"></i>
+                </div>
+                <h3>24/7</h3>
+                <p>Available Learning</p>
+              </div>
+            </Col>
           </Row>
         </Container>
       </section>
 
-      {/* ================= CORE FEATURES ================= */}
-      <section style={{ padding: "72px 0" }}>
-        <Container style={{ maxWidth: 1100 }}>
-          <Row className="text-center mb-5">
-            <Col>
-              <h2 style={{ fontWeight: 800 }}>
-                What You Get on Futurely
-              </h2>
-              <p className="text-muted mt-2">
-                Designed for ITI, Diploma & B.Tech students
+      {/* Exam Categories Section */}
+      <section className="exams-section">
+        <Container>
+          <Row className="mb-5 section-header">
+            <Col lg={8} className="mx-auto text-center">
+              <h2>Choose Your Exam Category</h2>
+              <p>
+                Select your state and exam type to start your personalized preparation journey
               </p>
             </Col>
           </Row>
 
           <Row className="g-4">
-            {[
-              {
-                icon: <BookHalf size={34} />,
-                title: "Exam Preparation",
-                desc: "PYQs, exam updates, and structured preparation for all engineering exams.",
-              },
-              {
-                icon: <Building size={34} />,
-                title: "College Finder",
-                desc: "Explore diploma & B.Tech colleges across every Indian state.",
-              },
-              {
-                icon: <Mortarboard size={34} />,
-                title: "Semester Resources",
-                desc: "Branch-wise notes, syllabus, and semester learning material.",
-              },
-              {
-                icon: <People size={34} />,
-                title: "Mentorship & Counselling",
-                desc: "Personal mentorship and counselling directly from Futurely for academic and college guidance.",
-              },
-              {
-                icon: <GraphUp size={34} />,
-                title: "Career Roadmaps",
-                desc: "Clear, realistic career paths for ITI, Diploma, Degree and beyond.",
-              },
-              {
-                icon: <GlobeCentralSouthAsia size={34} />,
-                title: "Jobs & Career Opportunities",
-                desc: "Internships, job guidance, and career opportunities tailored for engineering students.",
-              },
-            ].map((f) => (
-              <Col md={4} sm={6} key={f.title}>
-                <Card
-                  style={{
-                    border: "none",
-                    borderRadius: 18,
-                    height: "100%",
-                    boxShadow: "0 18px 50px rgba(0,0,0,0.07)",
-                  }}
-                >
-                  <Card.Body style={{ padding: 30 }}>
-                    <div
-                      style={{
-                        marginBottom: 16,
-                        color: "#0d6efd",
-                      }}
-                    >
-                      {f.icon}
-                    </div>
-                    <h5 style={{ fontWeight: 700 }}>
-                      {f.title}
-                    </h5>
-                    <p
-                      style={{
-                        color: "#495057",
-                        marginBottom: 0,
-                      }}
-                    >
-                      {f.desc}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section>
+            {/* Jharkhand */}
+            <Col md={6} lg={4}>
+              <div className="exam-card jharkhand-card">
+                <div className="card-glow jharkhand-glow"></div>
+                <div className="card-icon">
+                  <i className="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Jharkhand</h3>
+                <div className="exam-types">
+                  <span className="badge-type">D2D</span>
+                  <span className="badge-type">Polytechnic</span>
+                  <span className="badge-type">Diploma</span>
+                </div>
+                <p className="card-description">
+                  Comprehensive preparation for all Jharkhand state exams
+                </p>
+                <Link to="/exam-preparation/jharkhand">
+                  <Button className="btn-explore">
+                    Explore Now <i className="fas fa-arrow-right ms-2"></i>
+                  </Button>
+                </Link>
+              </div>
+            </Col>
 
-      {/* ================= CTA ================= */}
-      <section
-        style={{
-          padding: "72px 0",
-          background: "#ffffff",
-        }}
-      >
-        <Container style={{ maxWidth: 1000 }}>
-          <Row className="text-center">
-            <Col>
-              <h3 style={{ fontWeight: 800 }}>
-                Shaping the future of engineering education
-              </h3>
-              <p
-                style={{
-                  color: "#6c757d",
-                  maxWidth: 700,
-                  margin: "14px auto",
-                }}
-              >
-                Futurely is evolving into a complete ecosystem for students —
-                learning, discovery, mentorship, and career growth.
-              </p>
-              <Button size="lg" href="/about">
-                Learn more about Futurely
-              </Button>
+            {/* Bihar */}
+            <Col md={6} lg={4}>
+              <div className="exam-card bihar-card">
+                <div className="card-glow bihar-glow"></div>
+                <div className="card-icon">
+                  <i className="fas fa-book"></i>
+                </div>
+                <h3>Bihar</h3>
+                <div className="exam-types">
+                  <span className="badge-type">LE Board</span>
+                  <span className="badge-type">Polytechnic</span>
+                </div>
+                <p className="card-description">
+                  Complete study materials for Bihar Board exams
+                </p>
+                <Link to="/exam-preparation/bihar">
+                  <Button className="btn-explore">
+                    Explore Now <i className="fas fa-arrow-right ms-2"></i>
+                  </Button>
+                </Link>
+              </div>
+            </Col>
+
+            {/* UP */}
+            <Col md={6} lg={4}>
+              <div className="exam-card up-card coming-soon">
+                <div className="card-glow up-glow"></div>
+                <div className="card-icon">
+                  <i className="fas fa-eye"></i>
+                </div>
+                <h3>Uttar Pradesh</h3>
+                <div className="exam-types">
+                  <span className="badge-type">Coming Soon</span>
+                </div>
+                <p className="card-description">
+                  Get ready for UP board exams - launching very soon
+                </p>
+                <Button className="btn-explore" disabled>
+                  Coming Soon
+                </Button>
+              </div>
             </Col>
           </Row>
         </Container>
       </section>
-    </main>
+
+      {/* Features Section */}
+      <section className="features-section">
+        <Container>
+          <Row className="mb-5 section-header">
+            <Col lg={8} className="mx-auto text-center">
+              <h2>Why Students Love Futurely</h2>
+              <p>Everything you need to ace your exams and build your future</p>
+            </Col>
+          </Row>
+
+          <Row className="g-4">
+            <Col md={6} lg={3} className="feature-item">
+              <div className="feature-box">
+                <div className="feature-icon-wrap">
+                  <i className="fas fa-file-pdf"></i>
+                </div>
+                <h5>1000+ Questions</h5>
+                <p>Practice with thousands of curated questions from actual exams</p>
+              </div>
+            </Col>
+
+            <Col md={6} lg={3} className="feature-item">
+              <div className="feature-box">
+                <div className="feature-icon-wrap">
+                  <i className="fas fa-lightbulb"></i>
+                </div>
+                <h5>Detailed Solutions</h5>
+                <p>Step-by-step solutions to help you understand every concept</p>
+              </div>
+            </Col>
+
+            <Col md={6} lg={3} className="feature-item">
+              <div className="feature-box">
+                <div className="feature-icon-wrap">
+                  <i className="fas fa-chart-bar"></i>
+                </div>
+                <h5>Progress Tracking</h5>
+                <p>Monitor your performance with detailed analytics and insights</p>
+              </div>
+            </Col>
+
+            <Col md={6} lg={3} className="feature-item">
+              <div className="feature-box">
+                <div className="feature-icon-wrap">
+                  <i className="fas fa-users"></i>
+                </div>
+                <h5>Expert Support</h5>
+                <p>Get guidance from experienced educators and mentors</p>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* Quick Links Section */}
+      <section className="quick-links-section">
+        <Container>
+          <Row className="g-4">
+            <Col md={6}>
+              <Link to="/resources" className="quick-link-card">
+                <div className="link-icon">
+                  <i className="fas fa-book-open"></i>
+                </div>
+                <h4>Study Resources</h4>
+                <p>Access question papers, notes, and study materials</p>
+                <span className="link-arrow">
+                  <i className="fas fa-arrow-right"></i>
+                </span>
+              </Link>
+            </Col>
+            <Col md={6}>
+              <Link to="/counselling" className="quick-link-card">
+                <div className="link-icon">
+                  <i className="fas fa-headset"></i>
+                </div>
+                <h4>Career Counselling</h4>
+                <p>Get expert advice to choose the right career path</p>
+                <span className="link-arrow">
+                  <i className="fas fa-arrow-right"></i>
+                </span>
+              </Link>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="final-cta-section">
+        <Container>
+          <Row>
+            <Col lg={10} className="mx-auto text-center">
+              <h2>Ready to Transform Your Future?</h2>
+              <p>Join thousands of successful students preparing with Futurely</p>
+              <div className="cta-buttons">
+                <Link to="/exam-preparation">
+                  <Button className="btn-primary-glow large">
+                    Start Preparation Free
+                    <i className="fas fa-rocket ms-2"></i>
+                  </Button>
+                </Link>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+    </div>
   );
-}
+};
+
+export default Home;
