@@ -42,7 +42,6 @@ const Home = () => {
       // Get the text nodes
       const childNodes = Array.from(titleElement.childNodes);
       const firstTextNode = childNodes[0]; // "Prepare Smart" text node
-      const brElement = childNodes[1]; // <br>
       const gradientSpan = childNodes[2]; // <span> with "Crack State Exams"
       
       // Clear initial text
@@ -602,3 +601,4 @@ const Home = () => {
 };
 
 export default Home;
+
